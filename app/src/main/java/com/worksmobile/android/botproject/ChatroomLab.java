@@ -8,37 +8,37 @@ import java.util.List;
 /**
  * Created by user on 2018. 3. 27..
  */
-
+//possessing chatroom list by singleton pattern
 public class ChatroomLab {
 
-    private static ChatroomLab sChatroomLab;
+    private static ChatroomLab chatroomLab;
 
-    private List<Chatroom> mChatrooms;
+    private List<Chatroom> chatrooms;
 
     public static ChatroomLab get(Context context){
-        if(sChatroomLab == null){
-            sChatroomLab = new ChatroomLab(context);
+        if(chatroomLab == null){
+            chatroomLab = new ChatroomLab(context);
 
         }
-        return sChatroomLab;
+        return chatroomLab;
     }
 
     private ChatroomLab(Context context){
-        mChatrooms = new ArrayList<>();
+        chatrooms = new ArrayList<>();
         for (int i=0;i<100;i++){
             Chatroom chatroom = new Chatroom();
             chatroom.setTitle("채팅방#"+(i+1));
             chatroom.setTumbnail(R.drawable.thumb_default_team);
-            mChatrooms.add(chatroom);
+            chatrooms.add(chatroom);
         }
     }
 
     public List<Chatroom> getChatrooms(){
-        return mChatrooms;
+        return chatrooms;
     }
 
     public Chatroom getChatroom(long id){
-        for(Chatroom chatroom : mChatrooms){
+        for(Chatroom chatroom : chatrooms){
             if(chatroom.getId() == id){
                 return chatroom;
             }

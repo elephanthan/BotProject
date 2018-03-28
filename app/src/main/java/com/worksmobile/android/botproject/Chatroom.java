@@ -8,7 +8,7 @@ public class Chatroom {
 
     private long id;
     private String title;
-    private int mTumbnail;
+    private int thumbnail;
 
     public Chatroom(){
         id = CommonUtil.generateUniqueId();
@@ -17,7 +17,7 @@ public class Chatroom {
     public Chatroom(String title, int resId){
         id = CommonUtil.generateUniqueId();
         this.title = title;
-        this.mTumbnail = resId;
+        this.thumbnail = resId;
     }
 
     public String getTitle() {
@@ -29,11 +29,11 @@ public class Chatroom {
     }
 
     public int getTumbnail() {
-        return mTumbnail;
+        return thumbnail;
     }
 
     public void setTumbnail(int resId) {
-        this.mTumbnail = resId;
+        this.thumbnail = resId;
     }
 
     public long getId() {

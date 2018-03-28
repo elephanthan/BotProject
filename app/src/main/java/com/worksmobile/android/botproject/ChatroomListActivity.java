@@ -10,7 +10,7 @@ import java.util.List;
 public class ChatroomListActivity extends AppCompatActivity {
 
     private RecyclerView mChatroomRecyclerView;
-    private ChatroomAdapter mAdapter;
+    private ChatroomAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +27,8 @@ public class ChatroomListActivity extends AppCompatActivity {
         ChatroomLab chatroomLab = ChatroomLab.get(getApplicationContext());
         List<Chatroom> chatrooms = chatroomLab.getChatrooms();
 
-        mAdapter = new ChatroomAdapter(this, R.layout.list_item_chatroom, chatrooms);
-        mChatroomRecyclerView.setAdapter(mAdapter);
+        adapter = new ChatroomAdapter(this, R.layout.list_item_chatroom, chatrooms) ;
+        mChatroomRecyclerView.setAdapter(adapter);
     }
 
 }
