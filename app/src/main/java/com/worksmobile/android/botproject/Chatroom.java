@@ -6,26 +6,26 @@ package com.worksmobile.android.botproject;
 
 public class Chatroom {
 
-    private long mId;
-    private String mTitle;
+    private long id;
+    private String title;
     private int mTumbnail;
 
     public Chatroom(){
-        mId = CommonUtil.generateUniqueId();
+        id = CommonUtil.generateUniqueId();
     }
 
     public Chatroom(String title, int resId){
-        mId = CommonUtil.generateUniqueId();
-        this.mTitle = title;
+        id = CommonUtil.generateUniqueId();
+        this.title = title;
         this.mTumbnail = resId;
     }
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
     public void setTitle(String title) {
-        mTitle = title;
+        this.title = title;
     }
 
     public int getTumbnail() {
@@ -37,6 +37,6 @@ public class Chatroom {
     }
 
     public long getId() {
-        return mId;
+        return id;
     }
 }

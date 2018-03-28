@@ -43,7 +43,7 @@ public class ChatroomLab {
                 return chatroom;
             }
         }
-        return null;
+        return new Chatroom();
     }
 
 }

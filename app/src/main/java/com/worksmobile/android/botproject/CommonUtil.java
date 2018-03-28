@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class CommonUtil {
 
-    public static Long generateUniqueId()
+    public static long generateUniqueId()
     {
         long val = -1;
         do

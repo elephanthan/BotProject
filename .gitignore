@@ -56,7 +56,7 @@ captures/
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
 .idea/gradle.xml
-./idea/misc.xml
+.idea/misc.xml
 *.iml
 
 # Keystore files
