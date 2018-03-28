@@ -36,4 +36,7 @@ public class Chatroom {
         this.mTumbnail = resId;
     }
 
+    public long getId() {
+        return mId;
+    }
 }
