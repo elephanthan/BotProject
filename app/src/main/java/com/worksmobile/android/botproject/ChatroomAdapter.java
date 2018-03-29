@@ -24,9 +24,8 @@ public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.Chatro
         this.chatrooms = chatrooms;
     }
 
-    public ChatroomAdapter(Context context, int layout, List<Chatroom> chatrooms){
+    public ChatroomAdapter(Context context, List<Chatroom> chatrooms){
         this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.layout=layout;
         this.chatrooms = chatrooms;
     }
 
@@ -57,21 +56,21 @@ public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.Chatro
 
 
     public class ChatroomHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private Chatroom mChatroom;
+        private Chatroom chatroom;
 
-        private TextView mTitleTextView;
-        private ImageView mThumbnailImageView;
+        private TextView titleTextView;
+        private ImageView thumbnailImageView;
 
         public ChatroomHolder(View itemView){
             super(itemView);
-            mTitleTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_title_text);
-            mThumbnailImageView = (ImageView) itemView.findViewById(R.id.list_item_chatroom_thumbnail_img);
+            titleTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_title_text);
+            thumbnailImageView = (ImageView) itemView.findViewById(R.id.list_item_chatroom_thumbnail_img);
         }
 
         public void bindChatroom(Chatroom chatroom){
-            mChatroom = chatroom;
-            mTitleTextView.setText(mChatroom.getTitle());
-            mThumbnailImageView.setImageResource(mChatroom.getTumbnail());
+            this.chatroom = chatroom;
+            titleTextView.setText(chatroom.getTitle());
+            thumbnailImageView.setImageResource(chatroom.getTumbnail());
         }
 
         //어댑터 분리하면서 이벤트 삭제

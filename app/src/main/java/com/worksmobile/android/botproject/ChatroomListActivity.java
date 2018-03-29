@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ChatroomListActivity extends AppCompatActivity {
 
-    private RecyclerView mChatroomRecyclerView;
+    private RecyclerView chatroomRecyclerView;
     private ChatroomAdapter adapter;
 
     @Override
@@ -17,8 +17,8 @@ public class ChatroomListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom_list);
 
-        mChatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
-        mChatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
+        chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         updateUI();
     }
@@ -27,8 +27,8 @@ public class ChatroomListActivity extends AppCompatActivity {
         ChatroomLab chatroomLab = ChatroomLab.get(getApplicationContext());
         List<Chatroom> chatrooms = chatroomLab.getChatrooms();
 
-        adapter = new ChatroomAdapter(this, R.layout.list_item_chatroom, chatrooms) ;
-        mChatroomRecyclerView.setAdapter(adapter);
+        adapter = new ChatroomAdapter(this, chatrooms) ;
+        chatroomRecyclerView.setAdapter(adapter);
     }
 
 }
