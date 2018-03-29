@@ -19,7 +19,7 @@ public class ChatroomListActivity extends AppCompatActivity {
 
         mChatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         mChatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //RecyclerView.OnClickListener
+
         updateUI();
     }
 

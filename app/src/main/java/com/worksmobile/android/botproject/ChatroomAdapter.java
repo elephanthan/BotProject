@@ -34,7 +34,6 @@ public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.Chatro
     @Override
     public ChatroomHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = inflater.inflate(R.layout.list_item_chatroom, parent, false);
-
         final ChatroomHolder holder = new ChatroomHolder(view);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +55,7 @@ public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.Chatro
         return chatrooms.size();
     }
 
+
     public class ChatroomHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private Chatroom mChatroom;
 
@@ -75,7 +75,7 @@ public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.Chatro
         }
 
         //어댑터 분리하면서 이벤트 삭제
-        //이벤트 등록을 홀더에서 어댑터로 위임
+        //이벤트 등록을 홀더에서 어댑터에서 홀더를 생성하면서 등록
         @Override
         public void onClick(View view) {
             //Toast.makeText(view, mChatroom.getTitle(), Toast.LENGTH_SHORT).show();
