@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.worksmobile.android.botproject.ChatroomListActivity">
 
-    <ListView
-        android:id="@+id/chat_room_listview"
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/chat_room_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="#5f42f4"
-        android:dividerHeight="1.5dp"
-        android:choiceMode="singleChoice" />
+        />
 
 </LinearLayout>

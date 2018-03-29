@@ -1,42 +1,42 @@
 package com.worksmobile.android.botproject;
 
-import android.widget.ImageView;
-
-import java.util.UUID;
-
 /**
  * Created by user on 2018. 3. 27..
  */
 
 public class Chatroom {
 
-    private UUID mId;
-    private String mTitle;
-    private int mTumbnail;
+    private long id;
+    private String title;
+    private int thumbnail;
 
     public Chatroom(){
-        mId = UUID.randomUUID();
+        id = CommonUtil.generateUniqueId();
     }
 
     public Chatroom(String title, int resId){
-        mId = UUID.randomUUID();
-        this.mTitle = title;
-        this.mTumbnail = resId;
+        id = CommonUtil.generateUniqueId();
+        this.title = title;
+        this.thumbnail = resId;
     }
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
     public void setTitle(String title) {
-        mTitle = title;
+        this.title = title;
     }
 
     public int getTumbnail() {
-        return mTumbnail;
+        return thumbnail;
     }
 
     public void setTumbnail(int resId) {
-        this.mTumbnail = resId;
+        this.thumbnail = resId;
+    }
+
+    public long getId() {
+        return id;
     }
 }
