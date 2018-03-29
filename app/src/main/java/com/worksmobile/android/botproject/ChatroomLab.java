@@ -29,6 +29,9 @@ public class ChatroomLab {
             Chatroom chatroom = new Chatroom();
             chatroom.setTitle("채팅방#"+(i+1));
             chatroom.setTumbnail(R.drawable.thumb_default_team);
+            Message msg = new Message();
+            chatroom.setLatestMsg(msg);
+            chatroom.setNumber(3);
             chatrooms.add(chatroom);
         }
     }

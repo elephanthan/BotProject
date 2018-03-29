@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -63,17 +64,27 @@ public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.Chatro
 
         private TextView titleTextView;
         private ImageView thumbnailImageView;
+        private TextView numberTextView;
+        private TextView msgTextView;
+        private TextView msgDateTextView;
 
         public ChatroomHolder(View itemView){
             super(itemView);
             titleTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_title_text);
             thumbnailImageView = (ImageView) itemView.findViewById(R.id.list_item_chatroom_thumbnail_img);
+            numberTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_number);
+            msgTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_text);
+            msgDateTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_date);
         }
 
         public void bindChatroom(Chatroom chatroom){
             this.chatroom = chatroom;
             titleTextView.setText(chatroom.getTitle());
             thumbnailImageView.setImageResource(chatroom.getTumbnail());
+            numberTextView.setText("(" + chatroom.getNumber() + ")");
+            msgTextView.setText(chatroom.getLatestMsg().getText());
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
+            msgDateTextView.setText(sdf.format(chatroom.getLatestMsg().getSenddate()));
         }
 
         //어댑터 분리하면서 이벤트 삭제

@@ -8,9 +8,15 @@ import java.util.Date;
 
 public class Message {
     private long msgId;
-    private Date senddate;
-    private String text;
     private long userId;
+    private String text;
+    private Date senddate;
+
+    public Message(){
+        this.msgId = CommonUtil.generateUniqueId();
+        this.text = "This is message.";
+        this.senddate = new Date();
+    }
 
     public long getMsgId() {
         return msgId;
