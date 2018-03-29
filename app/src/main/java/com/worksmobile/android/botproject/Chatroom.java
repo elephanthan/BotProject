@@ -9,6 +9,24 @@ public class Chatroom {
     private long id;
     private String title;
     private int thumbnail;
+    private Message latestMsg;
+    private int number;
+
+    public Message getLatestMsg() {
+        return latestMsg;
+    }
+
+    public void setLatestMsg(Message latestMsg) {
+        this.latestMsg = latestMsg;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
     public Chatroom(){
         id = CommonUtil.generateUniqueId();
