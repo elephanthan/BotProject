@@ -41,7 +41,9 @@ public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.Chatro
             @Override
             public void onClick(View v) {
                 //Toast.makeText(v.getContext(), chatrooms.get(holder.getAdapterPosition()).getTitle() + " 선택됨!", Toast.LENGTH_SHORT).show(); // 이 코드가 핵심이었음...
-                context.startActivity(new Intent(context, ChatroomActivity.class));
+                //context.startActivity(new Intent(context, ChatroomActivity.class));
+                Intent intent = ChatroomActivity.newIntent(context, chatrooms.get(holder.getAdapterPosition()).getId());
+                context.startActivity(intent);
             }
         });
         return holder;

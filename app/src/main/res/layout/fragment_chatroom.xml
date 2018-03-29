@@ -5,8 +5,9 @@
     tools:context="com.worksmobile.android.botproject.ChatroomFragment">
 
     <TextView
+        android:id="@+id/chat_room_text_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+         />
 
 </FrameLayout>
