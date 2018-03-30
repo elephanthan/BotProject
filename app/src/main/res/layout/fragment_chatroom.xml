@@ -1,13 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/indoor_recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.worksmobile.android.botproject.ChatroomFragment">
 
-    <TextView
-        android:id="@+id/chat_room_text_title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-         />
-
-</FrameLayout>
+</android.support.v7.widget.RecyclerView>

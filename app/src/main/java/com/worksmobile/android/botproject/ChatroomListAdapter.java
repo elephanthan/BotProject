@@ -59,7 +59,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     }
 
 
-    public class ChatroomHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ChatroomHolder extends RecyclerView.ViewHolder{
         private Chatroom chatroom;
 
         private TextView titleTextView;
@@ -77,20 +77,14 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
             msgDateTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_date);
         }
 
-        public void bindChatroom(Chatroom chatroom){
-            this.chatroom = chatroom;
+        public void bindChatroom(Chatroom chatroom_){
+            this.chatroom = chatroom_;
             titleTextView.setText(chatroom.getTitle());
             thumbnailImageView.setImageResource(chatroom.getTumbnail());
             numberTextView.setText("(" + chatroom.getNumber() + ")");
             msgTextView.setText(chatroom.getLatestMsg().getText());
             SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
             msgDateTextView.setText(sdf.format(chatroom.getLatestMsg().getSenddate()));
-        }
-
-        //어댑터 분리하면서 이벤트 삭제
-        //이벤트 등록을 홀더에서 어댑터에서 홀더를 생성하면서 등록
-        @Override
-        public void onClick(View view) {
         }
     }
 }

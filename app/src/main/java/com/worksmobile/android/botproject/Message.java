@@ -18,6 +18,12 @@ public class Message {
         this.senddate = new Date();
     }
 
+    public Message(int seq){
+        this.id = CommonUtil.generateUniqueId();
+        this.text = "This is a message #" + seq;
+        this.senddate = new Date();
+    }
+
     public long getId() {
         return id;
     }
