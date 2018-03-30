@@ -7,13 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class ChatroomFragment extends Fragment {
 
     private static final String ARG_CHATROOM_ID = "chatroom_id";
 
     private Chatroom chatroom;
+    private List<Message> messages;
 
     private TextView titleTextView;
+    private TextView idTextView;
 
     public static ChatroomFragment newInstance(long chatroomId){
         Bundle args = new Bundle();
@@ -28,6 +32,10 @@ public class ChatroomFragment extends Fragment {
         super.onCreate(savedInstanceState);
         long chatroomId = (long) getArguments().getSerializable(ARG_CHATROOM_ID);
         chatroom = ChatroomLab.get(getActivity()).getChatroom(chatroomId);
+
+        //TODO 채팅방 아이디로 메시지 내역들을 가져옴
+        //지금은 메시지 더미 데이터를 만듦
+        messages = MessageLab.get(getActivity()).getMessages();
     }
 
     @Override

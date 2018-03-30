@@ -7,23 +7,19 @@ import java.util.Date;
  */
 
 public class Message {
-    private long msgId;
+    private long id;
     private long userId;
     private String text;
     private Date senddate;
 
     public Message(){
-        this.msgId = CommonUtil.generateUniqueId();
-        this.text = "This is message.";
+        this.id = CommonUtil.generateUniqueId();
+        this.text = "This is a message.";
         this.senddate = new Date();
     }
 
-    public long getMsgId() {
-        return msgId;
-    }
-
-    public void setMsgId(long msgId) {
-        this.msgId = msgId;
+    public long getId() {
+        return id;
     }
 
     public Date getSenddate() {
@@ -44,9 +40,5 @@ public class Message {
 
     public long getUserId() {
         return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 }

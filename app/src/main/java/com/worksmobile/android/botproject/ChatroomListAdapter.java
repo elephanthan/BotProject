@@ -16,17 +16,17 @@ import java.util.List;
  * Created by user on 2018. 3. 28..
  */
 
-public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.ChatroomHolder>{
+public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder>{
     private Context context;
     private LayoutInflater inflater;
     private int layout;
     private List<Chatroom> chatrooms;
 
-    public ChatroomAdapter(List<Chatroom> chatrooms){
+    public ChatroomListAdapter(List<Chatroom> chatrooms){
         this.chatrooms = chatrooms;
     }
 
-    public ChatroomAdapter(Context context, List<Chatroom> chatrooms){
+    public ChatroomListAdapter(Context context, List<Chatroom> chatrooms){
         this.context = context;
         this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.chatrooms = chatrooms;
