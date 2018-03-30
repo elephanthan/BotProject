@@ -9,23 +9,24 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
  * Created by user on 2018. 3. 28..
  */
 
-public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.ChatroomHolder>{
+public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder>{
     private Context context;
     private LayoutInflater inflater;
     private int layout;
     private List<Chatroom> chatrooms;
 
-    public ChatroomAdapter(List<Chatroom> chatrooms){
+    public ChatroomListAdapter(List<Chatroom> chatrooms){
         this.chatrooms = chatrooms;
     }
 
-    public ChatroomAdapter(Context context, List<Chatroom> chatrooms){
+    public ChatroomListAdapter(Context context, List<Chatroom> chatrooms){
         this.context = context;
         this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.chatrooms = chatrooms;
@@ -39,8 +40,8 @@ public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.Chatro
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(v.getContext(), chatrooms.get(holder.getAdapterPosition()).getTitle() + " 선택됨!", Toast.LENGTH_SHORT).show(); // 이 코드가 핵심이었음...
-                context.startActivity(new Intent(context, ChatroomActivity.class));
+                Intent intent = ChatroomActivity.newIntent(context, chatrooms.get(holder.getAdapterPosition()).getId());
+                context.startActivity(intent);
             }
         });
         return holder;
@@ -58,29 +59,32 @@ public class ChatroomAdapter extends RecyclerView.Adapter<ChatroomAdapter.Chatro
     }
 
 
-    public class ChatroomHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ChatroomHolder extends RecyclerView.ViewHolder{
         private Chatroom chatroom;
 
         private TextView titleTextView;
         private ImageView thumbnailImageView;
+        private TextView numberTextView;
+        private TextView msgTextView;
+        private TextView msgDateTextView;
 
         public ChatroomHolder(View itemView){
             super(itemView);
             titleTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_title_text);
             thumbnailImageView = (ImageView) itemView.findViewById(R.id.list_item_chatroom_thumbnail_img);
+            numberTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_number);
+            msgTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_text);
+            msgDateTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_date);
         }
 
-        public void bindChatroom(Chatroom chatroom){
-            this.chatroom = chatroom;
+        public void bindChatroom(Chatroom chatroom_){
+            this.chatroom = chatroom_;
             titleTextView.setText(chatroom.getTitle());
             thumbnailImageView.setImageResource(chatroom.getTumbnail());
-        }
-
-        //어댑터 분리하면서 이벤트 삭제
-        //이벤트 등록을 홀더에서 어댑터에서 홀더를 생성하면서 등록
-        @Override
-        public void onClick(View view) {
-            //Toast.makeText(view, mChatroom.getTitle(), Toast.LENGTH_SHORT).show();
+            numberTextView.setText("(" + chatroom.getNumber() + ")");
+            msgTextView.setText(chatroom.getLatestMsg().getText());
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
+            msgDateTextView.setText(sdf.format(chatroom.getLatestMsg().getSenddate()));
         }
     }
 }

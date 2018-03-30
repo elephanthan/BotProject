@@ -1,5 +1,7 @@
 package com.worksmobile.android.botproject;
 
+import java.util.List;
+
 /**
  * Created by user on 2018. 3. 27..
  */
@@ -9,6 +11,25 @@ public class Chatroom {
     private long id;
     private String title;
     private int thumbnail;
+    private Message latestMessage;
+    private List<User> participants;
+    private int number;
+
+    public Message getLatestMsg() {
+        return latestMessage;
+    }
+
+    public void setLatestMsg(Message latestMessage) {
+        this.latestMessage = latestMessage;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
     public Chatroom(){
         id = CommonUtil.generateUniqueId();
@@ -38,5 +59,13 @@ public class Chatroom {
 
     public long getId() {
         return id;
+    }
+
+    public List<User> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<User> participants) {
+        this.participants = participants;
     }
 }
