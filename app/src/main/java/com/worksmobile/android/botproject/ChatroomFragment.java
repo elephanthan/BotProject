@@ -22,7 +22,7 @@ public class ChatroomFragment extends Fragment {
 
     public static ChatroomFragment newInstance(long chatroomId){
         Bundle args = new Bundle();
-        args.putSerializable(ARG_CHATROOM_ID, chatroomId);
+        args.putLong(ARG_CHATROOM_ID, chatroomId);
         ChatroomFragment fragment = new ChatroomFragment();
         fragment.setArguments(args);
         return fragment;

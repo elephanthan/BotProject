@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 public class ChatroomActivity extends SingleFragmentActivity {
 
     private static final String EXTRA_CHATROOM_ID =
-            "com.worksmobile.android.botproject.chatroom_id";
+            "chatroom_id";
 
     public static Intent newIntent(Context context, long chatroomId){
         Intent intent = new Intent(context, ChatroomActivity.class);
@@ -17,7 +17,8 @@ public class ChatroomActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        long chatroomId = (long) getIntent().getSerializableExtra(EXTRA_CHATROOM_ID);
+        //long chatroomId = (long) getIntent().getSerializableExtra(EXTRA_CHATROOM_ID);
+        long chatroomId = (long) getIntent().getLongExtra(EXTRA_CHATROOM_ID, 0);
         return ChatroomFragment.newInstance(chatroomId);
     }
 }
