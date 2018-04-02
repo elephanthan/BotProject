@@ -35,7 +35,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
 
     @Override
     public ChatroomHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View view = inflater.inflate(R.layout.list_item_chatroom, parent, false);
+        View view = inflater.inflate(R.layout.item_chatroom, parent, false);
         final ChatroomHolder holder = new ChatroomHolder(view);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
