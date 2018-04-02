@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 
 import java.util.List;
 
@@ -21,6 +22,13 @@ public class ChatroomListActivity extends AppCompatActivity {
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         updateUI();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.triggers_chatroom, menu);
+        return true;
     }
 
     private void updateUI(){
