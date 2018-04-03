@@ -38,8 +38,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        final RecyclerView.ViewHolder holder;
-        //= inflater.inflate(R.layout.item_message_received, parent, false);
+        RecyclerView.ViewHolder holder;
         if(viewType == VIEW_TYPE_MESSAGE_SENT){
             view = inflater.inflate(R.layout.item_message_sent, parent, false);
             holder = new SentMessageHolder(view);
@@ -47,21 +46,12 @@ public class MessageAdapter extends RecyclerView.Adapter{
             view = inflater.inflate(R.layout.item_message_received, parent, false);
             holder = new ReceivedMessageHolder(view);
         }
-
-
-        holder.itemView.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Toast.makeText(v.getContext(), messages.get(holder.getAdapterPosition()).getText(), Toast.LENGTH_SHORT);
-            }
-        });
         return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Message msg = messages.get(position);
-        //holder.bindMessage(msg);
         switch (holder.getItemViewType()){
             case VIEW_TYPE_MESSAGE_SENT :
                 ((SentMessageHolder)holder).bindMessage(msg);
@@ -90,23 +80,33 @@ public class MessageAdapter extends RecyclerView.Adapter{
         return msg.getType();
     }
 
-    private class SentMessageHolder extends RecyclerView.ViewHolder {
+    private class SentMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView messageTextView, timeTextView;
 
         public SentMessageHolder(View itemView){
             super(itemView);
             messageTextView = (TextView) itemView.findViewById(R.id.text_message_body);
             timeTextView = (TextView) itemView.findViewById(R.id.text_message_time);
+
+            //itemView.setOnClickListener(this);
+            messageTextView.setOnClickListener(this);
+
         }
 
         void bindMessage(Message message){
             messageTextView.setText(message.getText());
             SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
+
+        }
+
+        @Override
+        public void onClick(View v){
+            Toast.makeText(context, messages.get(getAdapterPosition()).getText(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+    private class ReceivedMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView messageTextView, timeTextView, nameTextView;
         ImageView profileImageView;
 
@@ -114,13 +114,22 @@ public class MessageAdapter extends RecyclerView.Adapter{
             super(itemView);
             messageTextView = (TextView) itemView.findViewById(R.id.text_message_body);
             timeTextView = (TextView) itemView.findViewById(R.id.text_message_time);
+            profileImageView = (ImageView) itemView.findViewById(R.id.image_message_profile);
             //TODO Set Username, Userimage
+
+            profileImageView.setOnClickListener(this);
         }
 
         void bindMessage(Message message){
             messageTextView.setText(message.getText());
             SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
+        }
+
+        @Override
+        public void onClick(View v){
+            v
+            Toast.makeText(context, messages.get(getAdapterPosition()).getText(), Toast.LENGTH_SHORT).show();
         }
     }
 
