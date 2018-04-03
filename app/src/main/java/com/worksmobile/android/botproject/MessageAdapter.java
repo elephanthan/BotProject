@@ -106,7 +106,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
         }
     }
 
-    private class ReceivedMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView messageTextView, timeTextView, nameTextView;
         ImageView profileImageView;
 
@@ -117,19 +117,25 @@ public class MessageAdapter extends RecyclerView.Adapter{
             profileImageView = (ImageView) itemView.findViewById(R.id.image_message_profile);
             //TODO Set Username, Userimage
 
-            profileImageView.setOnClickListener(this);
+            profileImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UserinfoDialog dialog = new UserinfoDialog(context);
+                    dialog.show();
+                }
+            });
+            messageTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, messages.get(getAdapterPosition()).getText(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         void bindMessage(Message message){
             messageTextView.setText(message.getText());
             SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
-        }
-
-        @Override
-        public void onClick(View v){
-
-            Toast.makeText(context, messages.get(getAdapterPosition()).getText(), Toast.LENGTH_SHORT).show();
         }
     }
 
