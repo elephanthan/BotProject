@@ -1,8 +1,10 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.view.Chat.Chatroom;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+
+import com.worksmobile.android.botproject.view.SingleFragmentActivity;
 
 public class ChatroomActivity extends SingleFragmentActivity {
 

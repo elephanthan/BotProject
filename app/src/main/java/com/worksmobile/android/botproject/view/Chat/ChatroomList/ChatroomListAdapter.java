@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.view.Chat.ChatroomList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.view.Chat.Chatroom.ChatroomActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -21,15 +25,18 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     private LayoutInflater inflater;
     private int layout;
     private List<Chatroom> chatrooms;
+    private int itemSize;
 
     public ChatroomListAdapter(List<Chatroom> chatrooms){
         this.chatrooms = chatrooms;
+        this.itemSize = chatrooms.size();
     }
 
     public ChatroomListAdapter(Context context, List<Chatroom> chatrooms){
         this.context = context;
         this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.chatrooms = chatrooms;
+        this.itemSize = chatrooms.size();
     }
 
 
@@ -54,8 +61,9 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     }
 
     @Override
-    public int getItemCount(){
-        return chatrooms.size();
+    public int getItemCount() {
+        itemSize = chatrooms.size();
+        return itemSize;
     }
 
 

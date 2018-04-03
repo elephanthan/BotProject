@@ -1,6 +1,6 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.view.Chat.Chatroom;
 
-import android.content.Context;
+import com.worksmobile.android.botproject.model.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +15,15 @@ public class MessageLab {
 
     private List<Message> messages;
 
-    public static MessageLab get(Context context){
+    public static MessageLab get(){
         if(messageLab == null){
-            messageLab = new MessageLab(context);
+            messageLab = new MessageLab();
 
         }
         return messageLab;
     }
 
-    private MessageLab(Context context){
+    private MessageLab(){
         messages = new ArrayList<>();
         for (int i=0;i<100;i++){
             Message msg = new Message(i+1);

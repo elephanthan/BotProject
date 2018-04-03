@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.model;
 
 /**
  * Created by user on 2018. 3. 30..

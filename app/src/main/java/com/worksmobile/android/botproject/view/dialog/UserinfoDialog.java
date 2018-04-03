@@ -1,10 +1,12 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Window;
+
+import com.worksmobile.android.botproject.R;
 
 /**
  * Created by user on 2018. 4. 3..

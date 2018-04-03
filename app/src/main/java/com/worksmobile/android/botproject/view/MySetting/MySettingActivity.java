@@ -1,7 +1,9 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.view.MySetting;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.worksmobile.android.botproject.R;
 
 public class MySettingActivity extends AppCompatActivity {
 
