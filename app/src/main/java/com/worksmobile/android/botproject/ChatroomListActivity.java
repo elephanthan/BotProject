@@ -1,9 +1,12 @@
 package com.worksmobile.android.botproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.List;
 
@@ -22,6 +25,30 @@ public class ChatroomListActivity extends AppCompatActivity {
 
         updateUI();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.triggers_chatroom, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_item_new_chatting:
+                //Toast.makeText(getApplicationContext(),"New Chatting Menu item was selected.", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, NewChattingActivity.class));
+                return true;
+            case R.id.menu_item_my_setting:
+                //Toast.makeText(getApplicationContext(),"My Setting Menu item was selected.", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, MySettingActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     private void updateUI(){
         ChatroomLab chatroomLab = ChatroomLab.get(getApplicationContext());
