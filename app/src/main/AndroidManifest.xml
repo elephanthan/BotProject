@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChatroomActivity"></activity>
+        <activity android:name=".ChatroomActivity"
+                  android:parentActivityName=".ChatroomListActivity"></activity>
     </application>
 
 </manifest>

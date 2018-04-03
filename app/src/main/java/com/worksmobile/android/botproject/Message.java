@@ -8,9 +8,10 @@ import java.util.Date;
 
 public class Message {
     private long id;
-    private long userId;
+    private String senderId;
     private String text;
     private Date senddate;
+    private int type;
 
     public Message(){
         this.id = CommonUtil.generateUniqueId();
@@ -22,6 +23,7 @@ public class Message {
         this.id = CommonUtil.generateUniqueId();
         this.text = "This is a message #" + seq;
         this.senddate = new Date();
+        this.setType(seq%2+1);
     }
 
     public long getId() {
@@ -44,7 +46,15 @@ public class Message {
         this.text = text;
     }
 
-    public long getUserId() {
-        return userId;
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

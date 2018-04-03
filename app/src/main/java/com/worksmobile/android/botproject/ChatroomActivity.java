@@ -17,7 +17,6 @@ public class ChatroomActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        //long chatroomId = (long) getIntent().getSerializableExtra(EXTRA_CHATROOM_ID);
         long chatroomId = (long) getIntent().getLongExtra(EXTRA_CHATROOM_ID, 0);
         return ChatroomFragment.newInstance(chatroomId);
     }
