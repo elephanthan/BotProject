@@ -9,17 +9,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
  * Created by user on 2018. 3. 30..
  */
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageHolder>{
+public class MessageAdapter extends RecyclerView.Adapter{
     private Context context;
     private LayoutInflater inflater;
     private int layout;
     private List<Message> messages;
+
+    private static final int VIEW_TYPE_MESSAGE_SENT = 1;
+    private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
     public MessageAdapter(List<Message> messages){
         this.messages = messages;
@@ -32,9 +36,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
     }
 
     @Override
-    public MessageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.list_item_message, parent, false);
-        final MessageHolder holder = new MessageHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
+        final RecyclerView.ViewHolder holder;
+        //= inflater.inflate(R.layout.item_message_received, parent, false);
+        if(viewType == VIEW_TYPE_MESSAGE_SENT){
+            view = inflater.inflate(R.layout.item_message_sent, parent, false);
+            holder = new SentMessageHolder(view);
+        }else{
+            view = inflater.inflate(R.layout.item_message_received, parent, false);
+            holder = new ReceivedMessageHolder(view);
+        }
+
+
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -45,10 +59,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
     }
 
     @Override
-    public void onBindViewHolder(MessageAdapter.MessageHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Message msg = messages.get(position);
-        holder.bindMessage(msg);
-
+        //holder.bindMessage(msg);
+        switch (holder.getItemViewType()){
+            case VIEW_TYPE_MESSAGE_SENT :
+                ((SentMessageHolder)holder).bindMessage(msg);
+                break;
+            case VIEW_TYPE_MESSAGE_RECEIVED :
+                ((ReceivedMessageHolder)holder).bindMessage(msg);
+                break;
+        }
     }
 
     @Override
@@ -56,21 +77,50 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
         return messages.size();
     }
 
-    public class MessageHolder extends  RecyclerView.ViewHolder {
-        private Message msg;
+    @Override
+    public int getItemViewType(int position){
+        Message msg = messages.get(position);
 
-        private ImageView userImageView;
-        private TextView messageTextView;
-        private TextView messageDateView;
+        //TODO sendbird의 ID값과 Message의 USERID값을 비교해서 VIEWTYPE 결정해주기 (지금은 짝,홀 1,2 리턴)
+        //if(msg.getSenderId().equals(SendBird.getCurrentUser().getUserId()))
+        //return VIEW_TYPE_MESSAGE_SENT;
+        //else
+        //return VIEW_TYPE_MESSAGE_RECEIVED;
 
-        public MessageHolder(View itemView){
+        return msg.getType();
+    }
+
+    private class SentMessageHolder extends RecyclerView.ViewHolder {
+        TextView messageTextView, timeTextView;
+
+        public SentMessageHolder(View itemView){
             super(itemView);
-            messageTextView = (TextView) itemView.findViewById(R.id.list_item_msg_text);
+            messageTextView = (TextView) itemView.findViewById(R.id.text_message_body);
+            timeTextView = (TextView) itemView.findViewById(R.id.text_message_time);
         }
 
-        public void bindMessage(Message message){
-            this.msg = message;
-            messageTextView.setText(msg.getText());
+        void bindMessage(Message message){
+            messageTextView.setText(message.getText());
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
+            timeTextView.setText(sdf.format(message.getSenddate()));
+        }
+    }
+
+    private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+        TextView messageTextView, timeTextView, nameTextView;
+        ImageView profileImageView;
+
+        public ReceivedMessageHolder(View itemView){
+            super(itemView);
+            messageTextView = (TextView) itemView.findViewById(R.id.text_message_body);
+            timeTextView = (TextView) itemView.findViewById(R.id.text_message_time);
+            //TODO Set Username, Userimage
+        }
+
+        void bindMessage(Message message){
+            messageTextView.setText(message.getText());
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
+            timeTextView.setText(sdf.format(message.getSenddate()));
         }
     }
 
