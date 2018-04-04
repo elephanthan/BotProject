@@ -12,7 +12,7 @@ import com.worksmobile.android.botproject.view.dialog.UserinfoDialog;
  * Created by user on 2018. 4. 4..
  */
 
-class ChatroomClickListnerImpl implements ChatroomClickListner {
+class ChatroomClickListnerImpl implements ChatroomClickListener {
 
     Context context;
     Message msg;

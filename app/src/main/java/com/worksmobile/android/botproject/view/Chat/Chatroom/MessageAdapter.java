@@ -28,12 +28,12 @@ public class MessageAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
-    public MessageAdapter(List<Message> messages){
+    public MessageAdapter(List<Message> messages) {
         this.messages = messages;
         this.itemSize = messages.size();
     }
 
-    public MessageAdapter(Context context, List<Message> messages){
+    public MessageAdapter(Context context, List<Message> messages) {
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messages = messages;
@@ -44,10 +44,10 @@ public class MessageAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         RecyclerView.ViewHolder holder;
-        if(viewType == VIEW_TYPE_MESSAGE_SENT){
+        if (viewType == VIEW_TYPE_MESSAGE_SENT) {
             view = inflater.inflate(R.layout.item_message_sent, parent, false);
             holder = new SentMessageHolder(view);
-        }else{
+        } else {
             view = inflater.inflate(R.layout.item_message_received, parent, false);
             holder = new ReceivedMessageHolder(view);
         }
@@ -57,13 +57,13 @@ public class MessageAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Message msg = messages.get(position);
-        switch (holder.getItemViewType()){
-            case VIEW_TYPE_MESSAGE_SENT :
-                ((SentMessageHolder)holder).bindMessage(msg);
-                ((SentMessageHolder)holder).messageTextView.setOnClickListener(new ChatroomClickListnerImpl(context, msg));
+        switch (holder.getItemViewType()) {
+            case VIEW_TYPE_MESSAGE_SENT:
+                ((SentMessageHolder) holder).bindMessage(msg);
+                ((SentMessageHolder) holder).messageTextView.setOnClickListener(new ChatroomClickListnerImpl(context, msg));
                 break;
-            case VIEW_TYPE_MESSAGE_RECEIVED :
-                ((ReceivedMessageHolder)holder).bindMessage(msg);
+            case VIEW_TYPE_MESSAGE_RECEIVED:
+                ((ReceivedMessageHolder) holder).bindMessage(msg);
                 ((ReceivedMessageHolder) holder).profileImageView.setOnClickListener(new ChatroomClickListnerImpl(context, msg));
                 ((ReceivedMessageHolder) holder).messageTextView.setOnClickListener(new ChatroomClickListnerImpl(context, msg));
                 break;
@@ -77,7 +77,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public int getItemViewType(int position){
+    public int getItemViewType(int position) {
         Message msg = messages.get(position);
 
         //TODO sendbird의 ID값과 Message의 USERID값을 비교해서 VIEWTYPE 결정해주기 (지금은 짝,홀 1,2 리턴)
@@ -92,7 +92,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
     private class SentMessageHolder extends RecyclerView.ViewHolder {
         TextView messageTextView, timeTextView;
 
-        public SentMessageHolder(View itemView){
+        public SentMessageHolder(View itemView) {
             super(itemView);
             messageTextView = (TextView) itemView.findViewById(R.id.text_message_body);
             timeTextView = (TextView) itemView.findViewById(R.id.text_message_time);
@@ -109,7 +109,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
         TextView messageTextView, timeTextView, nameTextView;
         ImageView profileImageView;
 
-        public ReceivedMessageHolder(View itemView){
+        public ReceivedMessageHolder(View itemView) {
             super(itemView);
             messageTextView = (TextView) itemView.findViewById(R.id.text_message_body);
             timeTextView = (TextView) itemView.findViewById(R.id.text_message_time);
@@ -118,7 +118,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         }
 
-        void bindMessage(Message message){
+        void bindMessage(Message message) {
             messageTextView.setText(message.getText());
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
