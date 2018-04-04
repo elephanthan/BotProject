@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.widget.Toast;
 
+import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Message;
-
-import java.util.List;
+import com.worksmobile.android.botproject.view.dialog.UserinfoDialog;
 
 /**
  * Created by user on 2018. 4. 4..
@@ -15,23 +15,24 @@ import java.util.List;
 class ChatroomClickListnerImpl implements ChatroomClickListner {
 
     Context context;
-    List<Message> messages;
+    Message msg;
 
-
-    public ChatroomClickListnerImpl(Context context, List<Message> messages){
+    public ChatroomClickListnerImpl(Context context, Message msg){
         this.context = context;
-        this.messages = messages;
+        this.msg = msg;
     }
 
     @Override
     public void onClick(View view) {
-        Toast.makeText(context, "aaa", Toast.LENGTH_SHORT).show();
-//        switch (view.getId()){
-//            case R.id.image_message_profile :
-//                //Toast.makeText(context, messages.get(getAdapterPosition()).getText(), Toast.LENGTH_SHORT).show();
-//                break;
-//            default:
-//                break;
-//        }
+        switch (view.getId()){
+            case R.id.image_message_profile :
+                UserinfoDialog dialog = new UserinfoDialog(context);
+                dialog.show();
+                break;
+            case R.id.text_message_body :
+                Toast.makeText(context, msg.getText(), Toast.LENGTH_SHORT).show();
+            default:
+                break;
+        }
     }
 }
