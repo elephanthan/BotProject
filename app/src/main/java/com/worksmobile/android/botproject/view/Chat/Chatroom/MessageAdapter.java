@@ -20,7 +20,7 @@ import java.util.List;
  * Created by user on 2018. 3. 30..
  */
 
-public class MessageAdapter extends RecyclerView.Adapter{
+public class MessageAdapter extends RecyclerView.Adapter {
     private Context context;
     private LayoutInflater inflater;
     private int layout;
@@ -125,19 +125,18 @@ public class MessageAdapter extends RecyclerView.Adapter{
             profileImageView = (ImageView) itemView.findViewById(R.id.image_message_profile);
             //TODO Set Username, Userimage
 
-            profileImageView.setOnClickListener(new View.OnClickListener() {
+            profileImageView.setOnClickListener(new ChatroomClickListner() {
                 @Override
                 public void onClick(View view) {
                     UserinfoDialog dialog = new UserinfoDialog(context);
                     dialog.show();
                 }
             });
-            messageTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(context, messages.get(getAdapterPosition()).getText(), Toast.LENGTH_SHORT).show();
-                }
+            messageTextView.setOnClickListener(new ChatroomClickListnerImpl(context, messages){
+
             });
+
+
         }
 
         void bindMessage(Message message){

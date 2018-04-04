@@ -47,8 +47,6 @@ public class ChatroomFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_chatroom, container, false);
 
-//        titleTextView = (TextView) v.findViewById(R.id.chat_room_text_title);
-//        titleTextView.setText(chatroom.getTitle());
         messageRecyclerView = (RecyclerView) v.findViewById(R.id.indoor_recycler_view);
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -68,4 +66,5 @@ public class ChatroomFragment extends Fragment {
 
         }
     }
+
 }
