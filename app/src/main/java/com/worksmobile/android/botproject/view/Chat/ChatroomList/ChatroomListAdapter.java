@@ -23,18 +23,15 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     private LayoutInflater inflater;
     private int layout;
     private List<Chatroom> chatrooms;
-    private int itemSize;
 
     public ChatroomListAdapter(List<Chatroom> chatrooms){
         this.chatrooms = chatrooms;
-        this.itemSize = chatrooms.size();
     }
 
     public ChatroomListAdapter(Context context, List<Chatroom> chatrooms){
         this.context = context;
         this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.chatrooms = chatrooms;
-        this.itemSize = chatrooms.size();
     }
 
 
@@ -54,8 +51,9 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
 
     @Override
     public int getItemCount() {
-        itemSize = chatrooms.size();
-        return itemSize;
+        if(chatrooms == null)
+            return 0;
+        return chatrooms.size();
     }
 
 

@@ -23,21 +23,18 @@ public class MessageAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private int layout;
     private List<Message> messages;
-    private int itemSize = 0;
 
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
     public MessageAdapter(List<Message> messages) {
         this.messages = messages;
-        this.itemSize = messages.size();
     }
 
     public MessageAdapter(Context context, List<Message> messages) {
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messages = messages;
-        itemSize = messages.size();
     }
 
     @Override
@@ -72,8 +69,9 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        itemSize = messages.size();
-        return itemSize;
+        if(messages == null)
+            return 0;
+        return messages.size();
     }
 
     @Override
