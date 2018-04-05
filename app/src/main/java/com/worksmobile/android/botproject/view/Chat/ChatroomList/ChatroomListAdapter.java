@@ -57,7 +57,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     }
 
 
-    public class ChatroomHolder extends RecyclerView.ViewHolder{
+    static public class ChatroomHolder extends RecyclerView.ViewHolder{
         private Chatroom chatroom;
 
         private TextView titleTextView;

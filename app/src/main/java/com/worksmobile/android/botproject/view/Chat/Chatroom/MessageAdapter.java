@@ -87,7 +87,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
         return msg.getType();
     }
 
-    private class SentMessageHolder extends RecyclerView.ViewHolder {
+    static private class SentMessageHolder extends RecyclerView.ViewHolder {
         TextView messageTextView, timeTextView;
 
         public SentMessageHolder(View itemView) {
@@ -103,7 +103,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+    static private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView messageTextView, timeTextView, nameTextView;
         ImageView profileImageView;
 
