@@ -12,6 +12,10 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by user on 2018. 3. 28..
  */
@@ -37,13 +41,14 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     public ChatroomHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = inflater.inflate(R.layout.item_chatroom, parent, false);
         final ChatroomHolder holder = new ChatroomHolder(view);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = ChatroomActivity.newIntent(context, chatrooms.get(holder.getAdapterPosition()).getId());
-                context.startActivity(intent);
-            }
-        });
+
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = ChatroomActivity.newIntent(context, chatrooms.get(holder.getAdapterPosition()).getId());
+//                context.startActivity(intent);
+//            }
+//        });
         return holder;
     }
 
@@ -51,6 +56,13 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     public void onBindViewHolder(ChatroomHolder holder, int position){
         Chatroom chatroom = chatrooms.get(position);
         holder.bindChatroom(chatroom);
+
+        //********((ChatroomListActivity)context).onCallClick(chatroom);
+//        @OnClick(R.id.container_item_chatroom)
+//        void onCallClick(){
+//            Intent intent = ChatroomActivity.newIntent(context, chatrooms.get(getAdapterPosition()).getId());
+//            context.startActivity(intent);
+//        }
     }
 
     @Override
@@ -62,20 +74,36 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     public class ChatroomHolder extends RecyclerView.ViewHolder{
         private Chatroom chatroom;
 
-        private TextView titleTextView;
-        private ImageView thumbnailImageView;
-        private TextView numberTextView;
-        private TextView msgTextView;
-        private TextView msgDateTextView;
+        @BindView(R.id.list_item_chatroom_title_text)
+        TextView titleTextView;
+        @BindView(R.id.list_item_chatroom_thumbnail_img)
+        ImageView thumbnailImageView;
+        @BindView(R.id.list_item_chatroom_number)
+        TextView numberTextView;
+        @BindView(R.id.list_item_chatroom_msg_text)
+        TextView msgTextView;
+        @BindView(R.id.list_item_chatroom_msg_date)
+        TextView msgDateTextView;
 
-        public ChatroomHolder(View itemView){
+        public ChatroomHolder(View itemView) {
             super(itemView);
-            titleTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_title_text);
-            thumbnailImageView = (ImageView) itemView.findViewById(R.id.list_item_chatroom_thumbnail_img);
-            numberTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_number);
-            msgTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_text);
-            msgDateTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_date);
+            ButterKnife.bind(this, itemView);
         }
+
+        @OnClick(R.id.container_item_chatroom)
+        void onCallClick(){
+            Intent intent = ChatroomActivity.newIntent(context, chatrooms.get(getAdapterPosition()).getId());
+            context.startActivity(intent);
+        }
+
+//        public ChatroomHolder(View itemView){
+//            super(itemView);
+//            titleTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_title_text);
+//            thumbnailImageView = (ImageView) itemView.findViewById(R.id.list_item_chatroom_thumbnail_img);
+//            numberTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_number);
+//            msgTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_text);
+//            msgDateTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_date);
+//        }
 
         public void bindChatroom(Chatroom chatroom_){
             this.chatroom = chatroom_;
@@ -86,6 +114,8 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
             SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
             msgDateTextView.setText(sdf.format(chatroom.getLatestMsg().getSenddate()));
         }
+
+
     }
 }
 

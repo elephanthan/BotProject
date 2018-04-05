@@ -58,4 +58,11 @@ public class ChatroomListActivity extends AppCompatActivity {
         chatroomRecyclerView.setAdapter(adapter);
     }
 
+
+//*******
+//    @OnClick(R.id.layout_chatroom_list)
+//    void onCallClick(Chatroom chatroom){
+//        Intent intent = ChatroomActivity.newIntent(this, chatroom.getId());
+//        this.startActivity(intent);
+//    }
 }
