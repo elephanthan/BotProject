@@ -1,13 +1,15 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.view.Chat.ChatroomList;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.model.Chatroom;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -36,14 +38,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     @Override
     public ChatroomHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = inflater.inflate(R.layout.item_chatroom, parent, false);
-        final ChatroomHolder holder = new ChatroomHolder(view);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = ChatroomActivity.newIntent(context, chatrooms.get(holder.getAdapterPosition()).getId());
-                context.startActivity(intent);
-            }
-        });
+        ChatroomHolder holder = new ChatroomHolder(view);
         return holder;
     }
 
@@ -51,15 +46,18 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     public void onBindViewHolder(ChatroomHolder holder, int position){
         Chatroom chatroom = chatrooms.get(position);
         holder.bindChatroom(chatroom);
+        holder.itemView.setOnClickListener(new ChatroomListClickListenerImpl(context, chatroom));
     }
 
     @Override
-    public int getItemCount(){
+    public int getItemCount() {
+        if(chatrooms == null)
+            return 0;
         return chatrooms.size();
     }
 
 
-    public class ChatroomHolder extends RecyclerView.ViewHolder{
+    static public class ChatroomHolder extends RecyclerView.ViewHolder{
         private Chatroom chatroom;
 
         private TextView titleTextView;

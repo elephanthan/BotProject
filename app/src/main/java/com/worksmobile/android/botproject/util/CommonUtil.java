@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.util;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;

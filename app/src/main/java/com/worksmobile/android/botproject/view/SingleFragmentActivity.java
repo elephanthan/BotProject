@@ -1,9 +1,11 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+
+import com.worksmobile.android.botproject.R;
 
 /**
  * Created by user on 2018. 3. 29..

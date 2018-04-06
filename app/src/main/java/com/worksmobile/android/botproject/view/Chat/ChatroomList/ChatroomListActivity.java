@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.view.Chat.ChatroomList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.worksmobile.android.botproject.view.MySetting.MySettingActivity;
+import com.worksmobile.android.botproject.view.Chat.NewChatting.NewChattingActivity;
+import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.view.Chat.Chatroom.ChatroomLab;
 
 import java.util.List;
 
@@ -51,7 +57,7 @@ public class ChatroomListActivity extends AppCompatActivity {
 
 
     private void updateUI(){
-        ChatroomLab chatroomLab = ChatroomLab.get(getApplicationContext());
+        ChatroomLab chatroomLab = ChatroomLab.get();
         List<Chatroom> chatrooms = chatroomLab.getChatrooms();
 
         adapter = new ChatroomListAdapter(this, chatrooms) ;

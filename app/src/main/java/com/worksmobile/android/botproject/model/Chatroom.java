@@ -1,4 +1,6 @@
-package com.worksmobile.android.botproject;
+package com.worksmobile.android.botproject.model;
+
+import com.worksmobile.android.botproject.util.CommonUtil;
 
 import java.util.List;
 
