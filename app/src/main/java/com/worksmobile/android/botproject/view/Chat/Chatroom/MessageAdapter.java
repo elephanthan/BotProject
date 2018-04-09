@@ -57,6 +57,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
                 ((SentMessageHolder) holder).bindMessage(msg);
+                //TODO 이벤트 바인딩 다시 ViewHolder 생성자에서 하도록 변경
                 ((SentMessageHolder) holder).messageTextView.setOnClickListener(new ChatroomClickListnerImpl(context, msg));
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
@@ -112,8 +113,6 @@ public class MessageAdapter extends RecyclerView.Adapter {
             messageTextView = (TextView) itemView.findViewById(R.id.text_message_body);
             timeTextView = (TextView) itemView.findViewById(R.id.text_message_time);
             profileImageView = (ImageView) itemView.findViewById(R.id.image_message_profile);
-            //TODO Set Username, Userimage
-
         }
 
         void bindMessage(Message message) {

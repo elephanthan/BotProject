@@ -28,8 +28,7 @@ class ChatroomClickListnerImpl implements ChatroomClickListener {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.image_message_profile :
-//                UserinfoDialog dialog = new UserinfoDialog(context);
-//                dialog.show();
+                //TODO (FragmentActivty)를 사용하지 않고 처리
                 FragmentManager fm = ((FragmentActivity)context).getSupportFragmentManager();
                 UserinfoDialogFragment dialogFragment = new UserinfoDialogFragment();
                 dialogFragment.show(fm, "fragment_dialog_test");
