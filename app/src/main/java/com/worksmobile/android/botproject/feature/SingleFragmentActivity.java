@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.view;
+package com.worksmobile.android.botproject.feature;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

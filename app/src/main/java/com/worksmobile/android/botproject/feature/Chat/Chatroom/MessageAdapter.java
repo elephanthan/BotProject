@@ -1,14 +1,18 @@
-package com.worksmobile.android.botproject.view.Chat.Chatroom;
+package com.worksmobile.android.botproject.feature.Chat.Chatroom;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Message;
 
 import java.text.SimpleDateFormat;
@@ -18,7 +22,7 @@ import java.util.List;
  * Created by user on 2018. 3. 30..
  */
 
-public class MessageAdapter extends RecyclerView.Adapter {
+public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClickListener{
     private Context context;
     private LayoutInflater inflater;
     private int layout;
@@ -26,6 +30,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
+
 
     public MessageAdapter(List<Message> messages) {
         this.messages = messages;
@@ -38,15 +43,42 @@ public class MessageAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view;
-        RecyclerView.ViewHolder holder;
-        if (viewType == VIEW_TYPE_MESSAGE_SENT) {
-            view = inflater.inflate(R.layout.item_message_sent, parent, false);
-            holder = new SentMessageHolder(view);
-        } else {
-            view = inflater.inflate(R.layout.item_message_received, parent, false);
-            holder = new ReceivedMessageHolder(view);
+        final RecyclerView.ViewHolder holder;
+
+        switch (viewType){
+            case VIEW_TYPE_MESSAGE_SENT:
+                view = inflater.inflate(R.layout.item_message_sent, parent, false);
+                holder = new SentMessageHolder(view);
+                ((SentMessageHolder) holder).messageTextView.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        onItemClick(v, holder.getAdapterPosition());
+                    }
+                });
+                break;
+            case VIEW_TYPE_MESSAGE_RECEIVED:
+                view = inflater.inflate(R.layout.item_message_received, parent, false);
+                holder = new ReceivedMessageHolder(view);
+
+                ((ReceivedMessageHolder) holder).profileImageView.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        onItemClick(v, holder.getAdapterPosition());
+                    }
+                });
+
+                ((ReceivedMessageHolder) holder).messageTextView.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        onItemClick(v, holder.getAdapterPosition());
+                    }
+                });
+                break;
+            default:
+                view = inflater.inflate(R.layout.item_message_received, parent, false);
+                holder = new ReceivedMessageHolder(view);
         }
         return holder;
     }
@@ -57,13 +89,9 @@ public class MessageAdapter extends RecyclerView.Adapter {
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
                 ((SentMessageHolder) holder).bindMessage(msg);
-                //TODO 이벤트 바인딩 다시 ViewHolder 생성자에서 하도록 변경
-                ((SentMessageHolder) holder).messageTextView.setOnClickListener(new ChatroomClickListnerImpl(context, msg));
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
                 ((ReceivedMessageHolder) holder).bindMessage(msg);
-                ((ReceivedMessageHolder) holder).profileImageView.setOnClickListener(new ChatroomClickListnerImpl(context, msg));
-                ((ReceivedMessageHolder) holder).messageTextView.setOnClickListener(new ChatroomClickListnerImpl(context, msg));
                 break;
         }
     }
@@ -122,4 +150,19 @@ public class MessageAdapter extends RecyclerView.Adapter {
         }
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        switch (view.getId()){
+            case R.id.image_message_profile :
+                //TODO (FragmentActivty)를 사용하지 않고 처리
+                FragmentManager fm = ((FragmentActivity)context).getSupportFragmentManager();
+                UserinfoDialogFragment dialogFragment = new UserinfoDialogFragment();
+                dialogFragment.show(fm, "fragment_dialog_test");
+                break;
+            case R.id.text_message_body :
+                Toast.makeText(context, messages.get(position).getText(), Toast.LENGTH_SHORT).show();
+            default:
+                break;
+        }
+    }
 }
