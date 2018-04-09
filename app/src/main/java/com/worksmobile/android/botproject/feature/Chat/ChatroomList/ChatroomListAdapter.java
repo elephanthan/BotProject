@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.view.Chat.ChatroomList;
+package com.worksmobile.android.botproject.feature.Chat.ChatroomList;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -54,6 +54,11 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         if(chatrooms == null)
             return 0;
         return chatrooms.size();
+    }
+
+    public void updateChatroomList(List<Chatroom> chatrooms){
+        this.chatrooms = chatrooms;
+        notifyDataSetChanged();
     }
 
 

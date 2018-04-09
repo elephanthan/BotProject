@@ -1,25 +1,35 @@
-package com.worksmobile.android.botproject.view.Chat.ChatroomList;
+package com.worksmobile.android.botproject.feature.Chat.ChatroomList;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.worksmobile.android.botproject.view.MySetting.MySettingActivity;
-import com.worksmobile.android.botproject.view.Chat.NewChatting.NewChattingActivity;
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.api.ApiService;
+import com.worksmobile.android.botproject.feature.Chat.Chatroom.ChatroomLab;
+import com.worksmobile.android.botproject.feature.Chat.NewChatting.NewChattingActivity;
+import com.worksmobile.android.botproject.feature.MySetting.MySettingActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
-import com.worksmobile.android.botproject.view.Chat.Chatroom.ChatroomLab;
+import com.worksmobile.android.botproject.util.ApiUtils;
 
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class ChatroomListActivity extends AppCompatActivity {
 
     private RecyclerView chatroomRecyclerView;
     private ChatroomListAdapter adapter;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +38,8 @@ public class ChatroomListActivity extends AppCompatActivity {
 
         chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        apiService = ApiUtils.getApiService();
 
         updateUI();
     }
@@ -62,6 +74,26 @@ public class ChatroomListActivity extends AppCompatActivity {
 
         adapter = new ChatroomListAdapter(this, chatrooms) ;
         chatroomRecyclerView.setAdapter(adapter);
+
+        //TODO api response
+        apiService.getComment(1).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    Log.d("Test", response.body().string());
+                    //adapter.updateChatroomList(new ArrayList<Chatroom>());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
+
 
 }

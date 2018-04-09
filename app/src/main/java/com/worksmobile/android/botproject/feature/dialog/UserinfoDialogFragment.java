@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.view.dialog;
+package com.worksmobile.android.botproject.feature.dialog;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;

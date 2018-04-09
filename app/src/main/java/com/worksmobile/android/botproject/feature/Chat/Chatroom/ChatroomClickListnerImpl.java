@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.view.Chat.Chatroom;
+package com.worksmobile.android.botproject.feature.Chat.Chatroom;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Message;
-import com.worksmobile.android.botproject.view.dialog.UserinfoDialogFragment;
+import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 
 /**
  * Created by user on 2018. 4. 4..
