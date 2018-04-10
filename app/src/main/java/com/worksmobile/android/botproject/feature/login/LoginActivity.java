@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
@@ -131,6 +132,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
+        if (TextUtils.isEmpty(userId)) {
+            mUserIdView.setError(getString(R.string.error_field_required));
+            focusView = mUserIdView;
+            cancel = true;
+        } else if (!isUseridValid(userId)) {
+            mUserIdView.setError(getString(R.string.error_invalid_userid));
+            focusView = mUserIdView;
+            cancel = true;
+        }
+
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -142,6 +154,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(userId);
             mAuthTask.execute((Void) null);
         }
+    }
+
+    private boolean isUseridValid(String userid){
+        return userid.length() > 4;
     }
 
     /**
