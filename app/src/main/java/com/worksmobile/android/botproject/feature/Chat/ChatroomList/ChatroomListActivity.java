@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.view.Chat.ChatroomList;
+package com.worksmobile.android.botproject.feature.Chat.ChatroomList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,11 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.worksmobile.android.botproject.view.MySetting.MySettingActivity;
-import com.worksmobile.android.botproject.view.Chat.NewChatting.NewChattingActivity;
+import com.worksmobile.android.botproject.feature.MySetting.MySettingActivity;
+import com.worksmobile.android.botproject.feature.Chat.NewChatting.NewChattingActivity;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
-import com.worksmobile.android.botproject.view.Chat.Chatroom.ChatroomLab;
+import com.worksmobile.android.botproject.feature.Chat.Chatroom.ChatroomLab;
 
 import java.util.List;
 

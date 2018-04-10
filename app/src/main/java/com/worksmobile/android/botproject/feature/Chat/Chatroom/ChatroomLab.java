@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.view.Chat.Chatroom;
+package com.worksmobile.android.botproject.feature.Chat.Chatroom;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;

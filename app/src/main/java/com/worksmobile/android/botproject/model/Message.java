@@ -26,6 +26,7 @@ public class Message {
         this.text = "This is a message #" + seq;
         this.senddate = new Date();
         this.setType(seq%2+1);
+        this.senderId = "User #"+(seq%2+1);
     }
 
     public long getId() {
