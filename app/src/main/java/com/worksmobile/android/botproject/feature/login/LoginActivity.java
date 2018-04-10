@@ -3,9 +3,11 @@ package com.worksmobile.android.botproject.feature.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -26,6 +28,9 @@ import com.worksmobile.android.botproject.feature.Chat.ChatroomList.ChatroomList
 import static android.Manifest.permission.READ_CONTACTS;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -53,6 +58,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        pref =  getSharedPreferences("BotProject_LOGIN", Activity.MODE_PRIVATE);
+
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mUserIdView = (AutoCompleteTextView) findViewById(R.id.text_userid);
@@ -68,6 +76,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        if(pref.getString("userId",null) != null){
+            autoLogin();
+        }
     }
 
     private void populateAutoComplete() {
@@ -153,7 +165,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new UserLoginTask(userId);
             mAuthTask.execute((Void) null);
+
+            editor = pref.edit();
+            editor.putString("userId", userId);
+            editor.commit();
         }
+    }
+
+    private void autoLogin(){
+        String userId = pref.getString("userId","");
+        mUserIdView.setText(userId);
+        mAuthTask = new UserLoginTask(userId);
+        mAuthTask.execute((Void) null);
     }
 
     private boolean isUseridValid(String userid){
@@ -238,7 +261,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //TODO: Authentication User
 
             // TODO: register the new account here.
-
 
             return true;
         }
