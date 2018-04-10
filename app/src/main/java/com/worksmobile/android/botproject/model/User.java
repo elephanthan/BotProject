@@ -9,6 +9,15 @@ public class User {
     private String userName;
     private int userImg;
 
+    public User(){
+        this.userName = "Name is null";
+    }
+
+    public User(String userName){
+        this.userId = userName;
+        this.userName = userName;
+    }
+
     public String getUserId() {
         return userId;
     }

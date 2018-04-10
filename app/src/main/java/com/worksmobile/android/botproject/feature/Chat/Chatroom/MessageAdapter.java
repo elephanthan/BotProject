@@ -1,6 +1,7 @@
 package com.worksmobile.android.botproject.feature.Chat.Chatroom;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Message;
+import com.worksmobile.android.botproject.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -27,6 +29,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
     private LayoutInflater inflater;
     private int layout;
     private List<Message> messages;
+    private List<User> users;
 
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
@@ -36,14 +39,15 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
         this.messages = messages;
     }
 
-    public MessageAdapter(Context context, List<Message> messages) {
+    public MessageAdapter(Context context, @NonNull List<Message> messages) {
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messages = messages;
+        this.users = UserLab.get().getUsers();
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         final RecyclerView.ViewHolder holder;
 
@@ -156,8 +160,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
             case R.id.image_message_profile :
                 //TODO (FragmentActivty)를 사용하지 않고 처리
                 FragmentManager fm = ((FragmentActivity)context).getSupportFragmentManager();
-                UserinfoDialogFragment dialogFragment = new UserinfoDialogFragment();
-                dialogFragment.show(fm, "fragment_dialog_test");
+                UserinfoDialogFragment dialogFragment = UserinfoDialogFragment.newInstance(messages.get(position).getSenderId());
+
+                dialogFragment.show(fm,"fragment_dialog_test");
+                //dialogFragment.show("fragment_dialog_test");
                 break;
             case R.id.text_message_body :
                 Toast.makeText(context, messages.get(position).getText(), Toast.LENGTH_SHORT).show();
