@@ -20,6 +20,9 @@ import com.worksmobile.android.botproject.model.User;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by user on 2018. 3. 30..
  */
@@ -120,13 +123,15 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
         return msg.getType();
     }
 
-    static private class SentMessageHolder extends RecyclerView.ViewHolder {
-        TextView messageTextView, timeTextView;
+    static class SentMessageHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.text_message_body)
+        TextView messageTextView;
+        @BindView(R.id.text_message_time)
+        TextView timeTextView;
 
         public SentMessageHolder(View itemView) {
             super(itemView);
-            messageTextView = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeTextView = (TextView) itemView.findViewById(R.id.text_message_time);
+            ButterKnife.bind(this, itemView);
         }
 
         void bindMessage(Message message) {
@@ -136,15 +141,20 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
         }
     }
 
-    static private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
-        TextView messageTextView, timeTextView, nameTextView;
+    static class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.text_message_body)
+        TextView messageTextView;
+        @BindView(R.id.text_message_time)
+        TextView timeTextView;
+        @BindView(R.id.image_message_profile)
         ImageView profileImageView;
+        @BindView(R.id.text_message_name)
+        TextView nameTextView;
 
         public ReceivedMessageHolder(View itemView) {
             super(itemView);
-            messageTextView = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeTextView = (TextView) itemView.findViewById(R.id.text_message_time);
-            profileImageView = (ImageView) itemView.findViewById(R.id.image_message_profile);
+            ButterKnife.bind(this, itemView);
         }
 
         void bindMessage(Message message) {

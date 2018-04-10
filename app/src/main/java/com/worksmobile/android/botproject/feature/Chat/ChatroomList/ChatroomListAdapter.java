@@ -17,6 +17,9 @@ import com.worksmobile.android.botproject.model.Chatroom;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by user on 2018. 3. 28..
  */
@@ -64,19 +67,21 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     static public class ChatroomHolder extends RecyclerView.ViewHolder{
         private Chatroom chatroom;
 
-        private TextView titleTextView;
-        private ImageView thumbnailImageView;
-        private TextView numberTextView;
-        private TextView msgTextView;
-        private TextView msgDateTextView;
+        @BindView(R.id.list_item_chatroom_title_text)
+        TextView titleTextView;
+        @BindView(R.id.list_item_chatroom_thumbnail_img)
+        ImageView thumbnailImageView;
+        @BindView(R.id.list_item_chatroom_number)
+        TextView numberTextView;
+        @BindView(R.id.list_item_chatroom_msg_text)
+        TextView msgTextView;
+        @BindView(R.id.list_item_chatroom_msg_date)
+        TextView msgDateTextView;
+
 
         public ChatroomHolder(View itemView){
             super(itemView);
-            titleTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_title_text);
-            thumbnailImageView = (ImageView) itemView.findViewById(R.id.list_item_chatroom_thumbnail_img);
-            numberTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_number);
-            msgTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_text);
-            msgDateTextView = (TextView) itemView.findViewById(R.id.list_item_chatroom_msg_date);
+            ButterKnife.bind(this, itemView);
         }
 
         public void bindChatroom(Chatroom chatroom_){
@@ -88,7 +93,9 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
             SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
             msgDateTextView.setText(sdf.format(chatroom.getLatestMsg().getSenddate()));
         }
+
     }
+
 
     @Override
     public void onItemClick(View view, int position) {
