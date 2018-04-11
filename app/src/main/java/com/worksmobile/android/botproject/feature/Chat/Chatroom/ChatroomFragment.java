@@ -2,19 +2,23 @@ package com.worksmobile.android.botproject.feature.Chat.Chatroom;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
 
 import java.util.List;
 
-public class ChatroomFragment extends Fragment {
+public class ChatroomFragment extends Fragment implements ChatroomClickListener{
 
     private static final String ARG_CHATROOM_ID = "chatroom_id";
 
@@ -60,11 +64,30 @@ public class ChatroomFragment extends Fragment {
         List<Message> messages = messageLab.getMessages();
 
         if(messageAdapter == null){
-            messageAdapter = new MessageAdapter(getActivity(), messages);
+            messageAdapter = new MessageAdapter(getActivity(), messages, this);
             messageRecyclerView.setAdapter(messageAdapter);
         }else{
 
         }
     }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        switch (view.getId()){
+            case R.id.image_message_profile :
+                //TODO (FragmentActivty)를 사용하지 않고 처리
+                FragmentManager fm = ((FragmentActivity)getActivity()).getSupportFragmentManager();
+                UserinfoDialogFragment dialogFragment = UserinfoDialogFragment.newInstance(messages.get(position).getSenderId());
+
+                dialogFragment.show(fm,"fragment_dialog_test");
+                //dialogFragment.show("fragment_dialog_test");
+                break;
+            case R.id.text_message_body :
+                Toast.makeText(getActivity(), messages.get(position).getText(), Toast.LENGTH_SHORT).show();
+            default:
+                break;
+        }
+    }
+
 
 }

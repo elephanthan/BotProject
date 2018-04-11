@@ -2,22 +2,19 @@ package com.worksmobile.android.botproject.feature.Chat.Chatroom;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.model.User;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,15 +24,17 @@ import butterknife.ButterKnife;
  * Created by user on 2018. 3. 30..
  */
 
-public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClickListener{
+public class MessageAdapter extends RecyclerView.Adapter {
     private Context context;
     private LayoutInflater inflater;
     private int layout;
-    private List<Message> messages;
+    private List<Message> messages = new ArrayList<>();
     private List<User> users;
 
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
+
+    ChatroomClickListener listner;
 
 
     public MessageAdapter(List<Message> messages) {
@@ -47,6 +46,14 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messages = messages;
         this.users = UserLab.get().getUsers();
+    }
+
+    public MessageAdapter(Context context, @NonNull List<Message> messages, ChatroomClickListener listener) {
+        this.context = context;
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.messages = messages;
+        this.users = UserLab.get().getUsers();
+        this.listner = listener;
     }
 
     @Override
@@ -61,7 +68,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
                 ((SentMessageHolder) holder).messageTextView.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        onItemClick(v, holder.getAdapterPosition());
+                        listner.onItemClick(v, holder.getAdapterPosition());
                     }
                 });
                 break;
@@ -72,14 +79,14 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
                 ((ReceivedMessageHolder) holder).profileImageView.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        onItemClick(v, holder.getAdapterPosition());
+                        listner.onItemClick(v, holder.getAdapterPosition());
                     }
                 });
 
                 ((ReceivedMessageHolder) holder).messageTextView.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        onItemClick(v, holder.getAdapterPosition());
+                        listner.onItemClick(v, holder.getAdapterPosition());
                     }
                 });
                 break;
@@ -105,8 +112,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
 
     @Override
     public int getItemCount() {
-        if(messages == null)
-            return 0;
         return messages.size();
     }
 
@@ -141,7 +146,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
         }
     }
 
-    static class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+    class ReceivedMessageHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.text_message_body)
         TextView messageTextView;
@@ -162,23 +167,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements ChatroomClic
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
         }
+
+//        @OnClick(R.id.text_message_body)
+//        public void aa(){
+//            //Toast.makeText(context, messages.get(getAdapterPosition()).getText(), Toast.LENGTH_SHORT).show();
+//            ChatroomClickListener
+//        }
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        switch (view.getId()){
-            case R.id.image_message_profile :
-                //TODO (FragmentActivty)를 사용하지 않고 처리
-                FragmentManager fm = ((FragmentActivity)context).getSupportFragmentManager();
-                UserinfoDialogFragment dialogFragment = UserinfoDialogFragment.newInstance(messages.get(position).getSenderId());
-
-                dialogFragment.show(fm,"fragment_dialog_test");
-                //dialogFragment.show("fragment_dialog_test");
-                break;
-            case R.id.text_message_body :
-                Toast.makeText(context, messages.get(position).getText(), Toast.LENGTH_SHORT).show();
-            default:
-                break;
-        }
-    }
 }
