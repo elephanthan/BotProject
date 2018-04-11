@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
@@ -64,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mUserIdView = (AutoCompleteTextView) findViewById(R.id.text_userid);
-        populateAutoComplete();
+        //populateAutoComplete();
 
         Button mUserSignInButton = (Button) findViewById(R.id.user_sign_in_button);
         mUserSignInButton.setOnClickListener(new OnClickListener() {
@@ -80,6 +81,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if(pref.getString("userId",null) != null){
             autoLogin();
         }
+    }
+
+    private void changeLauncher(){
+        String s = getApplicationContext().getPackageName();
+        ComponentName cm = new ComponentName(s, s+".AliasActivity");
+        ComponentName cm2 = new ComponentName(s, s+".feature.login.LoginActivity");
+        PackageManager pm = this.getPackageManager();
+        pm.setComponentEnabledSetting(cm, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        pm.setComponentEnabledSetting(cm2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
     private void populateAutoComplete() {
@@ -169,6 +179,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             editor = pref.edit();
             editor.putString("userId", userId);
             editor.commit();
+
+            changeLauncher();
         }
     }
 
