@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.feature.Chat.ChatroomList;
+package com.worksmobile.android.botproject.feature.chat.chatroomlist;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,11 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.worksmobile.android.botproject.feature.MySetting.MySettingActivity;
-import com.worksmobile.android.botproject.feature.Chat.NewChatting.NewChattingActivity;
+import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
+import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
-import com.worksmobile.android.botproject.feature.Chat.Chatroom.ChatroomLab;
+import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomLab;
 
 import java.util.List;
 
@@ -44,11 +44,11 @@ public class ChatroomListActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.menu_item_new_chatting:
                 //Toast.makeText(getApplicationContext(),"New Chatting Menu item was selected.", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(this, NewChattingActivity.class));
+                startActivity(new Intent(this, NewchatActivity.class));
                 return true;
             case R.id.menu_item_my_setting:
                 //Toast.makeText(getApplicationContext(),"My Setting Menu item was selected.", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(this, MySettingActivity.class));
+                startActivity(new Intent(this, MysettingActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
