@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.feature.Chat.ChatroomList;
+package com.worksmobile.android.botproject.feature.chat.chatroomlist;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.feature.Chat.Chatroom.ChatroomActivity;
+import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
 
 import java.text.SimpleDateFormat;
