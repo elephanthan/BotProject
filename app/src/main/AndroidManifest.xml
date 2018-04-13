@@ -16,13 +16,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".feature.chat.chatroom.ChatroomActivity"
             android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
-        <activity android:name=".feature.chat.newchat.NewchatActivity" android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
-        <activity android:name=".feature.mysetting.MysettingActivity" android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
-
+        <activity
+            android:name=".feature.chat.newchat.NewchatActivity"
+            android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
+        <activity
+            android:name=".feature.mysetting.MysettingActivity"
+            android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
+        <activity android:name=".feature.login.LoginActivity"></activity>
     </application>
 
 </manifest>
