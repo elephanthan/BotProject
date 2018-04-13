@@ -64,35 +64,15 @@ public class MessageAdapter extends RecyclerView.Adapter {
         switch (viewType){
             case VIEW_TYPE_MESSAGE_SENT:
                 view = inflater.inflate(R.layout.item_message_sent, parent, false);
-                holder = new SentMessageHolder(view);
-                ((SentMessageHolder) holder).messageTextView.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v){
-                        listner.onItemClick(v, holder.getAdapterPosition());
-                    }
-                });
+                holder = new SentMessageHolder(view, listner);
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
                 view = inflater.inflate(R.layout.item_message_received, parent, false);
-                holder = new ReceivedMessageHolder(view);
-
-                ((ReceivedMessageHolder) holder).profileImageView.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v){
-                        listner.onItemClick(v, holder.getAdapterPosition());
-                    }
-                });
-
-                ((ReceivedMessageHolder) holder).messageTextView.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v){
-                        listner.onItemClick(v, holder.getAdapterPosition());
-                    }
-                });
+                holder = new ReceivedMessageHolder(view, listner);
                 break;
             default:
                 view = inflater.inflate(R.layout.item_message_received, parent, false);
-                holder = new ReceivedMessageHolder(view);
+                holder = new ReceivedMessageHolder(view, listner);
         }
         return holder;
     }
@@ -134,9 +114,20 @@ public class MessageAdapter extends RecyclerView.Adapter {
         @BindView(R.id.text_message_time)
         TextView timeTextView;
 
-        public SentMessageHolder(View itemView) {
+        //ChatroomClickListener listener;
+
+        public SentMessageHolder(View itemView, final ChatroomClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            //this.listener = listener;
+            this.messageTextView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    //this.listener.onItemClick(v, getAdapterPosition());
+                    listener.onMsgClick(getAdapterPosition());
+                }
+            });
         }
 
         void bindMessage(Message message) {
@@ -146,7 +137,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
         }
     }
 
-    class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+    static class ReceivedMessageHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.text_message_body)
         TextView messageTextView;
@@ -157,9 +148,23 @@ public class MessageAdapter extends RecyclerView.Adapter {
         @BindView(R.id.text_message_name)
         TextView nameTextView;
 
-        public ReceivedMessageHolder(View itemView) {
+        public ReceivedMessageHolder(View itemView, final ChatroomClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            this.profileImageView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    listener.onProfileClick(getAdapterPosition());
+                }
+            });
+
+            this.messageTextView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    listener.onMsgClick(getAdapterPosition());
+                }
+            });
         }
 
         void bindMessage(Message message) {

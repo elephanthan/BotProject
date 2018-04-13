@@ -72,21 +72,18 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener{
     }
 
     @Override
-    public void onItemClick(View view, int position) {
-        switch (view.getId()){
-            case R.id.image_message_profile :
-                //TODO (FragmentActivty)를 사용하지 않고 처리
-                FragmentManager fm = ((FragmentActivity)getActivity()).getSupportFragmentManager();
-                UserinfoDialogFragment dialogFragment = UserinfoDialogFragment.newInstance(messages.get(position).getSenderId());
+    public void onMsgClick(int position) {
+        Toast.makeText(getActivity(), messages.get(position).getText(), Toast.LENGTH_SHORT).show();
+    }
 
-                dialogFragment.show(fm,"fragment_dialog_test");
-                //dialogFragment.show("fragment_dialog_test");
-                break;
-            case R.id.text_message_body :
-                Toast.makeText(getActivity(), messages.get(position).getText(), Toast.LENGTH_SHORT).show();
-            default:
-                break;
-        }
+    @Override
+    public void onProfileClick(int position) {
+        //TODO (FragmentActivty)를 사용하지 않고 처리
+        FragmentManager fm = ((FragmentActivity)getActivity()).getSupportFragmentManager();
+        UserinfoDialogFragment dialogFragment = UserinfoDialogFragment.newInstance(messages.get(position).getSenderId());
+
+        dialogFragment.show(fm,"fragment_dialog_test");
+        //dialogFragment.show("fragment_dialog_test");
     }
 
 
