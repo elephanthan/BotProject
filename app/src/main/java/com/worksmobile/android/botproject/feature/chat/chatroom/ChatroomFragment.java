@@ -2,7 +2,6 @@ package com.worksmobile.android.botproject.feature.chat.chatroom;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -78,13 +77,9 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener{
 
     @Override
     public void onProfileClick(int position) {
-        //TODO (FragmentActivty)를 사용하지 않고 처리
-        FragmentManager fm = ((FragmentActivity)getActivity()).getSupportFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         UserinfoDialogFragment dialogFragment = UserinfoDialogFragment.newInstance(messages.get(position).getSenderId());
-
         dialogFragment.show(fm,"fragment_dialog_test");
-        //dialogFragment.show("fragment_dialog_test");
     }
-
 
 }

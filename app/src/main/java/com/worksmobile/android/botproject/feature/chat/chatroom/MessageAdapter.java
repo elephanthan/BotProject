@@ -99,11 +99,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
         Message msg = messages.get(position);
 
-        //TODO sendbird의 ID값과 Message의 USERID값을 비교해서 VIEWTYPE 결정해주기 (지금은 짝,홀 1,2 리턴)
-        //if(msg.getSenderId().equals(SendBird.getCurrentUser().getUserId()))
-        //return VIEW_TYPE_MESSAGE_SENT;
-        //else
-        //return VIEW_TYPE_MESSAGE_RECEIVED;
+        //TODO: sendbird의 ID값과 Message의 USERID값을 비교해서 VIEWTYPE 결정해주기 (지금은 짝,홀 1,2 리턴)
 
         return msg.getType();
     }
@@ -172,12 +168,6 @@ public class MessageAdapter extends RecyclerView.Adapter {
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
         }
-
-//        @OnClick(R.id.text_message_body)
-//        public void aa(){
-//            //Toast.makeText(context, messages.get(getAdapterPosition()).getText(), Toast.LENGTH_SHORT).show();
-//            ChatroomClickListener
-//        }
     }
 
 }
