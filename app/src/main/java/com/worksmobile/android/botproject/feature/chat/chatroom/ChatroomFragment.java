@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -44,6 +43,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     private Chatroom chatroom;
     private List<Message> messages;
 
+    View view;
+
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
         args.putLong(ARG_CHATROOM_ID, chatroomId);
@@ -65,7 +66,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chatroom, container, false);
+        view = inflater.inflate(R.layout.fragment_chatroom, container, false);
         ButterKnife.bind(this, view);
 
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -74,21 +75,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
         return view;
     }
-
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-////        getActivity().findViewById(R.id.fragment_container).setOnTouchListener(new View.OnTouchListener()
-////        {
-////            @Override
-////            public boolean onTouch(View dview, MotionEvent ev)
-////            {
-////                hideKeyboardFrom(getContext(), dview);
-////                //ChatroomActivity.hideKeyboard(getActivity());
-////                return true;
-////            }
-////        });
-//    }
 
     private void updateIndoorUI() {
         MessageLab messageLab = MessageLab.get();
@@ -114,6 +100,12 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         dialogFragment.show(fm, "fragment_dialog_test");
     }
 
+
+    @Override
+    public void onHolderClick() {
+        hideKeyboardFrom(getContext(), view);
+    }
+
     @OnClick(R.id.button_chatroom_send)
     public void onChatroomSendClick() {
         Message msg = new Message(editTextChatroom.getText().toString(), Message.VIEW_TYPE_MESSAGE_SENT);
@@ -124,29 +116,10 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
         editTextChatroom.setText("");
 
+        messageRecyclerView.smoothScrollToPosition(messages.size());
     }
 
-    public boolean dispatchTouchEvent(MotionEvent event) {
-
-        View view = getActivity().getCurrentFocus();
-        boolean ret = super.getActivity().dispatchTouchEvent(event);
-
-        if (view instanceof EditText) {
-            View w = getActivity().getCurrentFocus();
-            int location[] = new int[2];
-            w.getLocationOnScreen(location);
-            float x = event.getRawX() + w.getLeft() - location[0];
-            float y = event.getRawY() + w.getTop() - location[1];
-            if (event.getAction() == MotionEvent.ACTION_DOWN
-                    && (x < w.getLeft() || x >= w.getRight() || y < w.getTop() || y > w.getBottom())) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
-            }
-        }
-        return ret;
-    }
-
-    public static void hideKeyboardFrom(Context context, View view) {
+    public void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }

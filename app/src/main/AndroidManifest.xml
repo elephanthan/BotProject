@@ -17,7 +17,6 @@
         </activity>
         <activity android:name=".feature.chat.chatroomlist.ChatroomListActivity"></activity>
         <activity
-            android:windowSoftInputMode="stateAlwaysHidden"
             android:name=".feature.chat.chatroom.ChatroomActivity"
             android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
         <activity

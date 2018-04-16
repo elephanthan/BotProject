@@ -106,6 +106,8 @@ public class MessageAdapter extends RecyclerView.Adapter {
         TextView messageTextView;
         @BindView(R.id.text_message_time)
         TextView timeTextView;
+        @BindView(R.id.layout_message_item)
+        ViewGroup layout;
 
         //ChatroomClickListener listener;
 
@@ -119,6 +121,13 @@ public class MessageAdapter extends RecyclerView.Adapter {
                 public void onClick(View v){
                     //this.listener.onItemClick(v, getAdapterPosition());
                     listener.onMsgClick(getAdapterPosition());
+                }
+            });
+
+            this.layout.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    listener.onHolderClick();
                 }
             });
         }
@@ -164,9 +173,8 @@ public class MessageAdapter extends RecyclerView.Adapter {
             this.layout.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-
+                    listener.onHolderClick();
                 }
-
             });
         }
 
