@@ -10,26 +10,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.api.ApiService;
+import com.worksmobile.android.botproject.api.ApiRepository;
+import com.worksmobile.android.botproject.api.ApiRepository.RequestCallback;
+import com.worksmobile.android.botproject.api.HttpUrlConnectionClient;
+import com.worksmobile.android.botproject.api.RetrofitClient;
 import com.worksmobile.android.botproject.feature.Chat.Chatroom.ChatroomLab;
 import com.worksmobile.android.botproject.feature.Chat.NewChatting.NewChattingActivity;
 import com.worksmobile.android.botproject.feature.MySetting.MySettingActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
-import com.worksmobile.android.botproject.util.ApiUtils;
 
+import java.util.HashMap;
 import java.util.List;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.Map;
 
 
 public class ChatroomListActivity extends AppCompatActivity {
 
     private RecyclerView chatroomRecyclerView;
     private ChatroomListAdapter adapter;
-    private ApiService apiService;
+    //private RetrofitClient.ApiService apiService;
+    ApiRepository urlConnection, retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,8 @@ public class ChatroomListActivity extends AppCompatActivity {
         chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        apiService = ApiUtils.getApiService();
+        urlConnection = new HttpUrlConnectionClient();
+        retrofit = new RetrofitClient();
 
         updateUI();
     }
@@ -75,24 +76,55 @@ public class ChatroomListActivity extends AppCompatActivity {
         adapter = new ChatroomListAdapter(this, chatrooms) ;
         chatroomRecyclerView.setAdapter(adapter);
 
-        //TODO api response
-        apiService.getComment(1).enqueue(new Callback<ResponseBody>() {
+        Map<String, String> map1 = new HashMap<String, String>();
+        map1.put("PATH", "/comments");
+        map1.put("key", "postId");
+        map1.put("value", "1");
+
+        urlConnection.getComment(map1, new RequestCallback() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    Log.d("Test", response.body().string());
-                    //adapter.updateChatroomList(new ArrayList<Chatroom>());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            public void success(List<Object> comments) {
+                Log.d("url comment Success", comments.toString());
             }
 
-
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+            public void error(Throwable throwable) {
+                Log.d("url comment error", "hoyahoya");
             }
         });
+
+        Map<String, String> map2 = new HashMap<String, String>();
+        map2.put("PATH", "/posts");
+
+        urlConnection.getPosts(map2, new RequestCallback() {
+            @Override
+            public void success(List<Object> posts) {
+                Log.d("url post Success", posts.toString());
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+                Log.d("url post error", "hoyahoya");
+            }
+        });
+
+        Map<String, String> map3 = new HashMap<String, String>();
+        map1.put("PATH", "/comments");
+        map3.put("key", "id");
+        map3.put("value","1");
+
+        retrofit.getComment(map3, new RequestCallback() {
+            @Override
+            public void success(List<Object> comments) {
+                Log.d("retrofit Success", comments.toString());
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+                Log.d("retrofit error", "hoyahoya");
+            }
+        });
+
     }
 
 
