@@ -12,13 +12,10 @@ import java.util.Map;
 public interface ApiRepository {
     public static String SCHEME = "http";
     public static String AUTHORITY = "jsonplaceholder.typicode.com";
-//    public static String PATH = "/comments";
 
     Uri uri = new Uri.Builder()
             .scheme(SCHEME)
             .authority(AUTHORITY)
-//            .path(PATH)
-            //.appendQueryParameter("id", "1")
             .build();
 
     void getComment(Map<String, String> map, RequestCallback callback);
