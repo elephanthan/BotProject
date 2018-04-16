@@ -2,7 +2,6 @@ package com.worksmobile.android.botproject.feature.chat.chatroom;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -21,11 +20,6 @@ public class ChatroomActivity extends SingleFragmentActivity {
         Intent intent = new Intent(context, ChatroomActivity.class);
         intent.putExtra(EXTRA_CHATROOM_ID, chatroomId);
         return intent;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
     }
 
     @Override

@@ -108,15 +108,18 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     @OnClick(R.id.button_chatroom_send)
     public void onChatroomSendClick() {
-        Message msg = new Message(editTextChatroom.getText().toString(), Message.VIEW_TYPE_MESSAGE_SENT);
-        messages.add(msg);
-        messageAdapter.notifyDataSetChanged();
+        String strText = editTextChatroom.getText().toString();
+        if (!strText.equals("")){
+            Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
+            messages.add(msg);
+            messageAdapter.notifyDataSetChanged();
 
-        Log.d("msg model : ", msg.toString());
+            Log.d("msg model : ", msg.toString());
 
-        editTextChatroom.setText("");
+            editTextChatroom.setText("");
 
-        messageRecyclerView.smoothScrollToPosition(messages.size());
+            messageRecyclerView.smoothScrollToPosition(messages.size());
+        }
     }
 
     public void hideKeyboardFrom(Context context, View view) {

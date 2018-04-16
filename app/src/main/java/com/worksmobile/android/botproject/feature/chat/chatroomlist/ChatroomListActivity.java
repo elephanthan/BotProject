@@ -8,15 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
-import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
 import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomLab;
+import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
+import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
+import com.worksmobile.android.botproject.model.Chatroom;
 
 import java.util.List;
 
-public class ChatroomListActivity extends AppCompatActivity {
+public class ChatroomListActivity extends AppCompatActivity implements ChatroomListClickListener {
 
     private RecyclerView chatroomRecyclerView;
     private ChatroomListAdapter adapter;
@@ -60,8 +61,13 @@ public class ChatroomListActivity extends AppCompatActivity {
         ChatroomLab chatroomLab = ChatroomLab.get();
         List<Chatroom> chatrooms = chatroomLab.getChatrooms();
 
-        adapter = new ChatroomListAdapter(this, chatrooms) ;
+        adapter = new ChatroomListAdapter(this, chatrooms, this) ;
         chatroomRecyclerView.setAdapter(adapter);
     }
 
+    //event : 채팅방 입장
+    @Override
+    public void onHolderClick(int position) {
+        startActivity(new Intent(this, ChatroomActivity.class));
+    }
 }
