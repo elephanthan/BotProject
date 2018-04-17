@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.worksmobile.android.botproject.feature.MySetting.MySettingActivity">
+    tools:context="com.worksmobile.android.botproject.feature.mysetting.MySettingActivity">
 
 </android.support.constraint.ConstraintLayout>

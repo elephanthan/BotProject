@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.feature.Chat.ChatroomList;
+package com.worksmobile.android.botproject.feature.chat.ChatroomList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
-import com.worksmobile.android.botproject.feature.Chat.Chatroom.ChatroomActivity;
+import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
 
 /**
  * Created by user on 2018. 4. 4..

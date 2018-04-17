@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.feature.Chat.ChatroomList;
+package com.worksmobile.android.botproject.feature.chat.ChatroomList;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.feature.Chat.ChatroomList;
+package com.worksmobile.android.botproject.feature.chat.ChatroomList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,9 +14,9 @@ import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.api.ApiRepository.RequestCallback;
 import com.worksmobile.android.botproject.api.HttpUrlConnectionClient;
 import com.worksmobile.android.botproject.api.RetrofitClient;
-import com.worksmobile.android.botproject.feature.Chat.Chatroom.ChatroomLab;
-import com.worksmobile.android.botproject.feature.Chat.NewChatting.NewChattingActivity;
-import com.worksmobile.android.botproject.feature.MySetting.MySettingActivity;
+import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomLab;
+import com.worksmobile.android.botproject.feature.chat.newchat.NewChattingActivity;
+import com.worksmobile.android.botproject.feature.mysetting.MySettingActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
 
 import java.util.HashMap;

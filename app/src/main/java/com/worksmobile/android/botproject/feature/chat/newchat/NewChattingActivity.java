@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.feature.Chat.NewChatting;
+package com.worksmobile.android.botproject.feature.chat.newchat;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
