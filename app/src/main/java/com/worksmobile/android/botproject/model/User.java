@@ -10,7 +10,8 @@ public class User {
     private int userImg;
 
     public User(){
-        this.userName = "Name is null";
+        this.userId = "AA000001";
+        this.userName = "chulsoo";
     }
 
     public User(String userName){

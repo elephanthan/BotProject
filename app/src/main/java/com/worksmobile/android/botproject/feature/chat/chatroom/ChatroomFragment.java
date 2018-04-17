@@ -21,7 +21,9 @@ import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomLab;
 import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
+import com.worksmobile.android.botproject.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -110,8 +112,22 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     @OnClick(R.id.button_chatroom_send)
     public void onChatroomSendClick() {
         String strText = editTextChatroom.getText().toString();
+
+        //code for dummy
+        List<User> users = new ArrayList<User>();
+        User user = new User();
+        user.setUserId("AA000001");
+        user.setUserName("chulsoo");
+        users.add(user);
+        user.setUserId("AA000002");
+        user.setUserName("youngmi");
+        users.add(user);
+        //code for dummy
+
         if (!strText.equals("")){
-            Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
+            //Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
+            Message msg = new Message(strText, messages.size()%2+1);
+            msg.setSenderId(users.get(messages.size()%2).getUserName());
             messages.add(msg);
             messageAdapter.notifyDataSetChanged();
 
@@ -126,7 +142,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     @OnTouch(R.id.indoor_recycler_view)
     public boolean onRecyclerViewTouch(){
         hideKeyboardFrom(getContext(), view);
-        return true;
+        return false;
     }
 
     public void hideKeyboardFrom(Context context, View view) {

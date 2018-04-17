@@ -178,6 +178,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
             messageTextView.setText(message.getText());
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
+            nameTextView.setText(message.getSenderId());
         }
     }
 

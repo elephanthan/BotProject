@@ -72,6 +72,10 @@ public class Message {
         this.type = type;
     }
 
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
