@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.worksmobile.android.botproject.R;
 
-public class NewChattingActivity extends AppCompatActivity {
+public class NewchatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

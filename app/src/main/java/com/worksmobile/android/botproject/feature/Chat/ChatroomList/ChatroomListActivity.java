@@ -15,8 +15,8 @@ import com.worksmobile.android.botproject.api.ApiRepository.RequestCallback;
 import com.worksmobile.android.botproject.api.HttpUrlConnectionClient;
 import com.worksmobile.android.botproject.api.RetrofitClient;
 import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomLab;
-import com.worksmobile.android.botproject.feature.chat.newchat.NewChattingActivity;
-import com.worksmobile.android.botproject.feature.mysetting.MySettingActivity;
+import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
+import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
 
 import java.util.HashMap;
@@ -57,11 +57,11 @@ public class ChatroomListActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.menu_item_new_chatting:
                 //Toast.makeText(getApplicationContext(),"New Chatting Menu item was selected.", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(this, NewChattingActivity.class));
+                startActivity(new Intent(this, NewchatActivity.class));
                 return true;
             case R.id.menu_item_my_setting:
                 //Toast.makeText(getApplicationContext(),"My Setting Menu item was selected.", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(this, MySettingActivity.class));
+                startActivity(new Intent(this, MysettingActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -20,10 +20,10 @@
             android:name=".feature.chat.chatroom.ChatroomActivity"
             android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
         <activity
-            android:name=".feature.chat.newchat.NewChattingActivity"
+            android:name=".feature.chat.newchat.NewchatActivity"
             android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
         <activity
-            android:name=".feature.mysetting.MySettingActivity"
+            android:name=".feature.mysetting.MysettingActivity"
             android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
     </application>
 
