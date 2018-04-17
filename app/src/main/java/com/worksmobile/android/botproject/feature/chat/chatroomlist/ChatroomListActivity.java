@@ -5,21 +5,30 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
-import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.api.ApiRepository.RequestCallback;
+import com.worksmobile.android.botproject.api.HttpUrlConnectionClient;
+import com.worksmobile.android.botproject.api.RetrofitClient;
 import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomLab;
+import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
+import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
+import com.worksmobile.android.botproject.model.Chatroom;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatroomListActivity extends AppCompatActivity {
 
     private RecyclerView chatroomRecyclerView;
     private ChatroomListAdapter adapter;
+    private HttpUrlConnectionClient urlConnection;
+    private RetrofitClient retrofit;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +37,9 @@ public class ChatroomListActivity extends AppCompatActivity {
 
         chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        urlConnection = new HttpUrlConnectionClient();
+        retrofit = new RetrofitClient();
 
         updateUI();
     }
@@ -62,6 +74,56 @@ public class ChatroomListActivity extends AppCompatActivity {
 
         adapter = new ChatroomListAdapter(this, chatrooms) ;
         chatroomRecyclerView.setAdapter(adapter);
+
+        Map<String, String> map1 = new HashMap<String, String>();
+        map1.put("PATH", "/comments");
+        map1.put("key", "postId");
+        map1.put("value", "1");
+
+        urlConnection.getComment(map1, new RequestCallback() {
+            @Override
+            public void success(List<Object> comments) {
+                Log.d("url comment Success", comments.toString());
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+                Log.d("url comment error", "hoyahoya");
+            }
+        });
+
+        Map<String, String> map2 = new HashMap<String, String>();
+        map2.put("PATH", "/posts");
+
+        urlConnection.getPosts(map2, new RequestCallback() {
+            @Override
+            public void success(List<Object> posts) {
+                Log.d("url post Success", posts.toString());
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+                Log.d("url post error", "hoyahoya");
+            }
+        });
+
+        Map<String, String> map3 = new HashMap<String, String>();
+        map3.put("key", "id");
+        map3.put("value","1");
+
+        retrofit.getComment(map3, new RequestCallback() {
+            @Override
+            public void success(List<Object> comments) {
+                Log.d("retrofit Success", comments.toString());
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+                Log.d("retrofit error", "hoyahoya");
+            }
+        });
+
+
     }
 
 }
