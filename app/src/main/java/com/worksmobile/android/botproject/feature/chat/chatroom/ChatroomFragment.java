@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomLab;
 import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
@@ -26,6 +27,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 public class ChatroomFragment extends Fragment implements ChatroomClickListener {
 
@@ -38,12 +40,12 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     @BindView(R.id.indoor_recycler_view)
     RecyclerView messageRecyclerView;
 
+    private View view;
+
     private MessageAdapter messageAdapter;
 
     private Chatroom chatroom;
     private List<Message> messages;
-
-    View view;
 
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
@@ -60,7 +62,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         chatroom = ChatroomLab.get().getChatroom(chatroomId);
 
         //TODO 채팅방 아이디로 메시지 내역들을 가져옴
-        //지금은 메시지 더미 데이터를 만듦
         messages = MessageLab.get().getMessages();
     }
 
@@ -120,6 +121,12 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
             messageRecyclerView.smoothScrollToPosition(messages.size());
         }
+    }
+
+    @OnTouch(R.id.indoor_recycler_view)
+    public boolean onRecyclerViewTouch(){
+        hideKeyboardFrom(getContext(), view);
+        return true;
     }
 
     public void hideKeyboardFrom(Context context, View view) {

@@ -25,9 +25,7 @@ import butterknife.ButterKnife;
  */
 
 public class MessageAdapter extends RecyclerView.Adapter {
-    private Context context;
     private LayoutInflater inflater;
-    private int layout;
     private List<Message> messages = new ArrayList<>();
     private List<User> users;
 
@@ -39,14 +37,12 @@ public class MessageAdapter extends RecyclerView.Adapter {
     }
 
     public MessageAdapter(Context context, @NonNull List<Message> messages) {
-        this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messages = messages;
         this.users = UserLab.get().getUsers();
     }
 
     public MessageAdapter(Context context, @NonNull List<Message> messages, ChatroomClickListener listener) {
-        this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messages = messages;
         this.users = UserLab.get().getUsers();

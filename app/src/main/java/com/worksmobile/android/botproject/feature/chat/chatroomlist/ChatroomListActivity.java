@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
-import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomLab;
 import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
 import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
