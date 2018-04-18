@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
+import com.worksmobile.android.botproject.feature.chat.chatroom.UserLab;
 import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
 import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
@@ -48,11 +49,8 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         switch (item.getItemId()){
             case R.id.menu_item_new_chatting:
                 Chatroom chatroom = new Chatroom();
-                List<User> users = new ArrayList<User>();
-                for(int i=0;i<5;i++){
-                    User user = new User();
-                    users.add(user);
-                }
+                UserLab userLab = UserLab.get();
+                List<User> users = userLab.getUsers();
                 chatroom.setTitle("채팅방#"+(chatrooms.size()+1));
                 chatroom.setTumbnail(R.drawable.thumb_default_team);
                 Message msg = new Message();
@@ -60,8 +58,6 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
                 chatroom.setNumber(users.size());
                 chatroom.setParticipants(users);
                 chatrooms.add(chatroom);
-
-                chatroomListAdapter.notifyDataSetChanged();
 
                 startActivity(new Intent(this, NewchatActivity.class));
                 return true;
