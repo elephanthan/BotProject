@@ -1,8 +1,6 @@
-package com.worksmobile.android.botproject.feature.chat.chatroom;
+package com.worksmobile.android.botproject.feature.chat.chatroomlist;
 
-import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
-import com.worksmobile.android.botproject.model.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +25,15 @@ public class ChatroomLab {
 
     private ChatroomLab(){
         chatrooms = new ArrayList<>();
-        for (int i=0;i<100;i++){
-            Chatroom chatroom = new Chatroom();
-            chatroom.setTitle("채팅방#"+(i+1));
-            chatroom.setTumbnail(R.drawable.thumb_default_team);
-            Message msg = new Message();
-            chatroom.setLatestMsg(msg);
-            chatroom.setNumber(3);
-            chatrooms.add(chatroom);
-        }
+//        for (int i=0;i<100;i++){
+//            Chatroom chatroom = new Chatroom();
+//            chatroom.setTitle("채팅방#"+(i+1));
+//            chatroom.setTumbnail(R.drawable.thumb_default_team);
+//            Message msg = new Message();
+//            chatroom.setLatestMsg(msg);
+//            chatroom.setNumber(3);
+//            chatrooms.add(chatroom);
+//        }
     }
 
     public List<Chatroom> getChatrooms(){

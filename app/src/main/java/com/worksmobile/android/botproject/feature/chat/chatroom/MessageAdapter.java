@@ -25,14 +25,9 @@ import butterknife.ButterKnife;
  */
 
 public class MessageAdapter extends RecyclerView.Adapter {
-    private Context context;
     private LayoutInflater inflater;
-    private int layout;
     private List<Message> messages = new ArrayList<>();
     private List<User> users;
-
-    private static final int VIEW_TYPE_MESSAGE_SENT = 1;
-    private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
     ChatroomClickListener listner;
 
@@ -42,14 +37,12 @@ public class MessageAdapter extends RecyclerView.Adapter {
     }
 
     public MessageAdapter(Context context, @NonNull List<Message> messages) {
-        this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messages = messages;
         this.users = UserLab.get().getUsers();
     }
 
     public MessageAdapter(Context context, @NonNull List<Message> messages, ChatroomClickListener listener) {
-        this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messages = messages;
         this.users = UserLab.get().getUsers();
@@ -62,11 +55,11 @@ public class MessageAdapter extends RecyclerView.Adapter {
         final RecyclerView.ViewHolder holder;
 
         switch (viewType){
-            case VIEW_TYPE_MESSAGE_SENT:
+            case Message.VIEW_TYPE_MESSAGE_SENT:
                 view = inflater.inflate(R.layout.item_message_sent, parent, false);
                 holder = new SentMessageHolder(view, listner);
                 break;
-            case VIEW_TYPE_MESSAGE_RECEIVED:
+            case Message.VIEW_TYPE_MESSAGE_RECEIVED:
                 view = inflater.inflate(R.layout.item_message_received, parent, false);
                 holder = new ReceivedMessageHolder(view, listner);
                 break;
@@ -81,10 +74,10 @@ public class MessageAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Message msg = messages.get(position);
         switch (holder.getItemViewType()) {
-            case VIEW_TYPE_MESSAGE_SENT:
+            case Message.VIEW_TYPE_MESSAGE_SENT:
                 ((SentMessageHolder) holder).bindMessage(msg);
                 break;
-            case VIEW_TYPE_MESSAGE_RECEIVED:
+            case Message.VIEW_TYPE_MESSAGE_RECEIVED:
                 ((ReceivedMessageHolder) holder).bindMessage(msg);
                 break;
         }
@@ -109,6 +102,8 @@ public class MessageAdapter extends RecyclerView.Adapter {
         TextView messageTextView;
         @BindView(R.id.text_message_time)
         TextView timeTextView;
+        @BindView(R.id.layout_message_item)
+        ViewGroup layout;
 
         //ChatroomClickListener listener;
 
@@ -122,6 +117,13 @@ public class MessageAdapter extends RecyclerView.Adapter {
                 public void onClick(View v){
                     //this.listener.onItemClick(v, getAdapterPosition());
                     listener.onMsgClick(getAdapterPosition());
+                }
+            });
+
+            this.layout.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    listener.onHolderClick();
                 }
             });
         }
@@ -143,6 +145,8 @@ public class MessageAdapter extends RecyclerView.Adapter {
         ImageView profileImageView;
         @BindView(R.id.text_message_name)
         TextView nameTextView;
+        @BindView(R.id.layout_message_item)
+        ViewGroup layout;
 
         public ReceivedMessageHolder(View itemView, final ChatroomClickListener listener) {
             super(itemView);
@@ -161,12 +165,20 @@ public class MessageAdapter extends RecyclerView.Adapter {
                     listener.onMsgClick(getAdapterPosition());
                 }
             });
+
+            this.layout.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    listener.onHolderClick();
+                }
+            });
         }
 
         void bindMessage(Message message) {
             messageTextView.setText(message.getText());
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
+            nameTextView.setText(message.getSenderId());
         }
     }
 

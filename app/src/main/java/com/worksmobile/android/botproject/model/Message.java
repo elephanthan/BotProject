@@ -15,10 +15,22 @@ public class Message {
     private Date senddate;
     private int type;
 
+    public static final int VIEW_TYPE_MESSAGE_SENT = 1;
+    public static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
+
+
     public Message(){
         this.id = CommonUtil.generateUniqueId();
         this.text = "This is a message.";
         this.senddate = new Date();
+    }
+
+    public Message(String text, int type, String senderId){
+        this.id = CommonUtil.generateUniqueId();
+        this.senddate = new Date();
+        this.text = text;
+        this.type = type;
+        this.senderId = senderId;
     }
 
     public Message(int seq){
@@ -59,5 +71,20 @@ public class Message {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", senderId='" + senderId + '\'' +
+                ", text='" + text + '\'' +
+                ", senddate=" + senddate +
+                ", type=" + type +
+                '}';
     }
 }

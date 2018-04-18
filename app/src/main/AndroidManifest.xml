@@ -9,19 +9,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".feature.chat.chatroomlist.ChatroomListActivity">
+        <activity android:name=".feature.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".feature.chat.chatroomlist.ChatroomListActivity"></activity>
         <activity
             android:name=".feature.chat.chatroom.ChatroomActivity"
             android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
-        <activity android:name=".feature.chat.newchat.NewchatActivity" android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
-        <activity android:name=".feature.mysetting.MysettingActivity" android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
+        <activity
+            android:name=".feature.chat.newchat.NewchatActivity"
+            android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
+        <activity
+            android:name=".feature.mysetting.MysettingActivity"
+            android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
 
     </application>
 

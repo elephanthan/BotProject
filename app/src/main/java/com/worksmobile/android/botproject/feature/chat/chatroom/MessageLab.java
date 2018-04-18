@@ -25,10 +25,6 @@ public class MessageLab {
 
     private MessageLab(){
         messages = new ArrayList<>();
-        for (int i=0;i<100;i++){
-            Message msg = new Message(i+1);
-            messages.add(msg);
-        }
     }
 
     public List<Message> getMessages(){
