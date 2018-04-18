@@ -31,6 +31,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".beacon.RecoRangingActivity"/>
+        <activity android:name=".beacon.RecoMonitoringActivity"/>
 
         <service android:name="com.perples.recosdk.RECOBeaconService" />
         <service android:name=".beacon.RecoBackgroundMonitoringService" />

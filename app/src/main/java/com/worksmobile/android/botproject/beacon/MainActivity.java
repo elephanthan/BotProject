@@ -71,7 +71,8 @@ public class MainActivity extends Activity {
      * false일 경우, 계속 ranging을 실행합니다. (배터리 소모율에 영향을 끼칩니다.)
      * RECOBeaconManager 객체 생성 시 사용합니다.
      */
-    public static final boolean ENABLE_BACKGROUND_RANGING_TIMEOUT = true;
+    public static final boolean ENABLE_BACKGROUND_RANGING_TIMEOUT = false;
+    public static final boolean DISABLE_BACKGROUND_RANGING_TIMEOUT = false;
 
     /**
      * DISCONTINUOUS_SCAN:
@@ -266,11 +267,11 @@ public class MainActivity extends Activity {
     public void onButtonClicked(View v) {
         Button btn = (Button)v;
         if(btn.getId() == R.id.monitoringButton) {
-//            final Intent intent = new Intent(this, RecoMonitoringActivity.class);
-//            startActivity(intent);
+            final Intent intent = new Intent(this, RecoMonitoringActivity.class);
+            startActivity(intent);
         } else {
-//            final Intent intent = new Intent(this, RecoRangingActivity.class);
-//            startActivity(intent);
+            final Intent intent = new Intent(this, RecoRangingActivity.class);
+            startActivity(intent);
         }
     }
 
