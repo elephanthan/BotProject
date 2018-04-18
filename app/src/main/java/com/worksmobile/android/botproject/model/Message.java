@@ -25,11 +25,12 @@ public class Message {
         this.senddate = new Date();
     }
 
-    public Message(String text, int type){
+    public Message(String text, int type, String senderId){
         this.id = CommonUtil.generateUniqueId();
         this.senddate = new Date();
         this.text = text;
         this.type = type;
+        this.senderId = senderId;
     }
 
     public Message(int seq){
