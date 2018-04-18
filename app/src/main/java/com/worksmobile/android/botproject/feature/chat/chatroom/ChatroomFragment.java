@@ -22,6 +22,14 @@ import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -63,6 +71,69 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
         //TODO 채팅방 아이디로 메시지 내역들을 가져옴
         messages = MessageLab.get().getMessages();
+
+        final String topic        = "/chatrooms/1";
+        String content      = "Message from MqttPublishSample";
+        final int qos             = 2;
+        final String broker       = "tcp://10.106.151.135:1883";
+        final String clientId     = "JavaSample";
+        MemoryPersistence persistence = new MemoryPersistence();
+
+        final String LOG_TAG = this.getClass().getSimpleName();
+        try {
+            final MqttClient sampleClient = new MqttClient(broker, clientId, persistence);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+
+
+            sampleClient.setCallback(new MqttCallback() {
+                @Override
+                public void connectionLost(Throwable cause) {
+                    Log.i("connectionLost", "connectionLost");
+                }
+
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    Log.i("messageArrived", message.toString());
+                }
+
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken token) {
+                    Log.i("deliveryComplete", "deliveryComplete");
+                }
+            });
+
+
+            sampleClient.connect();
+            sampleClient.subscribe(topic, qos);
+
+//            String msg = new String(
+//                "srcUserId:AA000000",+
+//                    "chatroomId:123,+
+//                    "type:0"
+//                    "content:메시지 내용"
+//            );
+            String msg = "{" +
+                    "\"srcUserId\" : " + "\"AA0000000\"" +
+                    ", \"chatroomId\" : \"" + 1 + '\"' +
+                    ", \"type\" : \"" + 0 + '\"' +
+                    ", \"content\" : \"" + "메시지 내용 : abcdef\"" +
+                    '}';
+            MqttMessage message = new MqttMessage(msg.getBytes());
+            message.setQos(qos);
+            sampleClient.publish(topic, message);
+            sampleClient.disconnect();
+
+
+        } catch (MqttException me) {
+            System.out.println("reason "+me.getReasonCode());
+            System.out.println("msg "+me.getMessage());
+            System.out.println("loc "+me.getLocalizedMessage());
+            System.out.println("cause "+me.getCause());
+            System.out.println("excep "+me);
+            me.printStackTrace();
+        }
+
     }
 
     @Override
