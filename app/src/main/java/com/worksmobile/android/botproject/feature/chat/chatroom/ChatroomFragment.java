@@ -73,9 +73,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         messages = MessageLab.get().getMessages();
 
         final String topic        = "/chatrooms/1";
-        String content      = "Message from MqttPublishSample";
         final int qos             = 2;
-        final String broker       = "tcp://10.106.151.135:1883";
+        final String broker       = "tcp://10.66.77.99:1883";
         final String clientId     = "JavaSample";
         MemoryPersistence persistence = new MemoryPersistence();
 
@@ -89,23 +88,34 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             sampleClient.setCallback(new MqttCallback() {
                 @Override
                 public void connectionLost(Throwable cause) {
-                    Log.i("connectionLost", "connectionLost");
+                    cause.printStackTrace();
+                    Log.i("connectionLost", cause.getMessage());
                 }
 
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    Log.i("messageArrived", message.toString());
+
+                    Log.i("messageArrived", message.toString() + "|||" + topic);
                 }
 
                 @Override
                 public void deliveryComplete(IMqttDeliveryToken token) {
-                    Log.i("deliveryComplete", "deliveryComplete");
+                    try {
+                        if(token.isComplete()){
+                            Log.i("ee", "ee?");
+                        }
+                        MqttMessage msg = token.getMessage();
+                        Log.i("deliveryComplete", "dd");
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             });
 
 
             sampleClient.connect();
-            sampleClient.subscribe(topic, qos);
+            sampleClient.subscribe("#", qos);
 
 //            String msg = new String(
 //                "srcUserId:AA000000",+
@@ -122,7 +132,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             MqttMessage message = new MqttMessage(msg.getBytes());
             message.setQos(qos);
             sampleClient.publish(topic, message);
-            sampleClient.disconnect();
+            //sampleClient.disconnect();
 
 
         } catch (MqttException me) {
