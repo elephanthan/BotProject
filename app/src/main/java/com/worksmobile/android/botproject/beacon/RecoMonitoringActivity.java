@@ -46,22 +46,31 @@ public class RecoMonitoringActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_reco_ranging);
+        setContentView(R.layout.activity_reco_monitoring);
         TextView textView = (TextView)findViewById(R.id.textView);
         textView.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         try {
             // 파일에서 읽은 데이터를 저장하기 위해서 만든 변수
+
+            Bundle bundle = getIntent().getExtras();
+            String filename = bundle.getString("filename");
+
             StringBuffer data = new StringBuffer();
-            FileInputStream fis = openFileInput("mybeacon1.txt");//파일명
+            FileInputStream fis = openFileInput(filename);//파일명
             BufferedReader buffer = new BufferedReader
                     (new InputStreamReader(fis));
-            String str = buffer.readLine();                 // 파일에서 한줄을 읽어옴
-            String str2 = str;
-            while (str != null) {
+            String str = null;                 // 파일에서 한줄을 읽어옴
+            String str2 =null;
+            while (true) {
                 data.append(str + "\n");
                 str = buffer.readLine();
+
+                if(str==null)
+                    break;
+
                 str2 += str;
+                
             }
 
             textView.setText(Html.fromHtml(str2).toString());

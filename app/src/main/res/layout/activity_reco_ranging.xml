@@ -5,12 +5,12 @@
     android:layout_height="wrap_content"
     tools:context="com.worksmobile.android.botproject.beacon.RecoRangingActivity">
 
-    <TextView
-        android:id="@+id/textView"
+
+
+    <ListView android:id="@+id/list_item_filename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:singleLine="false"
-        android:text="" />
+        android:padding="10dp">
+    </ListView>
 
 </RelativeLayout>

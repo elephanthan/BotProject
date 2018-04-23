@@ -23,51 +23,48 @@
  */
 package com.worksmobile.android.botproject.beacon;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import com.worksmobile.android.botproject.R;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 
 /**
  * RECORangingActivity class is to range regions in the foreground.
  *
  * RECORangingActivity 클래스는 foreground 상태에서 ranging을 수행합니다.
  */
-public class RecoRangingActivity extends AppCompatActivity {
+public class RecoRangingActivity extends AppCompatActivity implements ItemFileClickListener{
+
+    private RecoRangingListAdapter mRangingListAdapter;
+    private ListView mRegionListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_reco_ranging);
-        TextView textView = (TextView)findViewById(R.id.textView);
-        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
+        //TextView textView = (TextView)findViewById(R.id.textView);
+        //textView.setMovementMethod(ScrollingMovementMethod.getInstance());
 
-        try {
-            // 파일에서 읽은 데이터를 저장하기 위해서 만든 변수
-            StringBuffer data = new StringBuffer();
-            FileInputStream fis = openFileInput("mybeacon.txt");//파일명
-            BufferedReader buffer = new BufferedReader
-                    (new InputStreamReader(fis));
-            String str = buffer.readLine();                 // 파일에서 한줄을 읽어옴
-            String str2 = str;
-            while (str != null) {
-                data.append(str + "\n");
-                str = buffer.readLine();
-                str2 += str;
-            }
 
-            textView.setText(Html.fromHtml(str2).toString());
-            buffer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mRangingListAdapter = new RecoRangingListAdapter(this);
+        mRegionListView = (ListView)findViewById(R.id.list_item_filename);
+        mRegionListView.setAdapter(mRangingListAdapter);
+    }
+
+
+    @Override
+    public void filenameClick(String filename) {
+        Intent intent = new Intent(this, RecoMonitoringActivity.class);
+        intent.putExtra("filename", filename);
+        startActivity(intent);
     }
 }

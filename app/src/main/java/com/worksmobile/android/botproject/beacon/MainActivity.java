@@ -1,18 +1,18 @@
 /**
  * The MIT License (MIT)
- *
+ * <p>
  * Copyright (c) 2014-2015 Perples, Inc.
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
      * false일 경우, 계속 ranging을 실행합니다. (배터리 소모율에 영향을 끼칩니다.)
      * RECOBeaconManager 객체 생성 시 사용합니다.
      */
-    public static final boolean ENABLE_BACKGROUND_RANGING_TIMEOUT = false;
+    public static final boolean ENABLE_BACKGROUND_RANGING_TIMEOUT = true;
     public static final boolean DISABLE_BACKGROUND_RANGING_TIMEOUT = false;
 
     /**
@@ -104,23 +104,23 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         mLayout = findViewById(R.id.mainLayout);
 
-        View includedLayout = (View) findViewById(R.id.reco_settings_values );
+        View includedLayout = (View) findViewById(R.id.reco_settings_values);
         TextView mRecoOnlyText = (TextView) includedLayout.findViewById(R.id.recoRecoonlySetting);
-        if( SCAN_RECO_ONLY ) {
+        if (SCAN_RECO_ONLY) {
             mRecoOnlyText.setText(R.string.settings_result_true);
         } else {
             mRecoOnlyText.setText(R.string.settings_result_false);
         }
 
         TextView mDiscontinuousText = (TextView) includedLayout.findViewById(R.id.recoDiscontinouosSetting);
-        if( DISCONTINUOUS_SCAN ) {
+        if (DISCONTINUOUS_SCAN) {
             mDiscontinuousText.setText(R.string.settings_result_true);
         } else {
             mDiscontinuousText.setText(R.string.settings_result_false);
         }
 
         TextView mBackgroundRangingTimeoutText = (TextView) includedLayout.findViewById(R.id.recoBackgroundtimeoutSetting);
-        if( ENABLE_BACKGROUND_RANGING_TIMEOUT ) {
+        if (ENABLE_BACKGROUND_RANGING_TIMEOUT) {
             mBackgroundRangingTimeoutText.setText(R.string.settings_result_true);
         } else {
             mBackgroundRangingTimeoutText.setText(R.string.settings_result_false);
@@ -132,7 +132,7 @@ public class MainActivity extends Activity {
         //mBluetoothAdapter = mBluetoothManager.getAdapter();
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        if(mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBTIntent, REQUEST_ENABLE_BT);
         }
@@ -149,8 +149,8 @@ public class MainActivity extends Activity {
          * http://www.google.com/design/spec/patterns/permissions.html
          * https://github.com/googlesamples/android-RuntimePermissions
          */
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 Log.i("MainActivity", "The location permission (ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION) is not granted.");
                 this.requestLocationPermission();
             } else {
@@ -172,15 +172,15 @@ public class MainActivity extends Activity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch(requestCode) {
-            case REQUEST_LOCATION : {
+        switch (requestCode) {
+            case REQUEST_LOCATION: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Snackbar.make(mLayout, R.string.location_permission_granted, Snackbar.LENGTH_LONG).show();
                 } else {
                     Snackbar.make(mLayout, R.string.location_permission_not_granted, Snackbar.LENGTH_LONG).show();
                 }
             }
-            default :
+            default:
                 break;
         }
 
@@ -191,13 +191,13 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        if(this.isBackgroundMonitoringServiceRunning(this)) {
-            ToggleButton toggle = (ToggleButton)findViewById(R.id.backgroundMonitoringToggleButton);
+        if (this.isBackgroundMonitoringServiceRunning(this)) {
+            ToggleButton toggle = (ToggleButton) findViewById(R.id.backgroundMonitoringToggleButton);
             toggle.setChecked(true);
         }
 
-        if(this.isBackgroundRangingServiceRunning(this)) {
-            ToggleButton toggle = (ToggleButton)findViewById(R.id.backgroundRangingToggleButton);
+        if (this.isBackgroundRangingServiceRunning(this)) {
+            ToggleButton toggle = (ToggleButton) findViewById(R.id.backgroundRangingToggleButton);
             toggle.setChecked(true);
         }
     }
@@ -225,7 +225,7 @@ public class MainActivity extends Activity {
      *
      */
     private void requestLocationPermission() {
-        if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
             return;
         }
@@ -241,8 +241,8 @@ public class MainActivity extends Activity {
     }
 
     public void onMonitoringToggleButtonClicked(View v) {
-        ToggleButton toggle = (ToggleButton)v;
-        if(toggle.isChecked()) {
+        ToggleButton toggle = (ToggleButton) v;
+        if (toggle.isChecked()) {
             Log.i("MainActivity", "onMonitoringToggleButtonClicked off to on");
             Intent intent = new Intent(this, RecoBackgroundMonitoringService.class);
             startService(intent);
@@ -253,8 +253,8 @@ public class MainActivity extends Activity {
     }
 
     public void onRangingToggleButtonClicked(View v) {
-        ToggleButton toggle = (ToggleButton)v;
-        if(toggle.isChecked()) {
+        ToggleButton toggle = (ToggleButton) v;
+        if (toggle.isChecked()) {
             Log.i("MainActivity", "onRangingToggleButtonClicked off to on");
             Intent intent = new Intent(this, RecoBackgroundRangingService.class);
             startService(intent);
@@ -265,20 +265,19 @@ public class MainActivity extends Activity {
     }
 
     public void onButtonClicked(View v) {
-        Button btn = (Button)v;
-        if(btn.getId() == R.id.monitoringButton) {
-            final Intent intent = new Intent(this, RecoMonitoringActivity.class);
-            startActivity(intent);
-        } else {
+        Button btn = (Button) v;
+        if (btn.getId() == R.id.rangingButton) {
             final Intent intent = new Intent(this, RecoRangingActivity.class);
             startActivity(intent);
+        } else {
+
         }
     }
 
     private boolean isBackgroundMonitoringServiceRunning(Context context) {
-        ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-        for(ActivityManager.RunningServiceInfo runningService : am.getRunningServices(Integer.MAX_VALUE)) {
-            if(RecoBackgroundMonitoringService.class.getName().equals(runningService.service.getClassName())) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo runningService : am.getRunningServices(Integer.MAX_VALUE)) {
+            if (RecoBackgroundMonitoringService.class.getName().equals(runningService.service.getClassName())) {
                 return true;
             }
         }
@@ -286,9 +285,9 @@ public class MainActivity extends Activity {
     }
 
     private boolean isBackgroundRangingServiceRunning(Context context) {
-        ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-        for(ActivityManager.RunningServiceInfo runningService : am.getRunningServices(Integer.MAX_VALUE)) {
-            if(RecoBackgroundRangingService.class.getName().equals(runningService.service.getClassName())) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo runningService : am.getRunningServices(Integer.MAX_VALUE)) {
+            if (RecoBackgroundRangingService.class.getName().equals(runningService.service.getClassName())) {
                 return true;
             }
         }

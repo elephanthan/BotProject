@@ -30,50 +30,58 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.perples.recosdk.RECOBeacon;
 import com.worksmobile.android.botproject.R;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class RecoRangingListAdapter extends BaseAdapter {
-    private ArrayList<RECOBeacon> mRangedBeacons;
+    //private ArrayList<RECOBeacon> mRangedBeacons;
+    private ArrayList<String> logfileNames;
     private LayoutInflater mLayoutInflater;
+    ItemFileClickListener listener;
+    Context context;
 
     public RecoRangingListAdapter(Context context) {
         super();
-        mRangedBeacons = new ArrayList<RECOBeacon>();
+        //mRangedBeacons = new ArrayList<RECOBeacon>();
+        this.context = context;
         mLayoutInflater = LayoutInflater.from(context);
+        this.listener = (ItemFileClickListener) context;
+
+        updateFileList();
     }
 
-    public void updateBeacon(RECOBeacon beacon) {
-        synchronized (mRangedBeacons) {
-            if(mRangedBeacons.contains(beacon)) {
-                mRangedBeacons.remove(beacon);
+    public void updateFileList(){
+        logfileNames = new ArrayList<String>();
+
+        String path=context.getFilesDir().getAbsolutePath();
+        File dirFile=new File(path);
+        File []fileList=dirFile.listFiles();
+        for(File tempFile : fileList) {
+            if(tempFile.isFile()) {
+                String tempPath=tempFile.getParent();
+                String tempFileName=tempFile.getName();
+//                System.out.println("Path="+tempPath);
+//                System.out.println("FileName="+tempFileName);
+
+                logfileNames.add(tempFileName);
             }
-            mRangedBeacons.add(beacon);
-        }
-    }
-
-    public void updateAllBeacons(Collection<RECOBeacon> beacons) {
-        synchronized (beacons) {
-            //mRangedBeacons = new ArrayList<RECOBeacon>(beacons);
-            mRangedBeacons.addAll(beacons);
         }
     }
 
     public void clear() {
-        mRangedBeacons.clear();
+        logfileNames.clear();
     }
 
     @Override
     public int getCount() {
-        return mRangedBeacons.size();
+        return logfileNames.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mRangedBeacons.get(position);
+        return logfileNames.get(position);
     }
 
     @Override
@@ -82,50 +90,36 @@ public class RecoRangingListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
-
-        if(convertView == null) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder = new ViewHolder();
+        if(convertView==null) {
             convertView = mLayoutInflater.inflate(R.layout.item_ranging_beacon, parent, false);
-            viewHolder = new ViewHolder();
-            viewHolder.recoProximityUuid = (TextView)convertView.findViewById(R.id.recoProximityUuid);
-            viewHolder.recoMajor = (TextView)convertView.findViewById(R.id.recoMajor);
-            viewHolder.recoMinor = (TextView)convertView.findViewById(R.id.recoMinor);
-            viewHolder.recoTxPower = (TextView)convertView.findViewById(R.id.recoTxPower);
-            viewHolder.recoRssi = (TextView)convertView.findViewById(R.id.recoRssi);
-            viewHolder.recoBattery = (TextView)convertView.findViewById(R.id.recoBattery);
-            viewHolder.recoProximity = (TextView)convertView.findViewById(R.id.recoProximity);
-            viewHolder.recoAccuracy = (TextView)convertView.findViewById(R.id.recoAccuracy);
-            convertView.setTag(viewHolder);
+            viewHolder.listItemFilename = (TextView) convertView.findViewById(R.id.list_item_logfile);
+
         } else {
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        RECOBeacon recoBeacon = mRangedBeacons.get(position);
+        if(viewHolder!=null) {
 
-        String proximityUuid = recoBeacon.getProximityUuid();
+            final String filename = logfileNames.get(position);
 
-        viewHolder.recoProximityUuid.setText(String.format("%s-%s-%s-%s-%s", proximityUuid.substring(0, 8), proximityUuid.substring(8, 12), proximityUuid.substring(12, 16), proximityUuid.substring(16, 20), proximityUuid.substring(20) ));
-        viewHolder.recoMajor.setText(recoBeacon.getMajor() + "");
-        viewHolder.recoMinor.setText(recoBeacon.getMinor() + "");
-        viewHolder.recoTxPower.setText(recoBeacon.getTxPower() + "");
-        viewHolder.recoRssi.setText(recoBeacon.getRssi() + "");
-        viewHolder.recoBattery.setText(recoBeacon.getBattery() + "");
-        viewHolder.recoProximity.setText(recoBeacon.getProximity() + "");
-        viewHolder.recoAccuracy.setText(String.format("%.2f", recoBeacon.getAccuracy()));
+            viewHolder.listItemFilename.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.filenameClick(filename);
+                }
+            });
+            viewHolder.listItemFilename.setText(filename);
+        }
 
         return convertView;
     }
 
     static class ViewHolder {
-        TextView recoProximityUuid;
-        TextView recoMajor;
-        TextView recoMinor;
-        TextView recoTxPower;
-        TextView recoRssi;
-        TextView recoBattery;
-        TextView recoProximity;
-        TextView recoAccuracy;
+        TextView listItemFilename;
     }
+
+
 
 }

@@ -61,9 +61,9 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
      * We recommend 1 second for scanning, 10 seconds interval between scanning, and 60 seconds for region expiration time.
      * 1초 스캔, 10초 간격으로 스캔, 60초의 region expiration time은 당사 권장사항입니다.
      */
-    private long mScanDuration = 10 * 1000L;
-    private long mSleepDuration = 1 * 1000L;
-    private long mRegionExpirationTime = 60 * 1000L;
+    private long mScanDuration = 1 * 1000L;
+    private long mSleepDuration = 3 * 1000L;
+    private long mRegionExpirationTime = 5 * 1000L;
     private int mNotificationID = 9999;
 
     private RECOBeaconManager mRecoManager;
@@ -78,22 +78,22 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
         Log.i("BackRangingService", "onCreate()");
         super.onCreate();
         try {
-            deleteFile("mybeacon.txt");
+            //deleteFile("ranging_"+getCurrentTiem()+".txt");
             fos = openFileOutput
-                    ("mybeacon.txt", // 파일명 지정
+                    ("ranging_"+getCurrentDayNTiem()+".txt", // 파일명 지정
                             Context.MODE_APPEND);// 저장모드
             out = new PrintWriter(fos);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        out.write("onCreate<br>");
-        out.flush();
+//        out.write("onCreate:::"+getCurrentTiem()+"<br>");
+//        out.flush();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("BackRangingService", "onStartCommand");
-        out.println("onStartCommand\n");
+//        out.println("onStartCommand\n");
 
         /**
          * Create an instance of RECOBeaconManager (to set scanning target and ranging timeout in the background.)
@@ -106,7 +106,7 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
          * 		mRecoManager = RECOBeaconManager.getInstance(getApplicationContext(), true, false);
          * 주의: enableRangingTimeout을 false로 설정 시, 배터리 소모량이 증가합니다.
          */
-        mRecoManager = RECOBeaconManager.getInstance(getApplicationContext(), MainActivity.SCAN_RECO_ONLY, MainActivity.DISABLE_BACKGROUND_RANGING_TIMEOUT);
+        mRecoManager = RECOBeaconManager.getInstance(getApplicationContext(), MainActivity.SCAN_RECO_ONLY, MainActivity.ENABLE_BACKGROUND_RANGING_TIMEOUT);
         this.bindRECOService();
         return START_STICKY;
     }
@@ -114,9 +114,9 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
     @Override
     public void onDestroy() {
         Log.i("BackRangingService", "onDestroy()");
-        out.println("onDestroy<br>");
-        out.flush();
-        out.close();
+//        out.println("onDestroy:::"+getCurrentTiem()+"<br>");
+//        out.flush();
+//        out.close();
         this.tearDown();
         super.onDestroy();
     }
@@ -124,15 +124,15 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Log.i("BackRangingService", "onTaskRemoved()");
-        out.println("onTaskRemoved<br>");
-        out.flush();
+//        out.println("onTaskRemoved:::"+getCurrentTiem()+"<br>");
+//        out.flush();
         super.onTaskRemoved(rootIntent);
     }
 
     private void bindRECOService() {
         Log.i("BackRangingService", "bindRECOService()");
-        out.println("bindRECOService<br>");
-        out.flush();
+//        out.println("bindRECOService:::"+getCurrentTiem()+"<br>");
+//        out.flush();
 
         mRegions = new ArrayList<RECOBeaconRegion>();
         this.generateBeaconRegion();
@@ -144,20 +144,24 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
 
     private void generateBeaconRegion() {
         Log.i("BackRangingService", "generateBeaconRegion()");
-        out.println("generateBeaconRegion<br>");
-        out.flush();
+//        out.println("generateBeaconRegion:::"+getCurrentTiem()+"<br>");
+//        out.flush();
 
         RECOBeaconRegion recoRegion;
 
-        recoRegion = new RECOBeaconRegion(MainActivity.RECO_UUID, "RECO Sample Region");
+        recoRegion = new RECOBeaconRegion(MainActivity.RECO_UUID, 701, "CheckPoint_A");
+        recoRegion.setRegionExpirationTimeMillis(this.mRegionExpirationTime);
+        mRegions.add(recoRegion);
+
+        recoRegion = new RECOBeaconRegion(MainActivity.RECO_UUID, 702, "CheckPoint_B");
         recoRegion.setRegionExpirationTimeMillis(this.mRegionExpirationTime);
         mRegions.add(recoRegion);
     }
 
     private void startMonitoring() {
         Log.i("BackRangingService", "startMonitoring()");
-        out.println("startMonitoring<br>");
-        out.flush();
+//        out.println("startMonitoring:::"+getCurrentTiem()+"<br>");
+//        out.flush();
 
         mRecoManager.setScanPeriod(this.mScanDuration);
         mRecoManager.setSleepPeriod(this.mSleepDuration);
@@ -177,8 +181,8 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
 
     private void stopMonitoring() {
         Log.i("BackRangingService", "stopMonitoring()");
-        out.println("stopMonitoring<br>");
-        out.flush();
+//        out.println("stopMonitoring:::"+getCurrentTiem()+"<br>");
+//        out.flush();
 
         for (RECOBeaconRegion region : mRegions) {
             try {
@@ -195,8 +199,8 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
 
     private void startRangingWithRegion(RECOBeaconRegion region) {
         Log.i("BackRangingService", "startRangingWithRegion()");
-        out.println("startRangingWithRegion<br>");
-        out.flush();
+//        out.println("startRangingWithRegion:::"+getCurrentTiem()+"<br>");
+//        out.flush();
         /**
          * There is a known android bug that some android devices scan BLE devices only once. (link: http://code.google.com/p/android/issues/detail?id=65863)
          * To resolve the bug in our SDK, you can use setDiscontinuousScan() method of the RECOBeaconManager.
@@ -219,8 +223,8 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
 
     private void stopRangingWithRegion(RECOBeaconRegion region) {
         Log.i("BackRangingService", "stopRangingWithRegion()");
-        out.println("stopRangingWithRegion<br>");
-        out.flush();
+//        out.println("stopRangingWithRegion:::"+getCurrentTiem()+"<br>");
+//        out.flush();
 
         try {
             mRecoManager.stopRangingBeaconsInRegion(region);
@@ -235,8 +239,8 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
 
     private void tearDown() {
         Log.i("BackRangingService", "tearDown()");
-        out.println("BackRangingService<br>");
-        out.flush();
+//        out.println("BackRangingService:::"+getCurrentTiem()+"<br>");
+//        out.flush();
         this.stopMonitoring();
 
         try {
@@ -250,8 +254,8 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
     @Override
     public void onServiceConnect() {
         Log.i("BackRangingService", "onServiceConnect()");
-        out.println("onServiceConnect<br>");
-        out.flush();
+//        out.println("onServiceConnect:::"+getCurrentTiem()+"<br>");
+//        out.flush();
         this.startMonitoring();
         //Write the code when RECOBeaconManager is bound to RECOBeaconService
     }
@@ -259,9 +263,9 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
     @Override
     public void didDetermineStateForRegion(RECOBeaconRegionState state, RECOBeaconRegion region) {
         Log.i("BackRangingService", "didDetermineStateForRegion()");
-        out.println("didDetermineStateForRegion<br>");
-        out.write("^^^^^^"+state.toString()+"^^^^^^^<br>");
-        out.flush();
+
+        //out.println("Region State ::: "+getCurrentTiem()+"<br>");
+//        out.flush();
         //Write the code when the state of the monitored region is changed
     }
 
@@ -278,13 +282,14 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
         //Get the region and found beacon list in the entered region
         Log.i("BackRangingService", "didEnterRegion() - " + region.getUniqueIdentifier());
 
-        out.println("***didEnterRegion<br>");
+        out.write("------------------- Enter ("+region.getUniqueIdentifier()+") "+getCurrentTiem()+"-------------------<br><br>");
+//        out.println("*** Enter Region("+region.getUniqueIdentifier()+":::"+getCurrentTiem()+"<br>");
 
-        out.write("--------------------<br>");
-        for(RECOBeacon beacon : beacons){
-            out.write(beacon.getMinor() + "<br>");
-        }
-        out.write("--------------------<br>");
+//        out.write("--------------------<br>");
+//        for(RECOBeacon beacon : beacons){
+//            out.write(beacon.getMinor() + ", " + beacon.getAccuracy() + "<br>");
+//        }
+//        out.write("--------------------<br>");
         out.flush();
 
         this.popupNotification("Inside of " + region.getUniqueIdentifier());
@@ -305,7 +310,8 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
          */
 
         Log.i("BackRangingService", "didExitRegion() - " + region.getUniqueIdentifier());
-        out.println("didExitRegion<br>");
+//        out.println("*** Exit Region("+region.getUniqueIdentifier()+"):::"+getCurrentTiem()+"<br>");
+        out.write("------------------- Exit ("+region.getUniqueIdentifier()+") "+getCurrentTiem()+"-------------------<br><br>");
         out.flush();
         this.popupNotification("Outside of " + region.getUniqueIdentifier());
         //Write the code when the device is exit the region
@@ -316,7 +322,7 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
     @Override
     public void didStartMonitoringForRegion(RECOBeaconRegion region) {
         Log.i("BackRangingService", "didStartMonitoringForRegion() - " + region.getUniqueIdentifier());
-        out.println("didStartMonitoringForRegion<br>");
+//        out.println("didStartMonitoringForRegion:::"+getCurrentTiem()+"<br>");
         //Write the code when starting monitoring the region is started successfully
     }
 
@@ -325,11 +331,20 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
         Log.i("BackRangingService", "didRangeBeaconsInRegion() - " + region.getUniqueIdentifier() + " with " + beacons.size() + " beacons");
         //Write the code when the beacons inside of the region is received
 
-        out.println("##didRangeBeaconsInRegion() - " + region.getUniqueIdentifier() + " with " + beacons.size() + " beacons  &nbsp &nbsp");
-        Date from = new Date();
-        SimpleDateFormat transFormat = new SimpleDateFormat("HH:mm:ss");
-        String to = transFormat.format(from);
-        out.println(to + "<br>");
+        out.println("### In Region("+region.getUniqueIdentifier()+") with " + beacons.size() + " beacons:::");
+
+        out.println(getCurrentTiem() + "<br>");
+        out.write("<<<<<<<<< <br>");
+        for(RECOBeacon beacon : beacons){
+            out.write(beacon.getMinor() + ", " +   Double.parseDouble(String.format("%.2f",beacon.getAccuracy())) + "m<br>");
+        }
+
+        out.write(">>>>>>>>> <br><br>");
+//        if(beacons.size()==0){
+//            out.println("@@didExitRegion decided by developer size0:::"+getCurrentTiem()+"<br>");
+//            didExitRegion(region);
+//        }
+
         out.flush();
 
     }
@@ -373,5 +388,13 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
         //Write the code when the RECOBeaconService is failed to range beacons in the region.
         //See the RECOErrorCode in the documents.
         return;
+    }
+
+    private String getCurrentTiem(){
+        return new SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(new Date());
+    }
+
+    private String getCurrentDayNTiem(){
+        return new SimpleDateFormat("MM-dd HH:mm:ss", Locale.KOREA).format(new Date());
     }
 }
