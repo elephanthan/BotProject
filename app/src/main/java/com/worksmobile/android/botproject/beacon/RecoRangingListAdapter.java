@@ -91,10 +91,12 @@ public class RecoRangingListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = new ViewHolder();
+        ViewHolder viewHolder;
         if(convertView==null) {
+            viewHolder = new ViewHolder();
             convertView = mLayoutInflater.inflate(R.layout.item_ranging_beacon, parent, false);
             viewHolder.listItemFilename = (TextView) convertView.findViewById(R.id.list_item_logfile);
+            convertView.setTag(viewHolder);
 
         } else {
             viewHolder = (ViewHolder)convertView.getTag();

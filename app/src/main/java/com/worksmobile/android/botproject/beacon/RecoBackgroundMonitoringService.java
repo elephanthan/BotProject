@@ -62,8 +62,8 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
      * 1초 스캔, 10초 간격으로 스캔, 60초의 region expiration time은 당사 권장사항입니다.
      */
     private long mScanDuration = 1 * 1000L;
-    private long mSleepDuration = 3 * 1000L;
-    private long mRegionExpirationTime = 5 * 1000L;
+    private long mSleepDuration = 10 * 1000L;
+    private long mRegionExpirationTime = 60 * 1000L;
     private int mNotificationID = 9999;
 
     private RECOBeaconManager mRecoManager;
@@ -74,19 +74,19 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
     @Override
     public void onCreate() {
-        Log.i("BackMonitoringService", "onCreate()");
+        Log.i("BackRangingService", "onCreate()");
         super.onCreate();
         try {
-            deleteFile("mybeacon1.txt");
+            //deleteFile("ranging_"+getCurrentTiem()+".txt");
             fos = openFileOutput
-                    ("mybeacon1.txt", // 파일명 지정
+                    ("monitoring_"+getCurrentDayNTiem()+".txt", // 파일명 지정
                             Context.MODE_APPEND);// 저장모드
             out = new PrintWriter(fos);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        out.write("onCreate:::"+getCurrentTiem()+"<br>");
-        out.flush();
+//        out.write("onCreate:::"+getCurrentTiem()+"<br>");
+//        out.flush();
     }
 
     @Override
@@ -305,5 +305,9 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
     private String getCurrentTiem(){
         return new SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(new Date());
+    }
+
+    private String getCurrentDayNTiem(){
+        return new SimpleDateFormat("MM-dd HH:mm:ss", Locale.KOREA).format(new Date());
     }
 }

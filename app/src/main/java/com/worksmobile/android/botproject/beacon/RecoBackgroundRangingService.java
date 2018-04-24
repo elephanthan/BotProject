@@ -83,6 +83,9 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
                     ("ranging_"+getCurrentDayNTiem()+".txt", // 파일명 지정
                             Context.MODE_APPEND);// 저장모드
             out = new PrintWriter(fos);
+            out.println("mScanDuration : " + mScanDuration + " <br>");
+            out.println("mSleepDuration : " + mSleepDuration + " <br>");
+            out.println("mRegionExpirationTime : " + mRegionExpirationTime + " <br><br>");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -210,6 +213,7 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
          * mRecoManager.setDiscontinuousScan(true);
          */
 
+//        mRecoManager.setDiscontinuousScan(true);
         try {
             mRecoManager.startRangingBeaconsInRegion(region);
         } catch (RemoteException e) {

@@ -48,16 +48,17 @@ public class RecoRangingActivity extends AppCompatActivity implements ItemFileCl
         //TextView textView = (TextView)findViewById(R.id.textView);
         //textView.setMovementMethod(ScrollingMovementMethod.getInstance());
 
+        mRangingListAdapter = new RecoRangingListAdapter(this);
+        mRegionListView = (ListView)findViewById(R.id.list_item_filename);
+        mRegionListView.setAdapter(mRangingListAdapter);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        mRangingListAdapter = new RecoRangingListAdapter(this);
-        mRegionListView = (ListView)findViewById(R.id.list_item_filename);
-        mRegionListView.setAdapter(mRangingListAdapter);
+        mRangingListAdapter.updateFileList();
+        //mRangingListAdapter.notifyDataSetChanged();
     }
 
 
