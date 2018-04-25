@@ -62,7 +62,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
      * 1초 스캔, 10초 간격으로 스캔, 60초의 region expiration time은 당사 권장사항입니다.
      */
     private long mScanDuration = 1 * 1000L;
-    private long mSleepDuration = 10 * 1000L;
+    private long mSleepDuration = 5 * 1000L;
     private long mRegionExpirationTime = 60 * 1000L;
     private int mNotificationID = 9999;
 
@@ -82,6 +82,9 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
                     ("monitoring_"+getCurrentDayNTiem()+".txt", // 파일명 지정
                             Context.MODE_APPEND);// 저장모드
             out = new PrintWriter(fos);
+            out.println("mScanDuration : " + mScanDuration + " <br>");
+            out.println("mSleepDuration : " + mSleepDuration + " <br>");
+            out.println("mRegionExpirationTime : " + mRegionExpirationTime + " <br><br>");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -92,8 +95,6 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("BackMonitoringService", "onStartCommand()");
-        out.write("onStartCommand:::"+getCurrentTiem()+"<br>");
-        out.flush();
         /**
          * Create an instance of RECOBeaconManager (to set scanning target and ranging timeout in the background.)
          * If you want to scan only RECO, and do not set ranging timeout in the backgournd, create an instance:
@@ -115,8 +116,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     @Override
     public void onDestroy() {
         Log.i("BackMonitoringService", "onDestroy()");
-        out.write("onDestroy:::"+getCurrentTiem()+"<br>");
-        out.flush();
+
         out.close();
         this.tearDown();
         super.onDestroy();
@@ -125,15 +125,13 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Log.i("BackMonitoringService", "onTaskRemoved()");
-//        out.write("onTaskRemoved:::"+getCurrentTiem()+"<br>");
-//        out.flush();
+
         super.onTaskRemoved(rootIntent);
     }
 
     private void bindRECOService() {
         Log.i("BackMonitoringService", "bindRECOService()");
-//        out.write("bindRECOService:::"+getCurrentTiem()+"<br>");
-//        out.flush();
+
         mRegions = new ArrayList<RECOBeaconRegion>();
         this.generateBeaconRegion();
 
@@ -143,19 +141,21 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
     private void generateBeaconRegion() {
         Log.i("BackMonitoringService", "generateBeaconRegion()");
-//        out.write("generateBeaconRegion:::"+getCurrentTiem()+"<br>");
-//        out.flush();
+
         RECOBeaconRegion recoRegion;
 
-        recoRegion = new RECOBeaconRegion(MainActivity.RECO_UUID, "RECO Sample Region");
+        recoRegion = new RECOBeaconRegion(MainActivity.RECO_UUID, 701, "CheckPoint_A");
+        recoRegion.setRegionExpirationTimeMillis(mRegionExpirationTime);
+        mRegions.add(recoRegion);
+
+        recoRegion = new RECOBeaconRegion(MainActivity.RECO_UUID, 702, "CheckPoint_B");
         recoRegion.setRegionExpirationTimeMillis(mRegionExpirationTime);
         mRegions.add(recoRegion);
     }
 
     private void startMonitoring() {
         Log.i("BackMonitoringService", "startMonitoring()");
-        out.write("startMonitoring:::"+getCurrentTiem()+"<br>");
-        out.flush();
+
         mRecoManager.setScanPeriod(mScanDuration);
         mRecoManager.setSleepPeriod(mSleepDuration);
 
@@ -174,8 +174,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
     private void stopMonitoring() {
         Log.i("BackMonitoringService", "stopMonitoring()");
-        out.write("stopMonitoring:::"+getCurrentTiem()+"<br>");
-        out.flush();
+
         for(RECOBeaconRegion region : mRegions) {
             try {
                 mRecoManager.stopMonitoringForRegion(region);
@@ -191,8 +190,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
     private void tearDown() {
         Log.i("BackMonitoringService", "tearDown()");
-        out.write("tearDown:::"+getCurrentTiem()+"<br>");
-        out.flush();
+
         this.stopMonitoring();
 
         try {
@@ -206,8 +204,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     @Override
     public void onServiceConnect() {
         Log.i("BackMonitoringService", "onServiceConnect()");
-        out.write("onServiceConnect:::"+getCurrentTiem()+"<br>");
-        out.flush();
+
         this.startMonitoring();
         //Write the code when RECOBeaconManager is bound to RECOBeaconService
     }
@@ -215,8 +212,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     @Override
     public void didDetermineStateForRegion(RECOBeaconRegionState state, RECOBeaconRegion region) {
         Log.i("BackMonitoringService", "didDetermineStateForRegion()");
-        out.write("didDetermineStateForRegion<br>");
-        out.write("^^^^^^"+state.toString()+"^^^^^^^<br>");
+        out.write("State : "+region.getUniqueIdentifier() + " " +state.toString()+"<br>");
         out.flush();
         //Write the code when the state of the monitored region is changed
     }
@@ -233,12 +229,12 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
         //Get the region and found beacon list in the entered region
         Log.i("BackMonitoringService", "didEnterRegion() - " + region.getUniqueIdentifier());
-        out.write("didEnterRegion:::"+getCurrentTiem()+"<br>");
-        out.write("--------------------<br>");
+        out.write("------------------- Enter ("+region.getUniqueIdentifier()+") "+getCurrentTiem()+"-------------------<br><br>");
+        out.write("<<<<<<<<<<<<<<<<<<<<< <br>");
         for(RECOBeacon beacon : beacons){
-            out.write(beacon.getMinor() + ", " + beacon.getAccuracy() + "<br>");
+            out.write(beacon.getMinor() + ", " +   Double.parseDouble(String.format("%.2f",beacon.getAccuracy())) + "m<br>");
         }
-        out.write("--------------------<br>");
+        out.write(">>>>>>>>>>>>>>>>>>>>> <br>");
         out.flush();
         this.popupNotification("Inside of " + region.getUniqueIdentifier());
         //Write the code when the device is enter the region
@@ -255,7 +251,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
          */
 
         Log.i("BackMonitoringService", "didExitRegion() - " + region.getUniqueIdentifier());
-        out.write("didExitRegion:::"+getCurrentTiem()+"<br>");
+        out.write("------------------- Exit ("+region.getUniqueIdentifier()+") "+getCurrentTiem()+"-------------------<br><br>");
         out.flush();
         this.popupNotification("Outside of " + region.getUniqueIdentifier());
         //Write the code when the device is exit the region
@@ -264,8 +260,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     @Override
     public void didStartMonitoringForRegion(RECOBeaconRegion region) {
         Log.i("BackMonitoringService", "didStartMonitoringForRegion() - " + region.getUniqueIdentifier());
-        out.write("didStartMonitoringForRegion:::"+getCurrentTiem()+"<br>");
-        out.flush();
+
         //Write the code when starting monitoring the region is started successfully
     }
 
