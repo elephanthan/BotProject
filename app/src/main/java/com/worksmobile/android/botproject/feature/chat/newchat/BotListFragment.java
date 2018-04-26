@@ -25,11 +25,11 @@ import butterknife.ButterKnife;
  * Created by user on 2018. 4. 25..
  */
 
-public class BotListFragment extends Fragment implements InvitableClickListener {
+public class BotListFragment extends Fragment implements TalkerClickListener {
 
     @BindView(R.id.newchat_recycler_view)
     RecyclerView userRecyclerView;
-    private InvitableAdapter userAdapter;
+    private TalkerAdapter userAdapter;
     private List<Talker> talkers = new ArrayList<Talker>();
 
     private MenuItem checkMenuItem;
@@ -83,7 +83,7 @@ public class BotListFragment extends Fragment implements InvitableClickListener 
         talkers = new ArrayList<>(bots);
 
         if (userAdapter == null) {
-            userAdapter = new InvitableAdapter(getActivity(), talkers, this);
+            userAdapter = new TalkerAdapter(getActivity(), talkers, this);
             userRecyclerView.setAdapter(userAdapter);
         }
     }

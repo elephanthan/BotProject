@@ -22,12 +22,12 @@ import butterknife.ButterKnife;
  * Created by user on 2018. 4. 25..
  */
 
-public class InvitableAdapter extends RecyclerView.Adapter<InvitableAdapter.InvitableHolder> {
+public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableHolder> {
     private LayoutInflater inflater;
     private List<Talker> talkers = new ArrayList<>();
-    InvitableClickListener listener;
+    TalkerClickListener listener;
 
-    public InvitableAdapter(Context context, List<Talker> talkers, InvitableClickListener listener) {
+    public TalkerAdapter(Context context, List<Talker> talkers, TalkerClickListener listener) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.talkers = talkers;
         this.listener = listener;
@@ -62,7 +62,7 @@ public class InvitableAdapter extends RecyclerView.Adapter<InvitableAdapter.Invi
         @BindView(R.id.layout_newchat_item)
         ViewGroup layout;
 
-        public InvitableHolder(View itemView, final InvitableClickListener listener) {
+        public InvitableHolder(View itemView, final TalkerClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
