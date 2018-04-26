@@ -2,7 +2,6 @@ package com.worksmobile.android.botproject.feature.chat.newchat;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.worksmobile.android.botproject.R;
@@ -16,25 +15,30 @@ public class NewchatPagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
     private int tabSize;
 
-    public NewchatPagerAdapter(Context context, FragmentManager fm) {
-        super(fm);
+    public NewchatPagerAdapter(Context context, int tabSize) {
+
+        super(((NewchatActivity)context).getSupportFragmentManager());
+        this.mContext = context;
         this.tabSize = tabSize;
     }
 
     // This determines the fragment for each tab
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) {
-            return new NewchatUsersFragment();
-        } else {
-            return new NewchatBotsFragment();
+        switch (position) {
+            case 0:
+                return new UserListFragment();
+            case 1:
+                return new BotListFragment();
+            default:
+                return null;
         }
     }
 
     // This determines the number of tabs
     @Override
     public int getCount() {
-        return 2;
+        return tabSize;
     }
 
     // This determines the title for each tab
