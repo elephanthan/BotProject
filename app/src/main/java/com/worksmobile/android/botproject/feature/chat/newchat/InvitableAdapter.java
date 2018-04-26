@@ -5,11 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.model.Invitable;
+import com.worksmobile.android.botproject.model.Talker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +24,12 @@ import butterknife.ButterKnife;
 
 public class InvitableAdapter extends RecyclerView.Adapter<InvitableAdapter.InvitableHolder> {
     private LayoutInflater inflater;
-    private List<Invitable> invitables = new ArrayList<>();
+    private List<Talker> talkers = new ArrayList<>();
     InvitableClickListener listener;
 
-    public InvitableAdapter(Context context, List<Invitable> invitables, InvitableClickListener listener) {
+    public InvitableAdapter(Context context, List<Talker> talkers, InvitableClickListener listener) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.invitables = invitables;
+        this.talkers = talkers;
         this.listener = listener;
     }
 
@@ -40,17 +41,20 @@ public class InvitableAdapter extends RecyclerView.Adapter<InvitableAdapter.Invi
 
     @Override
     public void onBindViewHolder(InvitableHolder holder, int position) {
-        Invitable invitable = invitables.get(position);
-        holder.bindInvitable(invitable);
+        Talker talker = talkers.get(position);
+        holder.bindInvitable(talker);
     }
 
     @Override
     public int getItemCount() {
-        return invitables.size();
+        return talkers.size();
     }
 
     static class InvitableHolder extends RecyclerView.ViewHolder {
 
+
+        @BindView(R.id.item_newchat_checkbox)
+        CheckBox checkBox;
         @BindView(R.id.item_newchat_image)
         ImageView imageView;
         @BindView(R.id.item_newchat_nickname)
@@ -61,24 +65,26 @@ public class InvitableAdapter extends RecyclerView.Adapter<InvitableAdapter.Invi
         public InvitableHolder(View itemView, final InvitableClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            this.layout.setOnClickListener(new View.OnClickListener() {
+
+            this.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onHolderClick(getAdapterPosition());
+                    listener.onCheckBoxClick(getAdapterPosition());
                 }
             });
         }
 
-        public void bindInvitable(Invitable invitable) {
-            //TODO check invitable which type is
-            if (invitable.getType() == 1) {
+        public void bindInvitable(Talker talker) {
+            //TODO check talker which type is
+            if (talker.getType() == 1) {
                 this.imageView.setImageResource(R.drawable.ic_person_black_48dp);
             }
-            if (invitable.getType() == 2) {
+            if (talker.getType() == 2) {
                 this.imageView.setImageResource(R.drawable.ic_android_black_48dp);
             }
 
-            this.nicknameTextView.setText(invitable.getName());
+            this.nicknameTextView.setText(talker.getName());
+            this.checkBox.setChecked(talker.isChecked());
         }
     }
 }

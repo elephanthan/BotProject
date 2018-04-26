@@ -4,7 +4,7 @@ package com.worksmobile.android.botproject.model;
  * Created by user on 2018. 3. 30..
  */
 
-public class User implements Invitable{
+public class User extends Talker {
     private String userId;
     private String userName;
     private int userImg;
@@ -20,7 +20,6 @@ public class User implements Invitable{
         this.userName = userName;
     }
 
-    @Override
     public int getType() {
         return type;
     }

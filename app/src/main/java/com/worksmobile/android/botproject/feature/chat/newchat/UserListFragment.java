@@ -5,13 +5,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.feature.chat.chatroom.UserLab;
-import com.worksmobile.android.botproject.model.Invitable;
+import com.worksmobile.android.botproject.model.Talker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,9 @@ public class UserListFragment extends Fragment implements InvitableClickListener
     @BindView(R.id.newchat_recycler_view)
     RecyclerView userRecyclerView;
     private InvitableAdapter userAdapter;
-    List<Invitable> invitables = new ArrayList<Invitable>();
+    List<Talker> talkers = new ArrayList<Talker>();
+
+    private MenuItem checkMenuItem;
 
     public static UserListFragment newInstance() {
         Bundle args = new Bundle();
@@ -39,6 +44,7 @@ public class UserListFragment extends Fragment implements InvitableClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
 
@@ -53,20 +59,65 @@ public class UserListFragment extends Fragment implements InvitableClickListener
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        checkMenuItem = menu.getItem(0);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_new_chatting:
+                List<Talker> checkedList = getCheckedTalkers();
+                Toast.makeText(getActivity(), checkedList.size()+"명 초대!", Toast.LENGTH_LONG).show();
+//                startActivity(new Intent(getActivity(), ChatroomActivity.class));
+            default:
+                break;
+        }
+
+        return false;
+    }
+
     private void updateUI() {
         UserLab userLab = UserLab.get();
-        List<? extends Invitable> users = userLab.getUsers();
-        invitables = new ArrayList<>(users);
+        List<? extends Talker> users = userLab.getUsers();
+        talkers = new ArrayList<>(users);
 
-        if(userAdapter == null){
-            userAdapter = new InvitableAdapter(getActivity(), invitables, this);
+        if (userAdapter == null) {
+            userAdapter = new InvitableAdapter(getActivity(), talkers, this);
             userRecyclerView.setAdapter(userAdapter);
         }
     }
 
-
     @Override
     public void onHolderClick(int position) {
-        Toast.makeText(getActivity(),invitables.get(position).getName(),Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCheckBoxClick(int position) {
+        Talker talker = talkers.get(position);
+        talker.setChecked(!talker.isChecked());
+
+        int checkedSize = getCheckedTalkers().size();
+
+
+        if (checkedSize > 0) {
+            if (!checkMenuItem.isEnabled()) {
+                checkMenuItem.setEnabled(true);
+            }
+        } else {
+            checkMenuItem.setEnabled(false);
+        }
+    }
+
+    private List<Talker> getCheckedTalkers() {
+        List<Talker> result = new ArrayList<Talker>();
+        for (Talker t : talkers) {
+            if (t.isChecked()) {
+                result.add(t);
+            }
+        }
+        return result;
     }
 }

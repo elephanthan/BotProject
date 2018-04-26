@@ -6,4 +6,5 @@ package com.worksmobile.android.botproject.feature.chat.newchat;
 
 interface InvitableClickListener {
     public void onHolderClick(int position);
+    public void onCheckBoxClick(int position);
 }

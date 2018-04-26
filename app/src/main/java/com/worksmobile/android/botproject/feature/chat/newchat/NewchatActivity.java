@@ -1,16 +1,13 @@
 package com.worksmobile.android.botproject.feature.chat.newchat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
 
 public class NewchatActivity extends AppCompatActivity {
 
@@ -28,7 +25,7 @@ public class NewchatActivity extends AppCompatActivity {
         final PagerAdapter adapter = new NewchatPagerAdapter(this, tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -53,14 +50,4 @@ public class NewchatActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_item_new_chatting:
-                startActivity(new Intent(this, ChatroomActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }

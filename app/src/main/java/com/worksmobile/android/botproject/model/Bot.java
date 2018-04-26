@@ -4,7 +4,7 @@ package com.worksmobile.android.botproject.model;
  * Created by user on 2018. 4. 26..
  */
 
-public class Bot implements Invitable{
+public class Bot extends Talker {
     private int botId;
     private String botName;
     private int botImage;
@@ -32,9 +32,12 @@ public class Bot implements Invitable{
         return botName;
     }
 
-    @Override
     public int getType() {
         return type;
+    }
+
+    public void setIsChecked(boolean bool) {
+
     }
 
     public void setBotName(String botName) {
