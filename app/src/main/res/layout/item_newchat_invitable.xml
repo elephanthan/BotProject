@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout_newchat_item"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/item_newchat_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true" />
+
+    <ImageView
+        android:id="@+id/item_newchat_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/item_newchat_checkbox"
+        android:padding="4dp" />
+
+    <TextView
+        android:id="@+id/item_newchat_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/item_newchat_image"
+        android:padding="4dp"
+        android:text="nickname" />
+
+
+    <TextView
+        android:id="@+id/item_newchat_userinfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/item_newchat_image"
+        android:layout_below="@id/item_newchat_nickname"
+        android:padding="4dp"
+        android:text="information" />
+
+</RelativeLayout>

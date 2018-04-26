@@ -4,10 +4,11 @@ package com.worksmobile.android.botproject.model;
  * Created by user on 2018. 3. 30..
  */
 
-public class User {
+public class User extends Talker {
     private String userId;
     private String userName;
     private int userImg;
+    private int type = 1;
 
     public User(){
         this.userId = "AA000001";
@@ -19,6 +20,10 @@ public class User {
         this.userName = userName;
     }
 
+    public int getType() {
+        return type;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -27,7 +32,8 @@ public class User {
         this.userId = userId;
     }
 
-    public String getUserName() {
+    @Override
+    public String getName() {
         return userName;
     }
 

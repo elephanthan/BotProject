@@ -23,7 +23,7 @@ public class UserLab {
     private UserLab(){
         users = new ArrayList<>();
         for(int i=0;i<5;i++){
-            User user = new User(i+"번째 유저");
+            User user = new User((i+1)+"번째 유저");
             users.add(user);
         }
     }
