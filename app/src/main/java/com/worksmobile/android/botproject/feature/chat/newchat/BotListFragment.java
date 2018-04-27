@@ -61,6 +61,9 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         checkMenuItem = menu.getItem(0);
+        if (getCheckedTalker() != null) {
+            checkMenuItem.setEnabled(true);
+        }
     }
 
     @Override
