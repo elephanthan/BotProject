@@ -2,18 +2,28 @@ package com.worksmobile.android.botproject.feature.chat.chatroom;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
@@ -47,6 +57,13 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     private Chatroom chatroom;
     private List<Message> messages;
 
+    private PopupWindow submenuPopupWindow;
+
+    private MenuItem showhideMenuItem;
+    private MenuItem inviteSubMenuItem;
+    private MenuItem notiSubMenuItem;
+    private MenuItem exitSubMenuItem;
+
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
         args.putLong(ARG_CHATROOM_ID, chatroomId);
@@ -58,6 +75,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         long chatroomId = (long) getArguments().getSerializable(ARG_CHATROOM_ID);
         chatroom = ChatroomLab.get().getChatroom(chatroomId);
 
@@ -66,15 +85,58 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((ChatroomActivity) getActivity()).getSupportActionBar().setTitle(chatroom.getTitle());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_chatroom, container, false);
         ButterKnife.bind(this, view);
+
+        //submenuPopupWindow = view.findViewById()
+        View popupView = inflater.inflate(R.layout.popupwindow_submenu, null);
+        submenuPopupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        submenuPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.GREEN));
 
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         updateIndoorUI();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        showhideMenuItem = menu.getItem(0);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_showhide:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                    item.setIcon(R.drawable.ic_action_arrow_up);
+                    item.setTitle(R.string.action_hidemenu);
+                    submenuPopupWindow.showAsDropDown(getActionBar(getActivity().getWindow().getDecorView()));
+                    dimBehind(submenuPopupWindow);
+
+                } else {
+                    item.setChecked(false);
+                    item.setTitle(R.string.action_showmenu);
+                    item.setIcon(R.drawable.ic_action_arrow_down);
+
+                    submenuPopupWindow.dismiss();
+                }
+                break;
+            default:
+                break;
+        }
+        return false;
     }
 
     private void updateIndoorUI() {
@@ -112,9 +174,9 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         String strText = editTextChatroom.getText().toString();
 
 
-        if (!strText.equals("")){
+        if (!strText.equals("")) {
             //Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
-            Message msg = new Message(strText, messages.size()%2+1, "shawty");
+            Message msg = new Message(strText, messages.size() % 2 + 1, "John Doe");
             messages.add(msg);
             messageAdapter.notifyDataSetChanged();
 
@@ -127,7 +189,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     }
 
     @OnTouch(R.id.indoor_recycler_view)
-    public boolean onRecyclerViewTouch(){
+    public boolean onRecyclerViewTouch() {
         hideKeyboardFrom(getContext(), view);
         return false;
     }
@@ -137,4 +199,36 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    public ViewGroup getActionBar(View view) {
+        try {
+            if (view instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) view;
+
+                if (viewGroup instanceof android.support.v7.widget.Toolbar) {
+                    return viewGroup;
+                }
+
+                for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                    ViewGroup actionBar = getActionBar(viewGroup.getChildAt(i));
+
+                    if (actionBar != null) {
+                        return actionBar;
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        return null;
+    }
+
+    private void dimBehind(PopupWindow popupWindow) {
+        View container = popupWindow.getContentView().getRootView();
+        Context context = popupWindow.getContentView().getContext();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
+        p.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        p.dimAmount = 0.3f;
+        wm.updateViewLayout(container, p);
+    }
 }

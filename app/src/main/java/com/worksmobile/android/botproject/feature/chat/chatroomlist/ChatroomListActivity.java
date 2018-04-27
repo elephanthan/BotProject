@@ -53,7 +53,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.triggers_chatroom, menu);
+        getMenuInflater().inflate(R.menu.triggers_chatroomlist, menu);
         return true;
     }
 

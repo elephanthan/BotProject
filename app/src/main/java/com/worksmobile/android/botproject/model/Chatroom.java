@@ -34,11 +34,12 @@ public class Chatroom {
     }
 
     public Chatroom(){
-        id = CommonUtil.generateUniqueId();
+        this.id = CommonUtil.generateUniqueId();
+        this.title = "채팅방";
     }
 
     public Chatroom(String title, int resId){
-        id = CommonUtil.generateUniqueId();
+        this.id = CommonUtil.generateUniqueId();
         this.title = title;
         this.thumbnail = resId;
     }

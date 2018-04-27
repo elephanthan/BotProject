@@ -6,4 +6,6 @@
     <string name="newchat_users">USERS</string>
     <string name="newchat_bots">BOTS</string>
     <string name="command_OK">OK</string>
+    <string name="action_showmenu">메뉴 열기</string>
+    <string name="action_hidemenu">메뉴 닫기</string>
 </resources>
