@@ -92,11 +92,11 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         public void bindChatroom(Chatroom chatroom_){
             this.chatroom = chatroom_;
             titleTextView.setText(chatroom.getTitle());
-            thumbnailImageView.setImageResource(chatroom.getTumbnail());
+            thumbnailImageView.setImageResource(R.drawable.thumb_default_team);
             numberTextView.setText("(" + chatroom.getNumber() + ")");
-            msgTextView.setText(chatroom.getLatestMsg().getText());
+            msgTextView.setText(chatroom.getLastMessageContent());
             SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
-            msgDateTextView.setText(sdf.format(chatroom.getLatestMsg().getSenddate()));
+            msgDateTextView.setText(chatroom.getLastMessageTime());
         }
 
 
