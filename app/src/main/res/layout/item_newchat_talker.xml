@@ -13,8 +13,8 @@
 
     <ImageView
         android:id="@+id/item_newchat_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
         android:layout_toRightOf="@id/item_newchat_checkbox"
         android:padding="4dp" />
 
