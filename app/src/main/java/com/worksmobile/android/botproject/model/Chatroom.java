@@ -13,10 +13,6 @@ public class Chatroom {
     private long id;
     @SerializedName("title")
     private String title;
-
-//    private int thumbnail;
-//    private Message latestMessage;
-//    private List<User> participants;
     @SerializedName("userCnt")
     private int number;
     @SerializedName("chatroomType")
@@ -25,14 +21,7 @@ public class Chatroom {
     private String lastMessageContent;
     @SerializedName("lastMessageTime")
     private String lastMessageTime;
-
-//    public Message getLatestMsg() {
-//        return latestMessage;
-//    }
-//
-//    public void setLatestMsg(Message latestMessage) {
-//        this.latestMessage = latestMessage;
-//    }
+    private int thumbnail;
 
     public int getNumber() {
         return number;
@@ -61,25 +50,17 @@ public class Chatroom {
         this.title = title;
     }
 
-//    public int getTumbnail() {
-//        return thumbnail;
-//    }
-//
-//    public void setTumbnail(int resId) {
-//        this.thumbnail = resId;
-//    }
+    public int getTumbnail() {
+        return thumbnail;
+    }
+
+    public void setTumbnail(int resId) {
+        this.thumbnail = resId;
+    }
 
     public long getId() {
         return id;
     }
-
-//    public List<User> getParticipants() {
-//        return participants;
-//    }
-//
-//    public void setParticipants(List<User> participants) {
-//        this.participants = participants;
-//    }
 
 
     public String getLastMessageContent() {

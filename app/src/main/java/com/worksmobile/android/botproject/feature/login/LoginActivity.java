@@ -8,10 +8,9 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
+import com.worksmobile.android.botproject.api.ApiShipper;
 import com.worksmobile.android.botproject.api.RetrofitClient;
 import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomListActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
@@ -49,11 +48,8 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("employee_number", userId);
         editor.commit();
 
-        Gson gson = new Gson();
-        JsonObject json = new JsonObject();
-        json.addProperty("userId", userId);
 
-        retrofitClient.loginUser(json, new ApiRepository.RequestChatroomListCallback() {
+        retrofitClient.loginUser(new ApiShipper("userid", userId), new ApiRepository.RequestChatroomListCallback() {
             @Override
             public void success(List<Chatroom> chatrooms) {
 //                Log.d("retrofit Success", chatrooms.toString());
@@ -61,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void error(Throwable throwable) {
-                Log.d("retrofit error", "hoyahoya");
+                Log.d("retrofit error", "Retrofit Error ::: loginUser");
             }
         });
 

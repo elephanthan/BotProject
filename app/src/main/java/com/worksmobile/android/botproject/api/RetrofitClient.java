@@ -2,6 +2,7 @@ package com.worksmobile.android.botproject.api;
 
 import android.net.Uri;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
@@ -54,33 +55,14 @@ public class RetrofitClient implements  ApiRepository {
         return builder.build();
     }
 
-//    @Override
-//    public void getComment(Map<String, String> map, final RequestCallback callback) {
-//        service.getComment(Integer.parseInt(map.get("value"))).enqueue(new Callback<List<Object>>() {
-//            @Override
-//            public void onResponse(Call<List<Object>> call, Response<List<Object>> response) {
-//                Log.d(TAG, "result: " + response.body().toString());
-//                callback.success(response.body());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Object>> call, Throwable error) {
-//                callback.error(error);
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public void getPosts(Map<String, String> map, RequestCallback callback) {
-//
-//    }
-
     @Override
-    public void loginUser(JsonObject json, final RequestChatroomListCallback callback){
+    public void loginUser(ApiShipper shipper, final RequestChatroomListCallback callback){
+
+        JsonObject json = getJson(shipper);
+
         service.loginUser(json).enqueue(new Callback<List<Chatroom>>() {
             @Override
             public void onResponse(Call<List<Chatroom>> call, Response<List<Chatroom>> response) {
-//                Log.d(TAG, "result: " + response.body().toString());
                 callback.success(response.body());
             }
 
@@ -89,6 +71,18 @@ public class RetrofitClient implements  ApiRepository {
                 callback.error(error);
             }
         });
+    }
+
+    private JsonObject getJson(ApiShipper shipper) {
+        Gson gson = new Gson();
+        JsonObject json = new JsonObject();
+        json.addProperty(shipper.getKey(), shipper.getValue());
+        return json;
+    }
+
+    @Override
+    public void getChatroomList(JsonObject json, RequestChatroomListCallback callback) {
+
     }
 
     public interface ApiService {

@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.api.HttpUrlConnectionClient;
 import com.worksmobile.android.botproject.api.RetrofitClient;
 import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
 import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
@@ -24,7 +23,6 @@ import java.util.Map;
 public class ChatroomListActivity extends AppCompatActivity implements ChatroomListClickListener {
 
     private RecyclerView chatroomRecyclerView;
-    private HttpUrlConnectionClient urlConnection;
     private RetrofitClient retrofit;
 
     private ChatroomListAdapter chatroomListAdapter;
@@ -88,53 +86,8 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         map1.put("key", "postId");
         map1.put("value", "1");
 
-//        urlConnection.getComment(map1, new RequestCallback() {
-//            @Override
-//            public void success(List<Object> comments) {
-//                Log.d("url comment Success", comments.toString());
-//            }
-//
-//            @Override
-//            public void error(Throwable throwable) {
-//                Log.d("url comment error", "hoyahoya");
-//            }
-//        });
-//
-//        Map<String, String> map2 = new HashMap<String, String>();
-//        map2.put("PATH", "/posts");
-//
-//        urlConnection.getPosts(map2, new RequestCallback() {
-//            @Override
-//            public void success(List<Object> posts) {
-//                Log.d("url post Success", posts.toString());
-//            }
-//
-//            @Override
-//            public void error(Throwable throwable) {
-//                Log.d("url post error", "hoyahoya");
-//            }
-//        });
-//
-//        Map<String, String> map3 = new HashMap<String, String>();
-//        map3.put("key", "id");
-//        map3.put("value","1");
-//
-//        retrofit.getComment(map3, new RequestCallback() {
-//            @Override
-//            public void success(List<Object> comments) {
-//                Log.d("retrofit Success", comments.toString());
-//            }
-//
-//            @Override
-//            public void error(Throwable throwable) {
-//                Log.d("retrofit error", "hoyahoya");
-//            }
-//        });
-
-
         chatroomListAdapter = new ChatroomListAdapter(this, chatrooms, this) ;
         chatroomRecyclerView.setAdapter(chatroomListAdapter);
-
     }
 
     @Override
