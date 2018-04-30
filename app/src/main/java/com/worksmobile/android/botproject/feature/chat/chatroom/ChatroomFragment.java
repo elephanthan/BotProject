@@ -2,8 +2,6 @@ package com.worksmobile.android.botproject.feature.chat.chatroom;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -50,6 +48,10 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     @BindView(R.id.indoor_recycler_view)
     RecyclerView messageRecyclerView;
 
+    ViewGroup container_item1;
+    ViewGroup container_item2;
+    ViewGroup container_item3;
+
     private View view;
 
     private MessageAdapter messageAdapter;
@@ -95,10 +97,31 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         view = inflater.inflate(R.layout.fragment_chatroom, container, false);
         ButterKnife.bind(this, view);
 
-        //submenuPopupWindow = view.findViewById()
         View popupView = inflater.inflate(R.layout.popupwindow_submenu, null);
-        submenuPopupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        submenuPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.GREEN));
+
+        submenuPopupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        container_item1 = popupView.findViewById(R.id.container_item1);
+        container_item2 = popupView.findViewById(R.id.container_item2);
+        container_item3 = popupView.findViewById(R.id.container_item3);
+        container_item1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item1_click();
+            }
+        });
+        container_item2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item2_click();
+            }
+        });
+        container_item3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item3_click();
+            }
+        });
 
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -222,6 +245,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         return null;
     }
 
+    //TODO exclude actionbar
     private void dimBehind(PopupWindow popupWindow) {
         View container = popupWindow.getContentView().getRootView();
         Context context = popupWindow.getContentView().getContext();
@@ -230,5 +254,15 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         p.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         p.dimAmount = 0.3f;
         wm.updateViewLayout(container, p);
+    }
+
+    public void item1_click(){
+        Toast.makeText(getActivity(), "메뉴1 선택", Toast.LENGTH_LONG).show();
+    }
+    public void item2_click(){
+        Toast.makeText(getActivity(), "메뉴2 선택", Toast.LENGTH_LONG).show();
+    }
+    public void item3_click(){
+        Toast.makeText(getActivity(), "메뉴3 선택", Toast.LENGTH_LONG).show();
     }
 }

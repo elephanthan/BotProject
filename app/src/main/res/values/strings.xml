@@ -9,4 +9,7 @@
     <string name="action_showmenu">메뉴 열기</string>
     <string name="action_hidemenu">메뉴 닫기</string>
     <string name="barname_chatroomlist">채팅방목록</string>
+    <string name="action_exit">나가기</string>
+    <string name="action_setnoti">알람 설정</string>
+    <string name="action_invite">초대</string>
 </resources>
