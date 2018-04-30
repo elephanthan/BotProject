@@ -8,4 +8,5 @@
     <string name="command_OK">OK</string>
     <string name="action_showmenu">메뉴 열기</string>
     <string name="action_hidemenu">메뉴 닫기</string>
+    <string name="barname_chatroomlist">채팅방목록</string>
 </resources>

@@ -15,16 +15,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/list_item_chatroom_thumbnail_img"
-        android:padding="4dp"
-        android:text="Chatroom Title" />
+        android:padding="4dp" />
 
     <TextView
         android:id="@+id/list_item_chatroom_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/list_item_chatroom_title_text"
-        android:padding="4dp"
-        android:text="Chatroom Number" />
+        android:padding="4dp" />
 
     <TextView
         android:id="@+id/list_item_chatroom_msg_text"
@@ -32,8 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/list_item_chatroom_thumbnail_img"
         android:layout_below="@id/list_item_chatroom_title_text"
-        android:padding="4dp"
-        android:text="Chatroom Latest Message Text" />
+        android:padding="4dp" />
 
     <TextView
         android:id="@+id/list_item_chatroom_msg_date"
@@ -42,9 +39,6 @@
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@id/list_item_chatroom_msg_text"
         android:textAlignment="textEnd"
-        android:padding="4dp"
-        android:text="Chatroom Latest Message Date" />
-
-
+        android:padding="4dp" />
 
 </RelativeLayout>

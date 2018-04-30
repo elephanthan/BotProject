@@ -1,6 +1,5 @@
 package com.worksmobile.android.botproject.api;
 
-import com.google.gson.JsonObject;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.User;
 
@@ -15,7 +14,7 @@ public interface ApiRepository {
     public static String AUTHORITY = "10.106.150.71:8080";
 
     void loginUser(ApiShipper shipper, RequestChatroomListCallback callback);
-    void getChatroomList(JsonObject json, RequestChatroomListCallback callback);
+    void getChatroomList(String userId, RequestChatroomListCallback callback);
 
     interface RequestUserCallback {
         void success(User user);

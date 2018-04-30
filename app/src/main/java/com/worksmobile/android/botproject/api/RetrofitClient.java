@@ -35,10 +35,10 @@ import retrofit2.http.QueryMap;
 public class RetrofitClient implements  ApiRepository {
     public static final String TAG = RetrofitClient.class.getSimpleName();
 
-    private final ApiService service;
+    private ApiService service;
 
     public RetrofitClient(){
-        final Retrofit retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(new Uri.Builder().scheme(SCHEME).encodedAuthority(AUTHORITY).build().toString())
                 .client(new OkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -81,8 +81,18 @@ public class RetrofitClient implements  ApiRepository {
     }
 
     @Override
-    public void getChatroomList(JsonObject json, RequestChatroomListCallback callback) {
+    public void getChatroomList(String userId, final RequestChatroomListCallback callback) {
+        service.getChatroomList(userId).enqueue(new Callback<List<Chatroom>>() {
+            @Override
+            public void onResponse(Call<List<Chatroom>> call, Response<List<Chatroom>> response) {
+                callback.success(response.body());
+            }
 
+            @Override
+            public void onFailure(Call<List<Chatroom>> call, Throwable error) {
+                callback.error(error);
+            }
+        });
     }
 
     public interface ApiService {
@@ -91,6 +101,9 @@ public class RetrofitClient implements  ApiRepository {
 
         @POST("login")
         Call<List<Chatroom>> loginUser(@Body JsonObject json);
+
+        @GET("chatrooms")
+        Call<List<Chatroom>> getChatroomList(@Query("userId") String userId);
 
         @GET("chatrooms")
         Call<List<Chatroom>> getChatroomsByUserId(@Query("userId") String userId);
@@ -116,7 +129,6 @@ public class RetrofitClient implements  ApiRepository {
         @GET("users")
         Call<User> getUsers(@QueryMap User user);
 
-
         @PUT("users/{userId}")
         Call<User> updateUser(@Path("userId") String userId, @Body User user);
 
@@ -125,6 +137,5 @@ public class RetrofitClient implements  ApiRepository {
 
         @POST("bots")
         Call<List<Map>> sendBotEvent(@Body List<Map> maps);
-
     }
 }

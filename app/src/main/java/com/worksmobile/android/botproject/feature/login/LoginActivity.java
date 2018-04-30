@@ -29,20 +29,18 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.edittext_login)
     EditText editTextLogin;
 
-    private RetrofitClient retrofitClient;
+    public static final RetrofitClient retrofitClient = new RetrofitClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
-        retrofitClient = new RetrofitClient();
     }
 
     @OnClick(R.id.button_login)
     public void onBtnLoginClicked(){
-        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("USER_INFO", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         String userId = editTextLogin.getText().toString();
         editor.putString("employee_number", userId);
