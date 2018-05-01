@@ -34,6 +34,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom_list);
+        getSupportActionBar().setTitle(R.string.barname_chatroomlist);
 
         chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -44,7 +45,6 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         super.onCreateOptionsMenu(menu);
-        getSupportActionBar().setTitle(R.string.barname_chatroomlist);
         getMenuInflater().inflate(R.menu.triggers_chatroomlist, menu);
         return true;
     }

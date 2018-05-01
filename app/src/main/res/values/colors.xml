@@ -6,5 +6,6 @@
     <color name="colorWorks">#4CAF50</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorDim">#696969</color>
+    <color name="colorGray300">#E0E0E0</color>
     <color name="colorBlack">#000000</color>
 </resources>

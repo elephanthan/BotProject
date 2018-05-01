@@ -64,6 +64,7 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
         super.onCreateOptionsMenu(menu, inflater);
         checkMenuItem = menu.getItem(0);
         int checkedSize = getCheckedTalkers().size();
+        checkMenuItem.setEnabled(false);
         if (checkedSize > 0) {
             checkMenuItem.setEnabled(true);
         }
@@ -73,7 +74,7 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_new_chatting:
+            case R.id.menu_item_ok:
                 List<Talker> checkedList = getCheckedTalkers();
                 Toast.makeText(getActivity(), checkedList.size() + "명 초대!", Toast.LENGTH_LONG).show();
 //                startActivity(new Intent(getActivity(), ChatroomActivity.class));
