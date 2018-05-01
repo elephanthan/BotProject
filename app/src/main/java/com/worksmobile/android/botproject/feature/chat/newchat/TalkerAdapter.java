@@ -77,10 +77,10 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
         public void bindInvitable(Talker talker) {
             //TODO check talker which type is
             if (talker.getType() == 1) {
-                this.imageView.setImageResource(R.drawable.ic_face_black_48dp);
+                this.imageView.setImageResource(R.drawable.ic_profile_default);
             }
             if (talker.getType() == 2) {
-                this.imageView.setImageResource(R.drawable.ic_android_black_48dp);
+                this.imageView.setImageResource(R.drawable.ic_profile_bot);
             }
 
             this.nicknameTextView.setText(talker.getName());

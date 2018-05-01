@@ -289,14 +289,14 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 //        Window.Attributes = attributes;
 
 
-        view.setBackgroundColor(getResources().getColor(R.color.colorBlack));
-        view.setAlpha(0.33f);
+//        view.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+//        view.setAlpha(0.33f);
 //        editTextChatroom.setFocusable(false);
     }
 
     private void unDimBehind(){
-        view.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        view.setAlpha(1);
+//        view.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+//        view.setAlpha(1);
 //        editTextChatroom.setFocusable(true);
     }
 
