@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.feature.chat.chatroom.UserLab;
+import com.worksmobile.android.botproject.factory.TalkerFactory;
 import com.worksmobile.android.botproject.model.Talker;
 
 import java.util.ArrayList;
@@ -86,9 +86,8 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     }
 
     private void updateUI() {
-        UserLab userLab = UserLab.get();
-        List<? extends Talker> users = userLab.getUsers();
-        talkers = new ArrayList<>(users);
+        TalkerFactory talkerFactory = new TalkerFactory();
+        talkers = talkerFactory.getTalkers(Talker.TALKER_TYPE_USER);
 
         if (userAdapter == null) {
             userAdapter = new TalkerAdapter(getActivity(), talkers, this);
