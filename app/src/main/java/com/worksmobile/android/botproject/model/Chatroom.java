@@ -43,6 +43,9 @@ public class Chatroom {
     }
 
     public String getTitle() {
+        if(title != null && title.length() > 18) {
+            title = title.substring(0, 15) + "...";
+        }
         return title;
     }
 
@@ -64,6 +67,9 @@ public class Chatroom {
 
 
     public String getLastMessageContent() {
+        if(lastMessageContent != null && lastMessageContent.length() > 18) {
+            lastMessageContent = lastMessageContent.substring(0, 15) + "...";
+        }
         return lastMessageContent;
     }
 
