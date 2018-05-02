@@ -8,11 +8,10 @@ public class User extends Talker {
     private String userId;
     private String userName;
     private int userImg;
-    private int type = 1;
 
     public User(){
         this.userId = "AA000001";
-        this.userName = "chulsoo";
+        this.userName = "user_unknown";
     }
 
     public User(String userName){
@@ -21,7 +20,7 @@ public class User extends Talker {
     }
 
     public int getType() {
-        return type;
+        return TALKER_TYPE_USER;
     }
 
     public String getUserId() {
@@ -32,7 +31,6 @@ public class User extends Talker {
         this.userId = userId;
     }
 
-    @Override
     public String getName() {
         return userName;
     }
