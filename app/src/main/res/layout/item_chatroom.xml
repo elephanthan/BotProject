@@ -2,19 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
     android:id="@+id/layout_chatroom_item">
 
     <ImageView
         android:id="@+id/list_item_chatroom_thumbnail_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp" />
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginLeft="4dp"/>
 
     <TextView
         android:id="@+id/list_item_chatroom_title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/list_item_chatroom_thumbnail_img"
+        android:layout_marginLeft="4dp"
         android:padding="4dp" />
 
     <TextView
@@ -30,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/list_item_chatroom_thumbnail_img"
         android:layout_below="@id/list_item_chatroom_title_text"
+        android:layout_marginLeft="4dp"
         android:padding="4dp" />
 
     <TextView
@@ -37,8 +40,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/list_item_chatroom_msg_text"
         android:textAlignment="textEnd"
+        android:layout_marginRight="4dp"
         android:padding="4dp" />
 
 </RelativeLayout>

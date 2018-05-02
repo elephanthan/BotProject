@@ -26,8 +26,10 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
     private LayoutInflater inflater;
     private List<Talker> talkers = new ArrayList<>();
     TalkerClickListener listener;
+    private static Context context;
 
     public TalkerAdapter(Context context, List<Talker> talkers, TalkerClickListener listener) {
+        this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.talkers = talkers;
         this.listener = listener;
@@ -81,6 +83,8 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
             }
             if (talker.getType() == 2) {
                 this.imageView.setImageResource(R.drawable.ic_profile_chatbot);
+                this.imageView.setPadding(16, 16, 16, 16);
+                this.imageView.setBackground(context.getResources().getDrawable(R.drawable.circle));
             }
 
             this.nicknameTextView.setText(talker.getName());

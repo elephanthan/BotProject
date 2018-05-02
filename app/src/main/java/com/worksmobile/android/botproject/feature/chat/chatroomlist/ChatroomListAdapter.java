@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
  */
 
 public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder> {
-    private Context context;
+    private static Context context;
     private LayoutInflater inflater;
     private int layout;
     private List<Chatroom> chatrooms = new ArrayList<>();
@@ -93,11 +93,23 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         public void bindChatroom(Chatroom chatroom_) {
             this.chatroom = chatroom_;
             titleTextView.setText(chatroom.getTitle());
-            thumbnailImageView.setImageResource(R.drawable.thumb_default_team);
+//            thumbnailImageView.setImageResource(R.drawable.thumb_default_team);
             numberTextView.setText("(" + chatroom.getNumber() + ")");
             msgTextView.setText(chatroom.getLastMessageContent());
 
-//            Instant.parse();
+            if (chatroom.getChatroomType() == 1) {
+                thumbnailImageView.setBackground(context.getResources().getDrawable(R.drawable.circle));
+                thumbnailImageView.setPadding(16, 16, 16, 16);
+                thumbnailImageView.setImageResource(R.drawable.ic_profile_chatbot);
+
+            } else {
+                if (chatroom.getNumber() <= 2) {
+                    thumbnailImageView.setImageResource(R.drawable.ic_profile_default);
+                } else {
+                    thumbnailImageView.setImageResource(R.drawable.ic_profile_group);
+                }
+            }
+
             SimpleDateFormat pattern = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             String displayformat = "MM-dd HH:mm";
             SimpleDateFormat destFormat = new SimpleDateFormat(displayformat, Locale.KOREA);
