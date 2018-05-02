@@ -5,18 +5,13 @@ package com.worksmobile.android.botproject.model;
  */
 
 public abstract class Talker {
-    public static final int TALKER_TYPE_USER = 1;
-    public static final int TALKER_TYPE_BOT = 2;
+    public static final int TALKER_TYPE_USER = 0;
+    public static final int TALKER_TYPE_BOT = 1;
 
-    private int type;
     private boolean isChecked = false;
     private String name;
 
     abstract public int getType();
-
-    public void setType(int type) {
-        this.type = type;
-    }
 
     public boolean isChecked() {
         return isChecked;

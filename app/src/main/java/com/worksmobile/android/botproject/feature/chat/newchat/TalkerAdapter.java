@@ -78,10 +78,10 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
 
         public void bindInvitable(Talker talker) {
             //TODO check talker which type is
-            if (talker.getType() == 1) {
+            if (talker.getType() == Talker.TALKER_TYPE_USER) {
                 this.imageView.setImageResource(R.drawable.ic_profile_default);
             }
-            if (talker.getType() == 2) {
+            if (talker.getType() == Talker.TALKER_TYPE_BOT) {
                 this.imageView.setImageResource(R.drawable.ic_profile_chatbot);
                 this.imageView.setPadding(16, 16, 16, 16);
                 this.imageView.setBackground(context.getResources().getDrawable(R.drawable.fg_circle));

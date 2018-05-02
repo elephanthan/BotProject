@@ -125,7 +125,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             }
         });
 
-        if (chatroom.getChatroomType()== 1) {
+        if (chatroom.getChatroomType()== Chatroom.CHATROOM_TYPE_BOT) {
             container_item1.setEnabled(false);
             container_item1.setAlpha(0.5f);
         }

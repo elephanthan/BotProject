@@ -9,6 +9,9 @@ import com.worksmobile.android.botproject.util.CommonUtil;
 
 public class Chatroom {
 
+    public static final int CHATROOM_TYPE_USER = 0;
+    public static final int CHATROOM_TYPE_BOT = 1;
+
     @SerializedName("chatroomId")
     private long id;
     @SerializedName("title")

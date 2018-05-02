@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.model.Message;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -97,7 +98,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
             numberTextView.setText("(" + chatroom.getNumber() + ")");
             msgTextView.setText(chatroom.getLastMessageContent());
 
-            if (chatroom.getChatroomType() == 1) {
+            if (chatroom.getChatroomType() == Message.VIEW_TYPE_MESSAGE_SENT) {
                 thumbnailImageView.setBackground(context.getResources().getDrawable(R.drawable.fg_circle));
                 thumbnailImageView.setPadding(16, 16, 16, 16);
                 thumbnailImageView.setImageResource(R.drawable.ic_profile_chatbot);

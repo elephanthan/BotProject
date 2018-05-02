@@ -15,8 +15,8 @@ public class Message {
     private Date senddate;
     private int type;
 
-    public static final int VIEW_TYPE_MESSAGE_SENT = 1;
-    public static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
+    public static final int VIEW_TYPE_MESSAGE_SENT = 0;
+    public static final int VIEW_TYPE_MESSAGE_RECEIVED = 1;
 
 
     public Message(){
