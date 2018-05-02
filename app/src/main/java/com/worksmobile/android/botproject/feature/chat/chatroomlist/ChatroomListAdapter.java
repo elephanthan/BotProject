@@ -98,7 +98,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
             msgTextView.setText(chatroom.getLastMessageContent());
 
             if (chatroom.getChatroomType() == 1) {
-                thumbnailImageView.setBackground(context.getResources().getDrawable(R.drawable.circle));
+                thumbnailImageView.setBackground(context.getResources().getDrawable(R.drawable.fg_circle));
                 thumbnailImageView.setPadding(16, 16, 16, 16);
                 thumbnailImageView.setImageResource(R.drawable.ic_profile_chatbot);
 

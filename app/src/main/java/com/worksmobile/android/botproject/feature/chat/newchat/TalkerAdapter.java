@@ -84,7 +84,7 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
             if (talker.getType() == 2) {
                 this.imageView.setImageResource(R.drawable.ic_profile_chatbot);
                 this.imageView.setPadding(16, 16, 16, 16);
-                this.imageView.setBackground(context.getResources().getDrawable(R.drawable.circle));
+                this.imageView.setBackground(context.getResources().getDrawable(R.drawable.fg_circle));
             }
 
             this.nicknameTextView.setText(talker.getName());
