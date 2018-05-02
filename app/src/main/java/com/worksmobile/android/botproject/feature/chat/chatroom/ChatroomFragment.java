@@ -209,7 +209,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
         if (!strText.equals("")) {
             //Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
-            Message msg = new Message(strText, messages.size() % 2 + 1, "John Doe");
+            Message msg = new Message(strText, messages.size() % 2, "John Doe");
             messages.add(msg);
             messageAdapter.notifyDataSetChanged();
 

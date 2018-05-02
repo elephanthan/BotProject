@@ -37,7 +37,7 @@ public class Message {
         this.id = CommonUtil.generateUniqueId();
         this.text = "This is a message #" + seq;
         this.senddate = new Date();
-        this.setType(seq%2+1);
+        this.setType(seq%2);
         this.senderId = "User #"+(seq%2+1);
     }
 
