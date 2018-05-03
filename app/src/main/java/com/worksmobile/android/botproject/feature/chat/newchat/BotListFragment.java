@@ -69,6 +69,12 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        //Toast.makeText(getActivity(), "onPreparedOptionsMenu Called!!!", Toast.LENGTH_LONG).show();
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_ok:
@@ -94,7 +100,7 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
 
     @Override
     public void onHolderClick(int position) {
-        Toast.makeText(getActivity(), talkers.get(position).getName(), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -121,7 +127,6 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
                 return t;
             }
         }
-        //return new Talker();
         return null;
     }
 }

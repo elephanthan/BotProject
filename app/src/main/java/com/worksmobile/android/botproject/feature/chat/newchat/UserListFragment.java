@@ -72,6 +72,11 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        //Toast.makeText(getActivity(), "onPreparedOptionsMenu Called!!!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_ok:

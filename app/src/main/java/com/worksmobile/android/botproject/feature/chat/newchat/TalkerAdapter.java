@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
  * Created by user on 2018. 4. 25..
  */
 
-public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableHolder> {
+public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.TalkerHolder> {
     private LayoutInflater inflater;
     private List<Talker> talkers = new ArrayList<>();
     TalkerClickListener listener;
@@ -36,13 +36,13 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
     }
 
     @Override
-    public InvitableHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TalkerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_newchat_talker, parent, false);
-        return new InvitableHolder(view, listener);
+        return new TalkerHolder(view, listener);
     }
 
     @Override
-    public void onBindViewHolder(InvitableHolder holder, int position) {
+    public void onBindViewHolder(TalkerHolder holder, int position) {
         Talker talker = talkers.get(position);
         holder.bindInvitable(talker);
     }
@@ -52,7 +52,7 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
         return talkers.size();
     }
 
-    static class InvitableHolder extends RecyclerView.ViewHolder {
+    static class TalkerHolder extends RecyclerView.ViewHolder {
 
 
         @BindView(R.id.item_newchat_checkbox)
@@ -64,7 +64,7 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
         @BindView(R.id.layout_newchat_item)
         ViewGroup layout;
 
-        public InvitableHolder(View itemView, final TalkerClickListener listener) {
+        public TalkerHolder(View itemView, final TalkerClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
