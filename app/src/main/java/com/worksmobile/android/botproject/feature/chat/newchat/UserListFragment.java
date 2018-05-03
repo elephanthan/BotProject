@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.feature.chat.chatroom.UserLab;
+import com.worksmobile.android.botproject.factory.TalkerFactory;
 import com.worksmobile.android.botproject.model.Talker;
 
 import java.util.ArrayList;
@@ -63,14 +63,20 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         checkMenuItem = menu.getItem(0);
+        int checkedSize = getCheckedTalkers().size();
+        checkMenuItem.setEnabled(false);
+        if (checkedSize > 0) {
+            checkMenuItem.setEnabled(true);
+        }
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_new_chatting:
+            case R.id.menu_item_ok:
                 List<Talker> checkedList = getCheckedTalkers();
-                Toast.makeText(getActivity(), checkedList.size()+"명 초대!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), checkedList.size() + "명 초대!", Toast.LENGTH_LONG).show();
 //                startActivity(new Intent(getActivity(), ChatroomActivity.class));
             default:
                 break;
@@ -80,9 +86,8 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     }
 
     private void updateUI() {
-        UserLab userLab = UserLab.get();
-        List<? extends Talker> users = userLab.getUsers();
-        talkers = new ArrayList<>(users);
+        TalkerFactory talkerFactory = new TalkerFactory();
+        talkers = talkerFactory.getTalkers(Talker.TALKER_TYPE_USER);
 
         if (userAdapter == null) {
             userAdapter = new TalkerAdapter(getActivity(), talkers, this);

@@ -12,8 +12,12 @@ import android.widget.TextView;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,43 +27,41 @@ import butterknife.ButterKnife;
  */
 
 public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder> {
-    private Context context;
+    private static Context context;
     private LayoutInflater inflater;
     private int layout;
-    private List<Chatroom> chatrooms;
+    private List<Chatroom> chatrooms = new ArrayList<>();
     private ChatroomListClickListener listener;
 
 
-    public ChatroomListAdapter(Context context, @NonNull List<Chatroom> chatrooms, ChatroomListClickListener listener){
+    public ChatroomListAdapter(Context context, @NonNull List<Chatroom> chatrooms, ChatroomListClickListener listener) {
         this.context = context;
-        this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.chatrooms = chatrooms;
         this.listener = listener;
     }
 
 
     @Override
-    public ChatroomHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public ChatroomHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_chatroom, parent, false);
         ChatroomHolder holder = new ChatroomHolder(view, listener);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(final ChatroomHolder holder, int position){
+    public void onBindViewHolder(final ChatroomHolder holder, int position) {
         Chatroom chatroom = chatrooms.get(position);
         holder.bindChatroom(chatroom);
     }
 
     @Override
     public int getItemCount() {
-        if(chatrooms == null)
-            return 0;
         return chatrooms.size();
     }
 
 
-    static public class ChatroomHolder extends RecyclerView.ViewHolder{
+    static public class ChatroomHolder extends RecyclerView.ViewHolder {
         private Chatroom chatroom;
 
         @BindView(R.id.list_item_chatroom_title_text)
@@ -76,30 +78,50 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         ViewGroup layout;
 
 
-        public ChatroomHolder(View itemView, final ChatroomListClickListener listener){
+        public ChatroomHolder(View itemView, final ChatroomListClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            this.layout.setOnClickListener(new View.OnClickListener(){
+            this.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v){
+                public void onClick(View v) {
                     listener.onHolderClick(getAdapterPosition());
                 }
             });
-
         }
 
-        public void bindChatroom(Chatroom chatroom_){
+        public void bindChatroom(Chatroom chatroom_) {
             this.chatroom = chatroom_;
             titleTextView.setText(chatroom.getTitle());
-            thumbnailImageView.setImageResource(chatroom.getTumbnail());
+//            thumbnailImageView.setImageResource(R.drawable.thumb_default_team);
             numberTextView.setText("(" + chatroom.getNumber() + ")");
-            msgTextView.setText(chatroom.getLatestMsg().getText());
-            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
-            msgDateTextView.setText(sdf.format(chatroom.getLatestMsg().getSenddate()));
+            msgTextView.setText(chatroom.getLastMessageContent());
+
+            if (chatroom.getChatroomType() == Chatroom.CHATROOM_TYPE_BOT) {
+                thumbnailImageView.setBackground(context.getResources().getDrawable(R.drawable.fg_circle));
+                thumbnailImageView.setPadding(16, 16, 16, 16);
+                thumbnailImageView.setImageResource(R.drawable.ic_profile_chatbot);
+
+            } else {
+                if (chatroom.getNumber() <= 2) {
+                    thumbnailImageView.setImageResource(R.drawable.ic_profile_default);
+                } else {
+                    thumbnailImageView.setImageResource(R.drawable.ic_profile_group);
+                }
+            }
+
+            SimpleDateFormat pattern = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            String displayformat = "MM-dd HH:mm";
+            SimpleDateFormat destFormat = new SimpleDateFormat(displayformat, Locale.KOREA);
+            try {
+                if (chatroom.getLastMessageTime() != null) {
+                    Date myDate = pattern.parse(chatroom.getLastMessageTime());
+                    msgDateTextView.setText(destFormat.format(myDate));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-
-
     }
 
 }

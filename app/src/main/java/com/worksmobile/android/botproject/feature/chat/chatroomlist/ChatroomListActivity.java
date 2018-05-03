@@ -1,6 +1,8 @@
 package com.worksmobile.android.botproject.feature.chat.chatroomlist;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,42 +12,32 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.api.ApiRepository.RequestCallback;
-import com.worksmobile.android.botproject.api.HttpUrlConnectionClient;
-import com.worksmobile.android.botproject.api.RetrofitClient;
+import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
-import com.worksmobile.android.botproject.feature.chat.chatroom.UserLab;
 import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
 import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
-import com.worksmobile.android.botproject.model.Message;
-import com.worksmobile.android.botproject.model.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import static com.worksmobile.android.botproject.feature.login.LoginActivity.retrofitClient;
 
 public class ChatroomListActivity extends AppCompatActivity implements ChatroomListClickListener {
 
     private RecyclerView chatroomRecyclerView;
-    private HttpUrlConnectionClient urlConnection;
-    private RetrofitClient retrofit;
 
     private ChatroomListAdapter chatroomListAdapter;
     List<Chatroom> chatrooms = new ArrayList<Chatroom>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom_list);
+        getSupportActionBar().setTitle(R.string.barname_chatroomlist);
 
         chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        urlConnection = new HttpUrlConnectionClient();
-        retrofit = new RetrofitClient();
 
         updateUI();
     }
@@ -53,7 +45,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.triggers_chatroom, menu);
+        getMenuInflater().inflate(R.menu.triggers_chatroomlist, menu);
         return true;
     }
 
@@ -61,16 +53,17 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_new_chatting:
-                Chatroom chatroom = new Chatroom();
-                UserLab userLab = UserLab.get();
-                List<User> users = userLab.getUsers();
-                chatroom.setTitle("채팅방#"+(chatrooms.size()+1));
-                chatroom.setTumbnail(R.drawable.thumb_default_team);
-                Message msg = new Message();
-                chatroom.setLatestMsg(msg);
-                chatroom.setNumber(users.size());
-                chatroom.setParticipants(users);
-                chatrooms.add(chatroom);
+//                Chatroom chatroom = new Chatroom();
+//                UserLab userLab = UserLab.get();
+//                List<User> users = userLab.getUsers();
+//                chatroom.setTitle("채팅방#"+(chatrooms.size()+1));
+//                chatroom.setTumbnail(R.drawable.thumb_default_team);
+//                Message msg = new Message();
+////                chatroom.setLatestMsg(msg);
+//                chatroom.setLastMessageContent();
+//                chatroom.setNumber(users.size());
+////                chatroom.setParticipants(users);
+//                chatrooms.add(chatroom);
 
                 startActivity(new Intent(this, NewchatActivity.class));
                 return true;
@@ -85,64 +78,37 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
     private void updateUI(){
         ChatroomLab chatroomLab = ChatroomLab.get();
-        chatrooms = chatroomLab.getChatrooms();
+        //chatrooms = chatroomLab.getChatrooms();
 
-        Map<String, String> map1 = new HashMap<String, String>();
-        map1.put("PATH", "/comments");
-        map1.put("key", "postId");
-        map1.put("value", "1");
+        final Context context = this;
+        final ChatroomListClickListener listener = this;
 
-        urlConnection.getComment(map1, new RequestCallback() {
+        SharedPreferences sharedPref =  getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
+        String employeeNumber = sharedPref.getString("employee_number", "-1");
+        retrofitClient.getChatroomList(employeeNumber, new ApiRepository.RequestChatroomListCallback() {
             @Override
-            public void success(List<Object> comments) {
-                Log.d("url comment Success", comments.toString());
+            public void success(List<Chatroom> chatrooms_) {
+                Log.d("retrofit Success", chatrooms_.toString());
+                chatrooms = chatrooms_;
+                chatroomListAdapter = new ChatroomListAdapter(context, chatrooms, listener) ;
+                chatroomRecyclerView.setAdapter(chatroomListAdapter);
             }
 
             @Override
             public void error(Throwable throwable) {
-                Log.d("url comment error", "hoyahoya");
+                Log.d("retrofit error", "Retrofit Error ::: loginUser");
+                chatroomListAdapter = new ChatroomListAdapter(context, chatrooms, listener) ;
+                chatroomRecyclerView.setAdapter(chatroomListAdapter);
             }
         });
 
-        Map<String, String> map2 = new HashMap<String, String>();
-        map2.put("PATH", "/posts");
-
-        urlConnection.getPosts(map2, new RequestCallback() {
-            @Override
-            public void success(List<Object> posts) {
-                Log.d("url post Success", posts.toString());
-            }
-
-            @Override
-            public void error(Throwable throwable) {
-                Log.d("url post error", "hoyahoya");
-            }
-        });
-
-        Map<String, String> map3 = new HashMap<String, String>();
-        map3.put("key", "id");
-        map3.put("value","1");
-
-        retrofit.getComment(map3, new RequestCallback() {
-            @Override
-            public void success(List<Object> comments) {
-                Log.d("retrofit Success", comments.toString());
-            }
-
-            @Override
-            public void error(Throwable throwable) {
-                Log.d("retrofit error", "hoyahoya");
-            }
-        });
-
-
-        chatroomListAdapter = new ChatroomListAdapter(this, chatrooms, this) ;
-        chatroomRecyclerView.setAdapter(chatroomListAdapter);
-
+//        chatroomListAdapter = new ChatroomListAdapter(this, chatrooms, this) ;
+//        chatroomRecyclerView.setAdapter(chatroomListAdapter);
     }
 
     @Override
     public void onHolderClick(int position) {
-        startActivity(new Intent(this, ChatroomActivity.class));
+        Intent intent = ChatroomActivity.newIntent(this, chatrooms.get(position).getId());
+        startActivity(intent);
     }
 }

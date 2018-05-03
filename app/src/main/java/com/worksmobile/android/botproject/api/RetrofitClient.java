@@ -1,8 +1,9 @@
 package com.worksmobile.android.botproject.api;
 
 import android.net.Uri;
-import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.model.User;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,36 +35,64 @@ import retrofit2.http.QueryMap;
 public class RetrofitClient implements  ApiRepository {
     public static final String TAG = RetrofitClient.class.getSimpleName();
 
-    private final ApiService service;
+    private ApiService service;
 
     public RetrofitClient(){
-        final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(new Uri.Builder().scheme(SCHEME).authority(AUTHORITY).build().toString())
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(new Uri.Builder().scheme(SCHEME).encodedAuthority(AUTHORITY).build().toString())
                 .client(new OkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(createOkHttpClient())
                 .build();
         service = retrofit.create(ApiService.class);
     }
 
+    private static OkHttpClient createOkHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        builder.addInterceptor(interceptor);
+        return builder.build();
+    }
+
     @Override
-    public void getComment(Map<String, String> map, final RequestCallback callback) {
-        service.getComment(Integer.parseInt(map.get("value"))).enqueue(new Callback<List<Object>>() {
+    public void loginUser(ApiShipper shipper, final RequestChatroomListCallback callback){
+
+        JsonObject json = getJson(shipper);
+
+        service.loginUser(json).enqueue(new Callback<List<Chatroom>>() {
             @Override
-            public void onResponse(Call<List<Object>> call, Response<List<Object>> response) {
-                Log.d(TAG, "result: " + response.body().toString());
+            public void onResponse(Call<List<Chatroom>> call, Response<List<Chatroom>> response) {
                 callback.success(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<Object>> call, Throwable error) {
+            public void onFailure(Call<List<Chatroom>> call, Throwable error) {
                 callback.error(error);
             }
         });
     }
 
-    @Override
-    public void getPosts(Map<String, String> map, RequestCallback callback) {
+    private JsonObject getJson(ApiShipper shipper) {
+        Gson gson = new Gson();
+        JsonObject json = new JsonObject();
+        json.addProperty(shipper.getKey(), shipper.getValue());
+        return json;
+    }
 
+    @Override
+    public void getChatroomList(String userId, final RequestChatroomListCallback callback) {
+        service.getChatroomList(userId).enqueue(new Callback<List<Chatroom>>() {
+            @Override
+            public void onResponse(Call<List<Chatroom>> call, Response<List<Chatroom>> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Chatroom>> call, Throwable error) {
+                callback.error(error);
+            }
+        });
     }
 
     public interface ApiService {
@@ -70,7 +100,10 @@ public class RetrofitClient implements  ApiRepository {
         Call<List<Object>> getComment(@Query("id") int id);
 
         @POST("login")
-        Call<User> loginUser(@Body User user);
+        Call<List<Chatroom>> loginUser(@Body JsonObject json);
+
+        @GET("chatrooms")
+        Call<List<Chatroom>> getChatroomList(@Query("userId") String userId);
 
         @GET("chatrooms")
         Call<List<Chatroom>> getChatroomsByUserId(@Query("userId") String userId);
@@ -96,7 +129,6 @@ public class RetrofitClient implements  ApiRepository {
         @GET("users")
         Call<User> getUsers(@QueryMap User user);
 
-
         @PUT("users/{userId}")
         Call<User> updateUser(@Path("userId") String userId, @Body User user);
 
@@ -105,6 +137,5 @@ public class RetrofitClient implements  ApiRepository {
 
         @POST("bots")
         Call<List<Map>> sendBotEvent(@Body List<Map> maps);
-
     }
 }

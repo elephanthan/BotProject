@@ -4,18 +4,14 @@ package com.worksmobile.android.botproject.model;
  * Created by user on 2018. 4. 26..
  */
 
-public class Talker {
-    private int type;
+public abstract class Talker {
+    public static final int TALKER_TYPE_USER = 0;
+    public static final int TALKER_TYPE_BOT = 1;
+
     private boolean isChecked = false;
     private String name;
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
+    abstract public int getType();
 
     public boolean isChecked() {
         return isChecked;
@@ -25,9 +21,7 @@ public class Talker {
         isChecked = checked;
     }
 
-    public String getName() {
-        return name;
-    }
+    abstract public String getName();
 
     public void setName(String name) {
         this.name = name;

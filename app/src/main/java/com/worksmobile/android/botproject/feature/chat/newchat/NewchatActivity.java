@@ -16,6 +16,8 @@ public class NewchatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newchat);
 
+        getSupportActionBar().setTitle(R.string.barname_newchat);
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.newchat_users));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.newchat_bots));
@@ -46,7 +48,7 @@ public class NewchatActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.triggers_newchat, menu);
+        getMenuInflater().inflate(R.menu.triggers_ok, menu);
         return true;
     }
 

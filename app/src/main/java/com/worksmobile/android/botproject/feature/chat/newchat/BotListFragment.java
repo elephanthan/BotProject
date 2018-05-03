@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.factory.TalkerFactory;
 import com.worksmobile.android.botproject.model.Talker;
 
 import java.util.ArrayList;
@@ -61,12 +62,16 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         checkMenuItem = menu.getItem(0);
+        checkMenuItem.setEnabled(false);
+        if (getCheckedTalker() != null) {
+            checkMenuItem.setEnabled(true);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_new_chatting:
+            case R.id.menu_item_ok:
                 Talker talker = getCheckedTalker();
                 Toast.makeText(getActivity(), talker.getName() + "과 시작", Toast.LENGTH_LONG).show();
 //                startActivity(new Intent(getActivity(), ChatroomActivity.class));
@@ -78,9 +83,8 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
     }
 
     private void updateUI() {
-        BotLab botLab = BotLab.get();
-        List<? extends Talker> bots = botLab.getBots();
-        talkers = new ArrayList<>(bots);
+        TalkerFactory talkerFactory = new TalkerFactory();
+        talkers = talkerFactory.getTalkers(Talker.TALKER_TYPE_BOT);
 
         if (userAdapter == null) {
             userAdapter = new TalkerAdapter(getActivity(), talkers, this);

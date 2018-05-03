@@ -1,19 +1,27 @@
 package com.worksmobile.android.botproject.feature.chat.chatroom;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
@@ -40,12 +48,24 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     @BindView(R.id.indoor_recycler_view)
     RecyclerView messageRecyclerView;
 
+    ViewGroup container_item1;
+    ViewGroup container_item2;
+    ViewGroup container_item3;
+
     private View view;
+    private View popupView;
 
     private MessageAdapter messageAdapter;
 
     private Chatroom chatroom;
     private List<Message> messages;
+
+    private PopupWindow submenuPopupWindow;
+
+    private MenuItem showhideMenuItem;
+    private MenuItem inviteSubMenuItem;
+    private MenuItem notiSubMenuItem;
+    private MenuItem exitSubMenuItem;
 
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
@@ -58,11 +78,20 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         long chatroomId = (long) getArguments().getSerializable(ARG_CHATROOM_ID);
         chatroom = ChatroomLab.get().getChatroom(chatroomId);
 
         //TODO 채팅방 아이디로 메시지 내역들을 가져옴
         messages = MessageLab.get().getMessages();
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((ChatroomActivity) getActivity()).getSupportActionBar().setTitle(chatroom.getTitle());
     }
 
     @Override
@@ -70,11 +99,77 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         view = inflater.inflate(R.layout.fragment_chatroom, container, false);
         ButterKnife.bind(this, view);
 
+        popupView = inflater.inflate(R.layout.popupwindow_submenu, null, false);
+        submenuPopupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        container_item1 = popupView.findViewById(R.id.container_item1);
+        container_item2 = popupView.findViewById(R.id.container_item2);
+        container_item3 = popupView.findViewById(R.id.container_item3);
+
+        container_item1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item1_click();
+            }
+        });
+        container_item2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item2_click();
+            }
+        });
+        container_item3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item3_click();
+            }
+        });
+
+        if (chatroom.getChatroomType()== Chatroom.CHATROOM_TYPE_BOT) {
+            container_item1.setEnabled(false);
+            container_item1.setAlpha(0.5f);
+        }
+
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         updateIndoorUI();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        showhideMenuItem = menu.getItem(0);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_showhide:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                    item.setIcon(R.drawable.ic_action_arrow_up);
+                    item.setTitle(R.string.action_hidemenu);
+
+                    submenuPopupWindow.showAsDropDown(getActionBar(getActivity().getWindow().getDecorView()));
+                    dimBehind(submenuPopupWindow);
+
+
+                } else {
+                    item.setChecked(false);
+                    item.setTitle(R.string.action_showmenu);
+                    item.setIcon(R.drawable.ic_action_arrow_down);
+                    unDimBehind();
+
+                    submenuPopupWindow.dismiss();
+                }
+                break;
+            default:
+                break;
+        }
+        return false;
     }
 
     private void updateIndoorUI() {
@@ -112,9 +207,9 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         String strText = editTextChatroom.getText().toString();
 
 
-        if (!strText.equals("")){
+        if (!strText.equals("")) {
             //Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
-            Message msg = new Message(strText, messages.size()%2+1, "shawty");
+            Message msg = new Message(strText, messages.size() % 2, "John Doe");
             messages.add(msg);
             messageAdapter.notifyDataSetChanged();
 
@@ -127,7 +222,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     }
 
     @OnTouch(R.id.indoor_recycler_view)
-    public boolean onRecyclerViewTouch(){
+    public boolean onRecyclerViewTouch() {
         hideKeyboardFrom(getContext(), view);
         return false;
     }
@@ -137,4 +232,81 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    public ViewGroup getActionBar(View view) {
+        try {
+            if (view instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) view;
+
+                if (viewGroup instanceof android.support.v7.widget.Toolbar) {
+                    return viewGroup;
+                }
+
+                for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                    ViewGroup actionBar = getActionBar(viewGroup.getChildAt(i));
+
+                    if (actionBar != null) {
+                        return actionBar;
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        return null;
+    }
+
+    //TODO exclude actionbar
+    @TargetApi(Build.VERSION_CODES.M)
+    private void dimBehind(PopupWindow popupWindow) {
+//        View container = popupWindow.getContentView().getRootView();
+//        Context context = popupWindow.getContentView().getContext();
+//        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+//        WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
+//        p.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+//        p.dimAmount = 0.5f;
+//        wm.updateViewLayout(container, p);
+//
+//        View con = getActivity().findViewById(R.id.fragment_container).getRootView();
+//        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+//        WindowManager.LayoutParams p = (WindowManager.LayoutParams) con.getLayoutParams();
+//        p.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+//        p.y = statusBarAndActionBarHeight;
+//        p.x = 500;
+//        p.dimAmount = 100f;
+//        p.width = ConstraintLayout.LayoutParams.MATCH_PARENT;
+//        p.height = ConstraintLayout.LayoutParams.MATCH_PARENT;
+//
+//        Log.d("P#####", "x : " + p.x + "y : " +  p.y + "width : " +  p.width + " height : " + p.height);
+//        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//        wm.updateViewLayout(con, p);
+//        getActivity().getWindow().setAttributes(p);
+//        getActivity().getWindow().setFeatureDrawableAlpha(getResources().getColor(R.color.colorDim),200);
+//
+//        getActivity().findViewById(R.id.fragment_container).setBackgroundColor(getResources().getColor(R.color.colorDim));
+//        int uiOptions = View.SYSTEM_UI_FLAG_LOW_PROFILE;
+//        var attributes = Window.Attributes;
+//        attributes.ScreenBrightness = 0.2f;
+//        Window.Attributes = attributes;
+
+
+//        view.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+//        view.setAlpha(0.33f);
+//        editTextChatroom.setFocusable(false);
+    }
+
+    private void unDimBehind(){
+//        view.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+//        view.setAlpha(1);
+//        editTextChatroom.setFocusable(true);
+    }
+
+    public void item1_click(){
+        Toast.makeText(getActivity(), "메뉴1 선택", Toast.LENGTH_LONG).show();
+    }
+    public void item2_click(){
+        Toast.makeText(getActivity(), "메뉴2 선택", Toast.LENGTH_LONG).show();
+    }
+    public void item3_click(){
+        Toast.makeText(getActivity(), "메뉴3 선택", Toast.LENGTH_LONG).show();
+    }
 }

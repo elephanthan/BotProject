@@ -1,9 +1,9 @@
 package com.worksmobile.android.botproject.api;
 
-import android.net.Uri;
+import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.model.User;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by user on 2018. 4. 16..
@@ -11,23 +11,25 @@ import java.util.Map;
 
 public interface ApiRepository {
     public static String SCHEME = "http";
-    public static String AUTHORITY = "jsonplaceholder.typicode.com";
+    public static String AUTHORITY = "10.106.150.71:8080";
 
-    Uri uri = new Uri.Builder()
-            .scheme(SCHEME)
-            .authority(AUTHORITY)
-            .build();
+    void loginUser(ApiShipper shipper, RequestChatroomListCallback callback);
+    void getChatroomList(String userId, RequestChatroomListCallback callback);
 
-    void getComment(Map<String, String> map, RequestCallback callback);
-
-    void getPosts(Map<String, String> map, RequestCallback callback);
-
-    interface RequestCallback {
-        // 생성시의 Callback
-        void success(List<Object> objects);
-
-        // 실패시의 Callback
+    interface RequestUserCallback {
+        void success(User user);
         void error(Throwable throwable);
     }
 
+    interface RequestChatroomListCallback {
+        void success(List<Chatroom> chatrooms);
+        void error(Throwable throwable);
+
+    }
+
+    interface RequestChatroomCallback {
+        void success(Chatroom chatroom);
+        void error(Throwable throwable);
+
+    }
 }

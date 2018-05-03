@@ -15,8 +15,8 @@ public class Message {
     private Date senddate;
     private int type;
 
-    public static final int VIEW_TYPE_MESSAGE_SENT = 1;
-    public static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
+    public static final int VIEW_TYPE_MESSAGE_SENT = 0;
+    public static final int VIEW_TYPE_MESSAGE_RECEIVED = 1;
 
 
     public Message(){
@@ -37,7 +37,7 @@ public class Message {
         this.id = CommonUtil.generateUniqueId();
         this.text = "This is a message #" + seq;
         this.senddate = new Date();
-        this.setType(seq%2+1);
+        this.setType(seq%2);
         this.senderId = "User #"+(seq%2+1);
     }
 

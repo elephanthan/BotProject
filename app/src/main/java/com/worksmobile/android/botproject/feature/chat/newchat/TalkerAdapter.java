@@ -26,8 +26,10 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
     private LayoutInflater inflater;
     private List<Talker> talkers = new ArrayList<>();
     TalkerClickListener listener;
+    private static Context context;
 
     public TalkerAdapter(Context context, List<Talker> talkers, TalkerClickListener listener) {
+        this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.talkers = talkers;
         this.listener = listener;
@@ -35,7 +37,7 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
 
     @Override
     public InvitableHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_newchat_invitable, parent, false);
+        View view = inflater.inflate(R.layout.item_newchat_talker, parent, false);
         return new InvitableHolder(view, listener);
     }
 
@@ -76,11 +78,13 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.InvitableH
 
         public void bindInvitable(Talker talker) {
             //TODO check talker which type is
-            if (talker.getType() == 1) {
-                this.imageView.setImageResource(R.drawable.ic_person_black_48dp);
+            if (talker.getType() == Talker.TALKER_TYPE_USER) {
+                this.imageView.setImageResource(R.drawable.ic_profile_default);
             }
-            if (talker.getType() == 2) {
-                this.imageView.setImageResource(R.drawable.ic_android_black_48dp);
+            if (talker.getType() == Talker.TALKER_TYPE_BOT) {
+                this.imageView.setImageResource(R.drawable.ic_profile_chatbot);
+                this.imageView.setPadding(16, 16, 16, 16);
+                this.imageView.setBackground(context.getResources().getDrawable(R.drawable.fg_circle));
             }
 
             this.nicknameTextView.setText(talker.getName());

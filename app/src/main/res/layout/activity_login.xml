@@ -10,10 +10,12 @@
     tools:context="com.worksmobile.android.botproject.feature.login.LoginActivity">
 
     <EditText
+        android:id="@+id/edittext_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:text="WM060001"/>
 
     <Button
         android:id="@+id/button_login"

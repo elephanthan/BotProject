@@ -8,10 +8,10 @@ public class Bot extends Talker {
     private int botId;
     private String botName;
     private int botImage;
-    private int type = 2;
+
     public Bot(){
         this.botId = 0;
-        this.botName = "android";
+        this.botName = "chatbot";
     }
 
     public Bot(int id, String name){
@@ -23,21 +23,12 @@ public class Bot extends Talker {
         return botId;
     }
 
-    public void setBotId(int botId) {
-        this.botId = botId;
-    }
-
-    @Override
     public String getName() {
         return botName;
     }
 
     public int getType() {
-        return type;
-    }
-
-    public void setIsChecked(boolean bool) {
-
+        return TALKER_TYPE_BOT;
     }
 
     public void setBotName(String botName) {
