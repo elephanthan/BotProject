@@ -30,7 +30,7 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
 
     @BindView(R.id.newchat_recycler_view)
     RecyclerView userRecyclerView;
-    private TalkerAdapter userAdapter;
+    private TalkerAdapter talkerAdapter;
     List<Talker> talkers = new ArrayList<Talker>();
 
     private MenuItem checkMenuItem;
@@ -63,17 +63,17 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         checkMenuItem = menu.getItem(0);
-        int checkedSize = getCheckedTalkers().size();
         checkMenuItem.setEnabled(false);
-        if (checkedSize > 0) {
-            checkMenuItem.setEnabled(true);
-        }
-
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        //Toast.makeText(getActivity(), "onPreparedOptionsMenu Called!!!", Toast.LENGTH_LONG).show();
+        int checkedSize = getCheckedTalkers().size();
+        if (checkedSize > 0) {
+            checkMenuItem.setEnabled(true);
+        } else {
+            checkMenuItem.setEnabled(false);
+        }
     }
 
     @Override
@@ -94,9 +94,9 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
         TalkerFactory talkerFactory = new TalkerFactory();
         talkers = talkerFactory.getTalkers(Talker.TALKER_TYPE_USER);
 
-        if (userAdapter == null) {
-            userAdapter = new TalkerAdapter(getActivity(), talkers, this);
-            userRecyclerView.setAdapter(userAdapter);
+        if (talkerAdapter == null) {
+            talkerAdapter = new TalkerAdapter(getActivity(), talkers, this);
+            userRecyclerView.setAdapter(talkerAdapter);
         }
     }
 
@@ -108,17 +108,7 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     public void onCheckBoxClick(int position) {
         Talker talker = talkers.get(position);
         talker.setChecked(!talker.isChecked());
-
-        int checkedSize = getCheckedTalkers().size();
-
-
-        if (checkedSize > 0) {
-            if (!checkMenuItem.isEnabled()) {
-                checkMenuItem.setEnabled(true);
-            }
-        } else {
-            checkMenuItem.setEnabled(false);
-        }
+        getActivity().invalidateOptionsMenu();
     }
 
     private List<Talker> getCheckedTalkers() {
