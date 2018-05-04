@@ -1,19 +1,36 @@
 package com.worksmobile.android.botproject.feature.mysetting;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.beacon.RecoBackgroundMonitoringService;
 
 public class MysettingActivity extends AppCompatActivity {
+
+    Switch bgmonitoringSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mysetting);
+
+        bgmonitoringSwitch = (Switch) findViewById(R.id.switch_item2);
+        bgmonitoringSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
+                bgmonitoringSwitchChanged(bChecked);
+            }
+        });
         getSupportActionBar().setTitle(R.string.barname_mysetting);
     }
 
@@ -33,5 +50,35 @@ public class MysettingActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (this.isBackgroundMonitoringServiceRunning(this)) {
+            bgmonitoringSwitch.setChecked(true);
+        }
+    }
+
+    private void bgmonitoringSwitchChanged(boolean bChecked) {
+        if (bChecked) {
+            Log.i("MainActivity", "onMonitoringToggleButtonClicked off to on");
+            Intent intent = new Intent(this, RecoBackgroundMonitoringService.class);
+            startService(intent);
+        } else {
+            Log.i("MainActivity", "onMonitoringToggleButtonClicked on to off");
+            stopService(new Intent(this, RecoBackgroundMonitoringService.class));
+        }
+    }
+
+    private boolean isBackgroundMonitoringServiceRunning(Context context) {
+        ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo runningService : am.getRunningServices(Integer.MAX_VALUE)) {
+            if(RecoBackgroundMonitoringService.class.getName().equals(runningService.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
