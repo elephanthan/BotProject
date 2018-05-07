@@ -98,8 +98,9 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
             titleTextView.setText(titleText);
 
             int chatroomNumber = chatroom.getNumber();
-            if(chatroomNumber > 2)
-            numberTextView.setText("(" + chatroomNumber + ")");
+            if(chatroomNumber > 2) {
+                numberTextView.setText("(" + chatroomNumber + ")");
+            }
 
             msgTextView.setText(chatroom.getLastMessageContent());
 
