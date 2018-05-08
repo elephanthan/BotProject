@@ -16,10 +16,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
@@ -49,8 +51,14 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_chatroom_list);
-        getSupportActionBar().setTitle(R.string.barname_chatroomlist);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView titleTextView = (TextView) findViewById(R.id.toolbar_title);
+        titleTextView.setText(R.string.barname_chatroomlist);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setCustomView(R.layout.toolbar_common);
 
         chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         chatroomLayout = (View) findViewById(R.id.layout_chatlist);

@@ -7,8 +7,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
@@ -89,7 +92,12 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((ChatroomActivity) getActivity()).getSupportActionBar().setTitle(chatroom.getTitle());
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        TextView titleTextView = (TextView) view.findViewById(R.id.toolbar_title);
+        titleTextView.setText(chatroom.getTitle());
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.toolbar_common);
     }
 
     @Override

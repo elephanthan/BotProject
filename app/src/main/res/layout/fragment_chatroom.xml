@@ -9,6 +9,12 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/toolbar_common" />
+
+
     <GridView
         android:id="@+id/gridView1"
         android:layout_width="match_parent"

@@ -8,13 +8,13 @@
     <string name="command_OK">확인</string>
     <string name="action_showmenu">메뉴 열기</string>
     <string name="action_hidemenu">메뉴 닫기</string>
-    <string name="barname_chatroomlist">채팅방목록</string>
+    <string name="barname_chatroomlist">채팅</string>
     <string name="action_exit">나가기</string>
     <string name="action_setnoti">알람 설정</string>
     <string name="action_invite">초대</string>
     <string name="setting_myinfo_nickname">닉네임</string>
     <string name="setting_myinfo">개인정보</string>
-    <string name="barname_newchat">새 채팅</string>
+    <string name="barname_newchat">대화할 사람</string>
     <string name="barname_mysetting">설정</string>
     <string name="setting_beacon">비콘</string>
     <string name="setting_beacon_bgmonitoring">백그라운드 모니터링 ON/OFF</string>

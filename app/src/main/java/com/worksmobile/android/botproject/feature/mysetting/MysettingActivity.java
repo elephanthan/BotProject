@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
@@ -24,6 +26,13 @@ public class MysettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mysetting);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView titleTextView = (TextView) findViewById(R.id.toolbar_title);
+        titleTextView.setText(R.string.barname_mysetting);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.toolbar_common);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         bgmonitoringSwitch = (Switch) findViewById(R.id.switch_item2);
         bgmonitoringSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -31,7 +40,6 @@ public class MysettingActivity extends AppCompatActivity {
                 bgmonitoringSwitchChanged(bChecked);
             }
         });
-        getSupportActionBar().setTitle(R.string.barname_mysetting);
     }
 
     @Override

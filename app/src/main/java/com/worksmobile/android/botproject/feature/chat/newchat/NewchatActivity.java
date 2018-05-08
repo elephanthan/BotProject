@@ -5,7 +5,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.worksmobile.android.botproject.R;
 
@@ -16,8 +18,12 @@ public class NewchatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newchat);
 
-        getSupportActionBar().setTitle(R.string.barname_newchat);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView titleTextView = (TextView) findViewById(R.id.toolbar_title);
+        titleTextView.setText(R.string.barname_newchat);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setCustomView(R.layout.toolbar_common);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.newchat_users));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.newchat_bots));
