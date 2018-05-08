@@ -12,17 +12,17 @@ import android.widget.TextView;
 import com.worksmobile.android.botproject.R;
 
 /**
- * Created by user on 2018. 4. 5..
+ * Created by user on 2018. 5. 8..
  */
 
-public class UserinfoDialogFragment extends DialogFragment {
+public class SetnotiDialogFragment extends DialogFragment {
 
-    public static final String USERINFO_DIALOG_KEY = "UserinfoDialog";
+    public static final String SETNOTI_DIALOG_KEY = "SetnotiDialog";
 
-    public static UserinfoDialogFragment newInstance(String userId) {
-        UserinfoDialogFragment dialog = new UserinfoDialogFragment();
+    public static SetnotiDialogFragment newInstance(String userId) {
+        SetnotiDialogFragment dialog = new SetnotiDialogFragment();
         Bundle args = new Bundle();
-        args.putString(USERINFO_DIALOG_KEY, userId);
+        args.putString(SETNOTI_DIALOG_KEY, userId);
         dialog.setArguments(args);
         return dialog;
     }
@@ -43,7 +43,7 @@ public class UserinfoDialogFragment extends DialogFragment {
         TextView textViewUserId = view.findViewById(R.id.dialog_textview_userid);
 
         if (getArguments() != null) {
-            textViewUserId.setText(getArguments().getString(USERINFO_DIALOG_KEY));
+            textViewUserId.setText(getArguments().getString(SETNOTI_DIALOG_KEY));
         }
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
