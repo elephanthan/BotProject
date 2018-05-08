@@ -41,7 +41,6 @@ public class RetrofitClient implements  ApiRepository {
     public RetrofitClient(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(new Uri.Builder().scheme(SCHEME).encodedAuthority(AUTHORITY).build().toString())
-                .client(new OkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(createOkHttpClient())
                 .build();
@@ -50,7 +49,7 @@ public class RetrofitClient implements  ApiRepository {
         gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
-    private static OkHttpClient createOkHttpClient() {
+    private OkHttpClient createOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
