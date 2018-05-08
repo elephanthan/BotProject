@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.util.TextUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -92,9 +93,15 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
 
         public void bindChatroom(Chatroom chatroom_) {
             this.chatroom = chatroom_;
-            titleTextView.setText(chatroom.getTitle());
-//            thumbnailImageView.setImageResource(R.drawable.thumb_default_team);
-            numberTextView.setText("(" + chatroom.getNumber() + ")");
+
+            String titleText = TextUtil.getResizedText(context,titleTextView, chatroom.getTitle());
+            titleTextView.setText(titleText);
+
+            int chatroomNumber = chatroom.getNumber();
+            if(chatroomNumber > 2) {
+                numberTextView.setText("(" + chatroomNumber + ")");
+            }
+
             msgTextView.setText(chatroom.getLastMessageContent());
 
             if (chatroom.getChatroomType() == Chatroom.CHATROOM_TYPE_BOT) {

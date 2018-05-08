@@ -10,12 +10,13 @@ import android.widget.EditText;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
-import com.worksmobile.android.botproject.api.ApiShipper;
 import com.worksmobile.android.botproject.api.RetrofitClient;
 import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomListActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,10 +48,12 @@ public class LoginActivity extends AppCompatActivity {
         editor.commit();
 
 
-        retrofitClient.loginUser(new ApiShipper("userid", userId), new ApiRepository.RequestChatroomListCallback() {
+        Map<String, String> map = new HashMap<>();
+        map.put("userId", userId);
+        retrofitClient.loginUser(map, new ApiRepository.RequestChatroomListCallback() {
             @Override
             public void success(List<Chatroom> chatrooms) {
-//                Log.d("retrofit Success", chatrooms.toString());
+//                Log.d("rf loginUser Success", chatrooms.toString());
             }
 
             @Override

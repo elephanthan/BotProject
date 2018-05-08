@@ -16,7 +16,6 @@ public class ChatroomActivity extends SingleFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getSupportActionBar().setTitle("aa");
     }
 
     public static Intent newIntent(Context context, long chatroomId){

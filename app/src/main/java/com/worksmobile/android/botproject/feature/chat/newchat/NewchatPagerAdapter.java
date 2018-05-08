@@ -12,13 +12,13 @@ import com.worksmobile.android.botproject.R;
 
 public class NewchatPagerAdapter extends FragmentPagerAdapter {
 
-    private Context mContext;
+    private Context context;
     private int tabSize;
 
     public NewchatPagerAdapter(Context context, int tabSize) {
 
         super(((NewchatActivity)context).getSupportFragmentManager());
-        this.mContext = context;
+        this.context = context;
         this.tabSize = tabSize;
     }
 
@@ -31,7 +31,7 @@ public class NewchatPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return new BotListFragment();
             default:
-                return null;
+                return new UserListFragment();
         }
     }
 
@@ -47,11 +47,11 @@ public class NewchatPagerAdapter extends FragmentPagerAdapter {
         // Generate title based on item position
         switch (position) {
             case 0:
-                return mContext.getString(R.string.newchat_users);
+                return context.getString(R.string.newchat_users);
             case 1:
-                return mContext.getString(R.string.newchat_bots);
+                return context.getString(R.string.newchat_bots);
             default:
-                return null;
+                return context.getString(R.string.newchat_users);
         }
     }
 

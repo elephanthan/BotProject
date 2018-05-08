@@ -30,7 +30,7 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
 
     @BindView(R.id.newchat_recycler_view)
     RecyclerView userRecyclerView;
-    private TalkerAdapter userAdapter;
+    private TalkerAdapter talkerAdapter;
     private List<Talker> talkers = new ArrayList<Talker>();
 
     private MenuItem checkMenuItem;
@@ -63,10 +63,15 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
         super.onCreateOptionsMenu(menu, inflater);
         checkMenuItem = menu.getItem(0);
         checkMenuItem.setEnabled(false);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
         if (getCheckedTalker() != null) {
             checkMenuItem.setEnabled(true);
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -86,15 +91,15 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
         TalkerFactory talkerFactory = new TalkerFactory();
         talkers = talkerFactory.getTalkers(Talker.TALKER_TYPE_BOT);
 
-        if (userAdapter == null) {
-            userAdapter = new TalkerAdapter(getActivity(), talkers, this);
-            userRecyclerView.setAdapter(userAdapter);
+        if (talkerAdapter == null) {
+            talkerAdapter = new TalkerAdapter(getActivity(), talkers, this);
+            userRecyclerView.setAdapter(talkerAdapter);
         }
     }
 
     @Override
     public void onHolderClick(int position) {
-        Toast.makeText(getActivity(), talkers.get(position).getName(), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -102,17 +107,14 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
         Talker preCheckedTalker = getCheckedTalker();
         if (talkers.get(position).equals(preCheckedTalker)) {
             talkers.get(position).setChecked(false);
-
-            checkMenuItem.setEnabled(false);
         } else {
             if(preCheckedTalker != null){
                 preCheckedTalker.setChecked(false);
             }
             talkers.get(position).setChecked(true);
-
-            checkMenuItem.setEnabled(true);
         }
-        userAdapter.notifyDataSetChanged();
+        talkerAdapter.notifyDataSetChanged();
+        getActivity().invalidateOptionsMenu();
     }
 
     private Talker getCheckedTalker() {
@@ -121,7 +123,6 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
                 return t;
             }
         }
-        //return new Talker();
         return null;
     }
 }
