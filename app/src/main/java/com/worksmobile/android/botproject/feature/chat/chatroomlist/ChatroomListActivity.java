@@ -77,33 +77,27 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
 
     private void updateUI(){
-        ChatroomLab chatroomLab = ChatroomLab.get();
-        //chatrooms = chatroomLab.getChatrooms();
-
-        final Context context = this;
-        final ChatroomListClickListener listener = this;
-
         SharedPreferences sharedPref =  getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-        String employeeNumber = sharedPref.getString("employee_number", "-1");
+        String employeeNumber = sharedPref.getString("employee_number", "WM060001");
         retrofitClient.getChatroomList(employeeNumber, new ApiRepository.RequestChatroomListCallback() {
             @Override
-            public void success(List<Chatroom> chatrooms_) {
-                Log.d("retrofit Success", chatrooms_.toString());
-                chatrooms = chatrooms_;
-                chatroomListAdapter = new ChatroomListAdapter(context, chatrooms, listener) ;
-                chatroomRecyclerView.setAdapter(chatroomListAdapter);
+            public void success(List<Chatroom> chatroomList) {
+                Log.d("retrofit Success", chatroomList.toString());
+                chatrooms = chatroomList;
+                onLoadGetChatrooms();
             }
 
             @Override
             public void error(Throwable throwable) {
                 Log.d("retrofit error", "Retrofit Error ::: loginUser");
-                chatroomListAdapter = new ChatroomListAdapter(context, chatrooms, listener) ;
-                chatroomRecyclerView.setAdapter(chatroomListAdapter);
+                onLoadGetChatrooms();
             }
         });
+    }
 
-//        chatroomListAdapter = new ChatroomListAdapter(this, chatrooms, this) ;
-//        chatroomRecyclerView.setAdapter(chatroomListAdapter);
+    private void onLoadGetChatrooms(){
+        chatroomListAdapter = new ChatroomListAdapter(this, chatrooms, this) ;
+        chatroomRecyclerView.setAdapter(chatroomListAdapter);
     }
 
     @Override
