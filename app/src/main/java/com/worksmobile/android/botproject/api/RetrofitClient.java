@@ -3,7 +3,7 @@ package com.worksmobile.android.botproject.api;
 import android.net.Uri;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.GsonBuilder;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.model.User;
@@ -36,6 +36,7 @@ public class RetrofitClient implements  ApiRepository {
     public static final String TAG = RetrofitClient.class.getSimpleName();
 
     private ApiService service;
+    Gson gson;
 
     public RetrofitClient(){
         Retrofit retrofit = new Retrofit.Builder()
@@ -45,6 +46,8 @@ public class RetrofitClient implements  ApiRepository {
                 .client(createOkHttpClient())
                 .build();
         service = retrofit.create(ApiService.class);
+
+        gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
     private static OkHttpClient createOkHttpClient() {
@@ -56,11 +59,8 @@ public class RetrofitClient implements  ApiRepository {
     }
 
     @Override
-    public void loginUser(ApiShipper shipper, final RequestChatroomListCallback callback){
-
-        JsonObject json = getJson(shipper);
-
-        service.loginUser(json).enqueue(new Callback<List<Chatroom>>() {
+    public void loginUser(Map<String, String> map, final RequestChatroomListCallback callback){
+        service.loginUser(gson.toJson(map)).enqueue(new Callback<List<Chatroom>>() {
             @Override
             public void onResponse(Call<List<Chatroom>> call, Response<List<Chatroom>> response) {
                 callback.success(response.body());
@@ -71,13 +71,6 @@ public class RetrofitClient implements  ApiRepository {
                 callback.error(error);
             }
         });
-    }
-
-    private JsonObject getJson(ApiShipper shipper) {
-        Gson gson = new Gson();
-        JsonObject json = new JsonObject();
-        json.addProperty(shipper.getKey(), shipper.getValue());
-        return json;
     }
 
     @Override
@@ -100,7 +93,7 @@ public class RetrofitClient implements  ApiRepository {
         Call<List<Object>> getComment(@Query("id") int id);
 
         @POST("login")
-        Call<List<Chatroom>> loginUser(@Body JsonObject json);
+        Call<List<Chatroom>> loginUser(@Body String json);
 
         @GET("chatrooms")
         Call<List<Chatroom>> getChatroomList(@Query("userId") String userId);

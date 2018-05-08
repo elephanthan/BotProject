@@ -4,6 +4,7 @@ import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by user on 2018. 4. 16..
@@ -13,7 +14,7 @@ public interface ApiRepository {
     public static String SCHEME = "http";
     public static String AUTHORITY = "10.106.150.71:8080";
 
-    void loginUser(ApiShipper shipper, RequestChatroomListCallback callback);
+    void loginUser(Map<String, String> map, RequestChatroomListCallback callback);
     void getChatroomList(String userId, RequestChatroomListCallback callback);
 
     interface RequestUserCallback {
