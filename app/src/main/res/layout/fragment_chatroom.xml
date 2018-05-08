@@ -13,8 +13,12 @@
         android:id="@+id/gridView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:numColumns="auto_fit"
         android:columnWidth="100dp"
-        android:numColumns="auto_fit" >
+        android:outlineProvider="bounds"
+        android:visibility="invisible"
+        android:elevation="8dp"
+        android:background="@drawable/bg_dropdown_row">
     </GridView>
 
     <android.support.v7.widget.RecyclerView

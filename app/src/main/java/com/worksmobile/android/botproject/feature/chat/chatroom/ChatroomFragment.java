@@ -1,9 +1,7 @@
 package com.worksmobile.android.botproject.feature.chat.chatroom;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
@@ -60,6 +57,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     private List<DropDownMenu> dropDownMenus;
 
     MenuItem showhideMenuItem;
+
+    GridView dropDownView;
 
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
@@ -115,18 +114,14 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                     item.setChecked(true);
                     item.setIcon(R.drawable.ic_action_arrow_up);
                     item.setTitle(R.string.action_hidemenu);
-
-//                    submenuPopupWindow.showAsDropDown(getActionBar(getActivity().getWindow().getDecorView()));
-//                    dimBehind(submenuPopupWindow);
-
-
+                    ((ChatroomActivity)getActivity()).getSupportActionBar().setElevation(0);
+                    dropDownView.setVisibility(View.VISIBLE);
                 } else {
                     item.setChecked(false);
                     item.setTitle(R.string.action_showmenu);
                     item.setIcon(R.drawable.ic_action_arrow_down);
-                    unDimBehind();
-
-//                    submenuPopupWindow.dismiss();
+                    ((ChatroomActivity)getActivity()).getSupportActionBar().setElevation(8);
+                    dropDownView.setVisibility(View.INVISIBLE);
                 }
                 break;
             default:
@@ -137,15 +132,12 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     private void createDropDownMenu() {
         DropdownMenuAdapter dropdownMenuAdapter = new DropdownMenuAdapter(getActivity(), dropDownMenus);
-
-        GridView gridView = (GridView)view.findViewById(R.id.gridView1);
-        gridView.setAdapter(dropdownMenuAdapter);
-
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        dropDownView = (GridView)view.findViewById(R.id.gridView1);
+        dropDownView.setAdapter(dropdownMenuAdapter);
+        dropDownView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), getResources().getString(dropDownMenus.get(position).getName()), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -233,11 +225,4 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         return null;
     }
 
-    //TODO exclude actionbar
-    @TargetApi(Build.VERSION_CODES.M)
-    private void dimBehind(PopupWindow popupWindow) {
-    }
-
-    private void unDimBehind(){
-    }
 }

@@ -47,7 +47,7 @@ public class DropdownMenuAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView==null)
-            convertView = inflator.inflate(R.layout.dropdown_chatroom, null);
+            convertView = inflator.inflate(R.layout.row_dropdown, null);
         ImageView iconImageView = (ImageView)convertView.findViewById(R.id.dd_imageview);
         TextView nameTextView = (TextView)convertView.findViewById(R.id.dd_textview);
 
