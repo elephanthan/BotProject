@@ -6,7 +6,6 @@
     android:gravity="center"
     android:background="@drawable/bg_dropdown_row"
     android:minHeight="100dp">
-
     <ImageView
         android:id="@+id/dd_imageview"
         android:layout_width="46dp"
