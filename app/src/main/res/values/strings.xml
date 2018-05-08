@@ -12,8 +12,14 @@
     <string name="action_exit">나가기</string>
     <string name="action_setnoti">알람 설정</string>
     <string name="action_invite">초대</string>
-    <string name="userinfo_nickname">닉네임</string>
-    <string name="userinfo">개인정보</string>
+    <string name="setting_myinfo_nickname">닉네임</string>
+    <string name="setting_myinfo">개인정보</string>
     <string name="barname_newchat">새 채팅</string>
-    <string name="barname_mysetting">내정보</string>
+    <string name="barname_mysetting">설정</string>
+    <string name="setting_beacon">비콘</string>
+    <string name="setting_beacon_bgmonitoring">백그라운드 모니터링 ON/OFF</string>
+
+    <string name="location_permission_granted">Location permission has been granted. RECO SDK can now work properly.</string>
+    <string name="location_permission_not_granted">Location permission for this application is denied. RECO SDK may not work properly.</string>
+    <string name="location_permission_rationale">Location permission is needed to monitor or range beacons.</string>
 </resources>
