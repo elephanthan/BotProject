@@ -2,6 +2,8 @@ package com.worksmobile.android.botproject.feature.chat.chatroom;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +25,9 @@ import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomLab;
+import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomListActivity;
+import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
+import com.worksmobile.android.botproject.feature.dialog.SetnotiDialogFragment;
 import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.DropDownMenu;
@@ -73,7 +78,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        long chatroomId = (long) getArguments().getSerializable(ARG_CHATROOM_ID);
+        long chatroomId = (long) getArguments().getLong(ARG_CHATROOM_ID);
         chatroom = ChatroomLab.get().getChatroom(chatroomId);
 
         //TODO 채팅방 아이디로 메시지 내역들을 가져옴
@@ -137,7 +142,31 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         dropDownView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), getResources().getString(dropDownMenus.get(position).getName()), Toast.LENGTH_SHORT).show();
+                DropDownMenu dropDownMenu = dropDownMenus.get(position);
+                int action = dropDownMenu.getName();
+                switch (action) {
+                    case R.string.action_invite :
+                        long chatroomId = (long) getArguments().getLong(ARG_CHATROOM_ID);
+                        Intent intent = new Intent(getActivity(), NewchatActivity.class);
+                        intent.putExtra(ARG_CHATROOM_ID, chatroomId);
+                        startActivity(intent);
+                        break;
+                    case R.string.action_setnoti :
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        SharedPreferences sharedPref =  getActivity().getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
+                        String employeeNumber = sharedPref.getString("employee_number", "WM060001");
+
+                        SetnotiDialogFragment dialogFragment = SetnotiDialogFragment.newInstance(employeeNumber);
+
+                        dialogFragment.show(fm, "fragment_dialog_test");
+                        break;
+                    case R.string.action_exit :
+                        //TODO Call API Server Exit Room
+                        startActivity(new Intent(getActivity(), ChatroomListActivity.class));
+                        break;
+                    default:
+
+                }
             }
         });
     }
