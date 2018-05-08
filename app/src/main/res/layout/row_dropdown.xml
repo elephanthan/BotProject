@@ -3,18 +3,18 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/colorWorks">
+    android:background="@drawable/bg_dropdown_row">
 
     <ImageView
         android:id="@+id/dd_imageview"
         android:layout_width="46dp"
-        android:layout_height="46dp" />
+        android:layout_height="46dp"/>
 
     <TextView
         android:id="@+id/dd_textview"
         android:layout_width="46dp"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="test"/>
+        android:textColor="@color/colorWhite"
+        android:textAlignment="center" />
 
 </LinearLayout>
