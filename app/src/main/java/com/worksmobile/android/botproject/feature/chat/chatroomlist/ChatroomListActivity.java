@@ -23,6 +23,7 @@ import android.view.View;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
+import com.worksmobile.android.botproject.api.RetrofitClient2;
 import com.worksmobile.android.botproject.beacon.SettingInfo;
 import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
 import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
@@ -44,6 +45,8 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
+
+    RetrofitClient2 retrofitClient2;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
@@ -150,6 +153,22 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
             public void error(Throwable throwable) {
                 Log.d("retrofit error", "Retrofit Error ::: loginUser");
                 onLoadGetChatrooms();
+            }
+        });
+
+        retrofitClient2 = new RetrofitClient2();
+
+        List<String> dummyImages = new ArrayList<Item>();
+        retrofitClient2.getDummyImages(chatrooms.size(), new ApiRepository.RequestStringListCallback() {
+            @Override
+            public void success(List<String> dummyImages) {
+                Log.d("retrofit Success", dummyImages.toString());
+
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+                Log.d("retrofit error", "Retrofit Error ::: getDummyImages");
             }
         });
     }

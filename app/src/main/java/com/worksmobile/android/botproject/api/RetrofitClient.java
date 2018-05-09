@@ -32,7 +32,7 @@ import retrofit2.http.QueryMap;
  * Created by user on 2018. 4. 9..
  */
 
-public class RetrofitClient implements  ApiRepository {
+public class RetrofitClient extends ApiRepository {
     public static final String TAG = RetrofitClient.class.getSimpleName();
 
     private ApiService service;
