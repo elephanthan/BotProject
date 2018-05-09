@@ -39,6 +39,11 @@ public class Chatroom {
         this.title = "채팅방";
     }
 
+    public Chatroom(long id) {
+        this.id = id;
+        this.title = "채팅방";
+    }
+
     public Chatroom(String title, int resId){
         this.id = CommonUtil.generateUniqueId();
         this.title = title;

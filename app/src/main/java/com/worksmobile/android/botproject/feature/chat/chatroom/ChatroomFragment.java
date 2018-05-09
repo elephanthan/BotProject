@@ -1,6 +1,5 @@
 package com.worksmobile.android.botproject.feature.chat.chatroom;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,14 +15,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.api.MqttRepository;
 import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomLab;
 import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomListActivity;
 import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
@@ -32,6 +33,13 @@ import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.DropDownMenu;
 import com.worksmobile.android.botproject.model.Message;
+import com.worksmobile.android.botproject.util.ViewUtil;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.List;
 
@@ -65,6 +73,9 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     GridView dropDownView;
 
+    private MqttClient mqttClient;
+    Gson gson;
+
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
         args.putLong(ARG_CHATROOM_ID, chatroomId);
@@ -84,6 +95,49 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         //TODO 채팅방 아이디로 메시지 내역들을 가져옴
         messages = MessageLab.get().getMessages();
         dropDownMenus = DropdownMenuLab.get(DROPDOWN_CHATROOM).getDropDownMenus();
+
+        SharedPreferences sharedPref =  getActivity().getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
+        String employeeNumber = sharedPref.getString("employee_number", "WM060001");
+
+        mqttClient = MqttRepository.getMqttClient();
+        mqttClient.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+                cause.printStackTrace();
+                Log.i("connectionLost", cause.getMessage());
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+
+                Log.i("messageArrived", message.toString() + "|||" + topic);
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+                try {
+                    if(token.isComplete()){
+                        Log.i("ee", "ee?");
+                    }
+                    MqttMessage msg = token.getMessage();
+                    Log.i("deliveryComplete", "msg");
+
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        try {
+            mqttClient.connect();
+            Log.d("subtopic", MqttRepository.topic + chatroomId + "/users/" + employeeNumber);
+            mqttClient.subscribe(MqttRepository.topic + chatroomId + "/users/" + employeeNumber, MqttRepository.qos);
+//            mqttClient.subscribe("#", MqttRepository.qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+        gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
     @Override
@@ -198,7 +252,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     @Override
     public void onHolderClick() {
-        hideKeyboardFrom(getContext(), view);
+        ViewUtil.hideKeyboardFrom(getContext(), view);
     }
 
     @OnClick(R.id.button_chatroom_send)
@@ -208,50 +262,33 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
         if (!strText.equals("")) {
             //Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
-            Message msg = new Message(strText, messages.size() % 2, "John Doe");
+            Message msg = new Message(strText, messages.size() % 2, "WM060001");
+
+            String msgString = gson.toJson(msg);
+
+            Log.d("SendMsg", msgString);
+
+            MqttMessage mqttMessage = new MqttMessage(msgString.getBytes());
+            mqttMessage.setQos(MqttRepository.qos);
+            Log.d("pubtopic", MqttRepository.topic + chatroom.getId());
+            try {
+                mqttClient.publish(MqttRepository.topic + chatroom.getId(), mqttMessage);
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+
             messages.add(msg);
             messageAdapter.notifyDataSetChanged();
 
-            Log.d("msg model : ", msg.toString());
-
             editTextChatroom.setText("");
-
             messageRecyclerView.smoothScrollToPosition(messages.size());
         }
     }
 
     @OnTouch(R.id.indoor_recycler_view)
     public boolean onRecyclerViewTouch() {
-        hideKeyboardFrom(getContext(), view);
+        ViewUtil.hideKeyboardFrom(getContext(), view);
         return false;
-    }
-
-    public void hideKeyboardFrom(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    public ViewGroup getActionBar(View view) {
-        try {
-            if (view instanceof ViewGroup) {
-                ViewGroup viewGroup = (ViewGroup) view;
-
-                if (viewGroup instanceof android.support.v7.widget.Toolbar) {
-                    return viewGroup;
-                }
-
-                for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                    ViewGroup actionBar = getActionBar(viewGroup.getChildAt(i));
-
-                    if (actionBar != null) {
-                        return actionBar;
-                    }
-                }
-            }
-        } catch (Exception e) {
-        }
-
-        return null;
     }
 
 }

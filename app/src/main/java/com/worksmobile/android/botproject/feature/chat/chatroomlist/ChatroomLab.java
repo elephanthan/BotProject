@@ -46,7 +46,7 @@ public class ChatroomLab {
                 return chatroom;
             }
         }
-        return new Chatroom();
+        return new Chatroom(id);
     }
 
 }
