@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,15 +108,29 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
             msgTextView.setText(chatroom.getLastMessageContent());
 
             if (chatroom.getChatroomType() == Chatroom.CHATROOM_TYPE_BOT) {
-                thumbnailImageView.setBackground(context.getResources().getDrawable(R.drawable.fg_circle));
-                thumbnailImageView.setPadding(16, 16, 16, 16);
-                thumbnailImageView.setImageResource(R.drawable.ic_profile_chatbot);
+//                thumbnailImageView.setBackground(context.getResources().getDrawable(R.drawable.fg_circle));
+//                thumbnailImageView.setPadding(16, 16, 16, 16);
+//                thumbnailImageView.setImageResource(R.drawable.ic_profile_chatbot);
+
+                String imageUrl = "https://media.istockphoto.com/vectors/chat-bots-icon-vector-id802349040";
+                Glide.with(context).load(imageUrl).into(thumbnailImageView);
 
             } else {
                 if (chatroom.getNumber() <= 2) {
-                    thumbnailImageView.setImageResource(R.drawable.ic_profile_default);
+                    //thumbnailImageView.setImageResource(R.drawable.ic_profile_default);
+                    //DESIGN TEST CODE
+                    Random random = new Random();
+                    int randInt = random.nextInt(50)+1;
+                    String imageUrl = "http://www.designskilz.com/random-users/images/imageF" + randInt + ".jpg";
+                    Glide.with(context).load(imageUrl).into(thumbnailImageView);
                 } else {
                     thumbnailImageView.setImageResource(R.drawable.ic_profile_group);
+
+                    //DESIGN TEST CODE
+                    Random random = new Random();
+                    int randInt = random.nextInt(50)+1;
+                    String imageUrl = "http://www.designskilz.com/random-users/images/imageM" + randInt + ".jpg";
+                    Glide.with(context).load(imageUrl).into(thumbnailImageView);
                 }
             }
 
