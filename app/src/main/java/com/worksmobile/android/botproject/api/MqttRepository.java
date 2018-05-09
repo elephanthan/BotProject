@@ -16,12 +16,8 @@ public class MqttRepository {
     public final static String topic        = "/chatrooms/";
     public final static int qos             = 2;
     private final static String broker       = "tcp://10.105.185.60";
-    private final static String clientId     = "mqttSampleId";
 
-
-
-
-    public static MqttClient getMqttClient(){
+    public static MqttClient getMqttClient(String clientId){
         MqttClient mqttClient = null;
         MemoryPersistence persistence = new MemoryPersistence();
         try {

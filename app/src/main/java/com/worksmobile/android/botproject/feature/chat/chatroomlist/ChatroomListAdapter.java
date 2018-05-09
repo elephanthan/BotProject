@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
-import com.worksmobile.android.botproject.util.TextUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +21,8 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.worksmobile.android.botproject.util.ViewUtil.getResizedTextViewText;
 
 /**
  * Created by user on 2018. 3. 28..
@@ -94,7 +95,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         public void bindChatroom(Chatroom chatroom_) {
             this.chatroom = chatroom_;
 
-            String titleText = TextUtil.getResizedText(context,titleTextView, chatroom.getTitle());
+            String titleText = getResizedTextViewText(context,titleTextView, chatroom.getTitle());
             titleTextView.setText(titleText);
 
             int chatroomNumber = chatroom.getNumber();

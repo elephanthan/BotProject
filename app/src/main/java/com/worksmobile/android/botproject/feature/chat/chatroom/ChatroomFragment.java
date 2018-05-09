@@ -22,7 +22,6 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.MqttRepository;
 import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomLab;
@@ -35,9 +34,6 @@ import com.worksmobile.android.botproject.model.DropDownMenu;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.util.ViewUtil;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -49,6 +45,7 @@ import butterknife.OnClick;
 import butterknife.OnTouch;
 
 import static com.worksmobile.android.botproject.feature.chat.chatroom.DropdownMenuLab.DROPDOWN_CHATROOM;
+import static com.worksmobile.android.botproject.feature.login.LoginActivity.mqttClient;
 
 public class ChatroomFragment extends Fragment implements ChatroomClickListener {
 
@@ -73,9 +70,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     GridView dropDownView;
 
-    private MqttClient mqttClient;
-    Gson gson;
-
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
         args.putLong(ARG_CHATROOM_ID, chatroomId);
@@ -99,45 +93,19 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         SharedPreferences sharedPref =  getActivity().getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         String employeeNumber = sharedPref.getString("employee_number", "WM060001");
 
-        mqttClient = MqttRepository.getMqttClient();
-        mqttClient.setCallback(new MqttCallback() {
-            @Override
-            public void connectionLost(Throwable cause) {
-                cause.printStackTrace();
-                Log.i("connectionLost", cause.getMessage());
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-
-                Log.i("messageArrived", message.toString() + "|||" + topic);
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-                try {
-                    if(token.isComplete()){
-                        Log.i("ee", "ee?");
-                    }
-                    MqttMessage msg = token.getMessage();
-                    Log.i("deliveryComplete", "msg");
-
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
         try {
             mqttClient.connect();
             Log.d("subtopic", MqttRepository.topic + chatroomId + "/users/" + employeeNumber);
-            mqttClient.subscribe(MqttRepository.topic + chatroomId + "/users/" + employeeNumber, MqttRepository.qos);
-//            mqttClient.subscribe("#", MqttRepository.qos);
+//            mqttClient.subscribe(MqttRepository.topic + chatroomId + "/users/" + employeeNumber, MqttRepository.qos);
+            mqttClient.subscribe(MqttRepository.topic + chatroom.getId(), MqttRepository.qos);
+
         } catch (MqttException e) {
             e.printStackTrace();
         }
-        gson = new GsonBuilder().setPrettyPrinting().create();
+    }
+
+    private void makeMqtt(){
+
     }
 
     @Override
@@ -259,18 +227,14 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     public void onChatroomSendClick() {
         String strText = editTextChatroom.getText().toString();
 
-
         if (!strText.equals("")) {
             //Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
             Message msg = new Message(strText, messages.size() % 2, "WM060001");
 
-            String msgString = gson.toJson(msg);
-
-            Log.d("SendMsg", msgString);
+            String msgString = new Gson().toJson(msg);
 
             MqttMessage mqttMessage = new MqttMessage(msgString.getBytes());
             mqttMessage.setQos(MqttRepository.qos);
-            Log.d("pubtopic", MqttRepository.topic + chatroom.getId());
             try {
                 mqttClient.publish(MqttRepository.topic + chatroom.getId(), mqttMessage);
             } catch (MqttException e) {
