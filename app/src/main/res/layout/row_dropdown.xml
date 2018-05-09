@@ -16,7 +16,7 @@
         android:id="@+id/dd_textview"
         android:layout_width="46dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/color_white"
         android:textAlignment="center"
         android:gravity="center"/>
 

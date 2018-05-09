@@ -14,6 +14,9 @@ public interface ApiRepository {
     public static String SCHEME = "http";
     public static String AUTHORITY = "10.106.150.71:8080";
 
+    public static final String IMAGE_URL = "http://10.66.76.40:8081/image/";
+    public static final String IMAGE_PROFILE_EXT = ".jpeg";
+
     void loginUser(Map<String, String> map, RequestChatroomListCallback callback);
     void getChatroomList(String userId, RequestChatroomListCallback callback);
 

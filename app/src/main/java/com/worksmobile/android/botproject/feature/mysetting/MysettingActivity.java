@@ -3,17 +3,23 @@ package com.worksmobile.android.botproject.feature.mysetting;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.beacon.RecoBackgroundMonitoringService;
+
+import static com.worksmobile.android.botproject.api.ApiRepository.IMAGE_PROFILE_EXT;
+import static com.worksmobile.android.botproject.api.ApiRepository.IMAGE_URL;
 
 public class MysettingActivity extends AppCompatActivity {
 
@@ -24,7 +30,14 @@ public class MysettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mysetting);
 
-        bgmonitoringSwitch = (Switch) findViewById(R.id.switch_item2);
+        SharedPreferences sharedPref =  getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
+        String employeeNumber = sharedPref.getString("employee_number", "WM060001");
+
+        ImageView imageView = (ImageView) findViewById(R.id.imageview_profile);
+        String imageUrl = IMAGE_URL + employeeNumber + IMAGE_PROFILE_EXT;
+        Glide.with(this).load(imageUrl).into(imageView);
+
+        bgmonitoringSwitch = (Switch) findViewById(R.id.switch_beacon_monitoring);
         bgmonitoringSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
