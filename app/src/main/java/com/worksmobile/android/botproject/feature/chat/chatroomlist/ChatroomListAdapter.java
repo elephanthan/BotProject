@@ -64,6 +64,15 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         return chatrooms.size();
     }
 
+    public void replaceData(List<Chatroom> chatrooms) {
+        setList(chatrooms);
+        notifyDataSetChanged();
+    }
+
+    public void setList(List<Chatroom> chatrooms) {
+        this.chatrooms = chatrooms;
+    }
+
 
     static public class ChatroomHolder extends RecyclerView.ViewHolder {
         private Chatroom chatroom;

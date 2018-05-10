@@ -34,9 +34,11 @@ import java.util.List;
 
 import static com.worksmobile.android.botproject.feature.login.LoginActivity.retrofitClient;
 
-public class ChatroomListActivity extends AppCompatActivity implements ChatroomListClickListener {
+public class ChatroomListActivity extends AppCompatActivity implements ChatroomListClickListener, ChatroomListContract.View {
 
-    private View chatroomLayout;
+    private ChatroomListContract.Presenter chatroomListPresenter;
+
+    private View chatroomListView;
     private RecyclerView chatroomRecyclerView;
 
     private ChatroomListAdapter chatroomListAdapter;
@@ -52,11 +54,15 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         setContentView(R.layout.activity_chatroom_list);
         getSupportActionBar().setTitle(R.string.barname_chatroomlist);
 
+
+
         chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
-        chatroomLayout = (View) findViewById(R.id.layout_chatlist);
+        chatroomListView = (View) findViewById(R.id.layout_chatlist);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         updateUI();
+        chatroomListAdapter = new ChatroomListAdapter(this, chatrooms, this);
+        chatroomRecyclerView.setAdapter(chatroomListAdapter);
 
         //If a user device turns off bluetooth, request to turn it on.
         //사용자가 블루투스를 켜도록 요청합니다.
@@ -143,20 +149,13 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
             public void success(List<Chatroom> chatroomList) {
                 Log.d("retrofit Success", chatroomList.toString());
                 chatrooms = chatroomList;
-                onLoadGetChatrooms();
             }
 
             @Override
             public void error(Throwable throwable) {
                 Log.d("retrofit error", "Retrofit Error ::: loginUser");
-                onLoadGetChatrooms();
             }
         });
-    }
-
-    private void onLoadGetChatrooms(){
-        chatroomListAdapter = new ChatroomListAdapter(this, chatrooms, this) ;
-        chatroomRecyclerView.setAdapter(chatroomListAdapter);
     }
 
     @Override
@@ -171,7 +170,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
             return;
         }
 
-        Snackbar.make(chatroomLayout, R.string.location_permission_rationale, Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(chatroomListView, R.string.location_permission_rationale, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.command_OK, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -179,5 +178,17 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void setChatroomListPresenter(ChatroomListContract.Presenter chatroomListPresenter) {
+        this.chatroomListPresenter = chatroomListPresenter;
+    }
+
+    @Override
+    public void showChatrooms(List<Chatroom> chatrooms) {
+        chatroomListAdapter.replaceData(chatrooms);
+        chatroomListView.setVisibility(View.VISIBLE);
+
     }
 }
