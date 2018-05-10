@@ -26,7 +26,7 @@
         android:textSize="12sp"
         app:layout_constraintLeft_toRightOf="@id/image_message_profile"
         android:layout_marginLeft="8dp"
-        android:textColor="@color/colorBlack"
+        android:textColor="@color/color_black"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="4dp" />
 
@@ -38,7 +38,7 @@
         android:maxWidth="240dp"
         android:padding="8dp"
         android:layout_marginTop="4dp"
-        android:textColor="@color/colorBlack"
+        android:textColor="@color/color_black"
         app:layout_constraintTop_toBottomOf="@id/text_message_name"
         app:layout_constraintLeft_toRightOf="@id/image_message_profile"
         android:layout_marginLeft="8dp"
@@ -52,6 +52,6 @@
         app:layout_constraintLeft_toRightOf="@id/text_message_body"
         android:layout_marginLeft="4dp"
         app:layout_constraintBottom_toBottomOf="@id/text_message_body"
-        android:textColor="@color/colorBlack"/>
+        android:textColor="@color/color_black"/>
 
 </android.support.constraint.ConstraintLayout>

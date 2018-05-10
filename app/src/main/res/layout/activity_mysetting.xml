@@ -2,56 +2,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_mysetting"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/bg_mysetting_index"
     tools:context="com.worksmobile.android.botproject.feature.mysetting.MysettingActivity">
 
     <TextView
         android:id="@+id/textview_index1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:background="@drawable/bg_mysetting_index"
+        android:layout_marginLeft="16dp"
         android:gravity="center_vertical"
         android:text="@string/setting_myinfo"
-        android:textColor="@color/colorBlack"
+        android:textColor="@color/color_black"
         android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_height="60dp"
+        android:layout_height="150dp"
         android:background="@drawable/bg_mysetting">
 
-        <TextView
-            android:id="@+id/textview_item1"
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
+        <ImageView
+            android:id="@+id/imageview_profile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:text="@string/setting_myinfo_nickname"
-            android:textSize="15sp"
-            android:textStyle="bold"/>
+            android:background="@drawable/bg_border_black_1dp"/>
 
         <EditText
-            android:id="@+id/edittext_item1"
+            android:id="@+id/edittext_nickname"
             android:layout_width="220dp"
             android:layout_height="43dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:hint="@string/hint_mysetting_nickname"/>
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textview_index2"
-        android:layout_width="match_parent"
+        android:id="@+id/textview_index_beacon"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:background="@drawable/bg_mysetting_index"
-        android:text="@string/setting_beacon"
-        android:textColor="@color/colorBlack"
+        android:layout_marginLeft="16dp"
         android:gravity="center_vertical"
+        android:text="@string/setting_beacon"
+        android:textColor="@color/color_black"
         android:textSize="18sp" />
 
 
@@ -63,7 +64,7 @@
         android:background="@drawable/bg_mysetting">
 
         <TextView
-            android:id="@+id/textview_item2"
+            android:id="@+id/textview_beacon_monitoring"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_marginBottom="8dp"
@@ -74,7 +75,7 @@
             android:textStyle="bold"/>
 
         <Switch
-            android:id="@+id/switch_item2"
+            android:id="@+id/switch_beacon_monitoring"
             android:switchMinWidth="60dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
