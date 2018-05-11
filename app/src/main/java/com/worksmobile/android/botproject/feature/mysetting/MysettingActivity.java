@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.beacon.RecoBackgroundMonitoringService;
 import com.worksmobile.android.botproject.beacon.SettingInfo;
+import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
 import static com.worksmobile.android.botproject.api.ApiRepository.IMAGE_PROFILE_EXT;
 import static com.worksmobile.android.botproject.api.ApiRepository.IMAGE_URL;
@@ -47,8 +47,7 @@ public class MysettingActivity extends AppCompatActivity {
 
         mysettingLayout = findViewById(R.id.layout_mysetting);
 
-        SharedPreferences sharedPref =  getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-        String employeeNumber = sharedPref.getString("employee_number", "WM060001");
+        String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
 
         ImageView imageView = (ImageView) findViewById(R.id.imageview_profile);
         String imageUrl = IMAGE_URL + employeeNumber + IMAGE_PROFILE_EXT;

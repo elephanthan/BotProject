@@ -1,7 +1,6 @@
 package com.worksmobile.android.botproject.feature.login;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +15,7 @@ import com.worksmobile.android.botproject.api.RetrofitClient;
 import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomListActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
+import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -51,12 +51,9 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_login)
     public void onBtnLoginClicked(){
-        SharedPreferences pref = getSharedPreferences("USER_INFO", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
         String userId = editTextLogin.getText().toString();
-        editor.putString("employee_number", userId);
-        editor.commit();
 
+        SharedPrefUtil.setStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID, userId);
 
         Map<String, String> map = new HashMap<>();
         map.put("userId", userId);

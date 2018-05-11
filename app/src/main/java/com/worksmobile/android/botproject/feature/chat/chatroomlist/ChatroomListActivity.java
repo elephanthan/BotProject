@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +27,7 @@ import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity
 import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
 import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +41,12 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     private View chatroomListView;
     private RecyclerView chatroomRecyclerView;
 
-    private ChatroomListAdapter chatroomListAdapter;
     List<Chatroom> chatrooms = new ArrayList<Chatroom>();
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
+
+    ChatroomListContract.AdapterView adapterView;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
@@ -54,15 +55,17 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         setContentView(R.layout.activity_chatroom_list);
         getSupportActionBar().setTitle(R.string.barname_chatroomlist);
 
-
-
-        chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         chatroomListView = (View) findViewById(R.id.layout_chatlist);
+        chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        chatroomListPresenter = new ChatroomListPresenter(this);
+
         updateUI();
-        chatroomListAdapter = new ChatroomListAdapter(this, chatrooms, this);
+        ChatroomListAdapter chatroomListAdapter = new ChatroomListAdapter(this, this);
         chatroomRecyclerView.setAdapter(chatroomListAdapter);
+
+        adapterView = chatroomListAdapter;
 
         //If a user device turns off bluetooth, request to turn it on.
         //사용자가 블루투스를 켜도록 요청합니다.
@@ -142,8 +145,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
 
     private void updateUI(){
-        SharedPreferences sharedPref =  getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-        String employeeNumber = sharedPref.getString("employee_number", "WM060001");
+        String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
         retrofitClient.getChatroomList(employeeNumber, new ApiRepository.RequestChatroomListCallback() {
             @Override
             public void success(List<Chatroom> chatroomList) {
@@ -157,6 +159,8 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
             }
         });
     }
+
+
 
     @Override
     public void onHolderClick(int position) {
@@ -187,7 +191,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
     @Override
     public void showChatrooms(List<Chatroom> chatrooms) {
-        chatroomListAdapter.replaceData(chatrooms);
+        adapterView.refresh();
         chatroomListView.setVisibility(View.VISIBLE);
 
     }

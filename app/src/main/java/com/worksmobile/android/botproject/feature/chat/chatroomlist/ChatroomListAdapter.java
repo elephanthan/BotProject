@@ -30,7 +30,8 @@ import static com.worksmobile.android.botproject.util.ViewUtil.getResizedTextVie
  * Created by user on 2018. 3. 28..
  */
 
-public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder> {
+public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder>
+        implements ChatroomListContract.AdapterView{
     private static Context context;
     private LayoutInflater inflater;
     private int layout;
@@ -42,6 +43,13 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.chatrooms = chatrooms;
+        this.listener = listener;
+    }
+
+    public ChatroomListAdapter(Context context, ChatroomListClickListener listener) {
+        this.context = context;
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.chatrooms = new ArrayList<>();
         this.listener = listener;
     }
 
@@ -64,13 +72,14 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         return chatrooms.size();
     }
 
-    public void replaceData(List<Chatroom> chatrooms) {
-        setList(chatrooms);
-        notifyDataSetChanged();
-    }
 
     public void setList(List<Chatroom> chatrooms) {
         this.chatrooms = chatrooms;
+    }
+
+    @Override
+    public void refresh() {
+        notifyDataSetChanged();
     }
 
 

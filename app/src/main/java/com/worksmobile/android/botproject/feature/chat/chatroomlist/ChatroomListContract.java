@@ -6,7 +6,7 @@ import com.worksmobile.android.botproject.model.Chatroom;
 
 import java.util.List;
 
-public class ChatroomListContract {
+public interface ChatroomListContract {
     interface View extends BaseView<ChatroomListContract.Presenter> {
 
         void showChatrooms(List<Chatroom> chatrooms);
@@ -17,5 +17,9 @@ public class ChatroomListContract {
 
         void loadChatrooms();
 
+    }
+
+    interface AdapterView {
+        void refresh();
     }
 }

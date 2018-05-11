@@ -15,4 +15,9 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
     public void start() {
 
     }
+
+    @Override
+    public void loadChatrooms() {
+
+    }
 }

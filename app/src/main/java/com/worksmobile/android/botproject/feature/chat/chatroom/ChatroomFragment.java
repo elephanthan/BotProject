@@ -1,8 +1,6 @@
 package com.worksmobile.android.botproject.feature.chat.chatroom;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -32,6 +30,7 @@ import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.DropDownMenu;
 import com.worksmobile.android.botproject.model.Message;
+import com.worksmobile.android.botproject.util.SharedPrefUtil;
 import com.worksmobile.android.botproject.util.ViewUtil;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -90,8 +89,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         messages = MessageLab.get().getMessages();
         dropDownMenus = DropdownMenuLab.get(DROPDOWN_CHATROOM).getDropDownMenus();
 
-        SharedPreferences sharedPref =  getActivity().getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-        String employeeNumber = sharedPref.getString("employee_number", "WM060001");
+        String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
 
         try {
             mqttClient.connect();
@@ -175,9 +173,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                         break;
                     case R.string.action_setnoti :
                         FragmentManager fm = getActivity().getSupportFragmentManager();
-                        SharedPreferences sharedPref =  getActivity().getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-                        String employeeNumber = sharedPref.getString("employee_number", "WM060001");
-
+                        
+                        String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
                         SetnotiDialogFragment dialogFragment = SetnotiDialogFragment.newInstance(employeeNumber);
 
                         dialogFragment.show(fm, "fragment_dialog_test");
