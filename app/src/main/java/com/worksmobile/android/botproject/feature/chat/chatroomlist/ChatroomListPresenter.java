@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.model.ChatroomDataModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +16,15 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
 
     private final ChatroomListContract.View chatroomListView;
     private final ChatroomListContract.AdapterView chatroomAdapterView;
+    private final ChatroomDataModel chatroomDataModel;
 
     List<Chatroom> chatroomsToShow = new ArrayList<Chatroom>();
 
-    public ChatroomListPresenter(@NonNull ChatroomListContract.View chatroomListView, @NonNull ChatroomListContract.AdapterView chatroomAdapterView) {
-        this.chatroomListView = chatroomListView;
+    public ChatroomListPresenter(@NonNull ChatroomListContract.View view, ChatroomListContract.AdapterView adapterView, @NonNull ChatroomDataModel dataModel) {
+        this.chatroomListView = view;
         this.chatroomListView.setChatroomListPresenter(this);
-        this.chatroomAdapterView = chatroomAdapterView;
+        this.chatroomAdapterView = adapterView;
+        this.chatroomDataModel = dataModel;
     }
 
     @Override
@@ -36,10 +39,10 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
             @Override
             public void success(List<Chatroom> chatroomList) {
                 Log.d("retrofit Success", chatroomList.toString());
-                chatroomsToShow = chatroomList;
-                chatroomAdapterView.refresh(chatroomsToShow);
-                chatroomListView.showChatrooms();
+                processChatrooms(chatroomList);
             }
+
+
 
             @Override
             public void error(Throwable throwable) {
@@ -47,4 +50,22 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
             }
         });
     }
+
+    private void processChatrooms(List<Chatroom> chatroomList) {
+        chatroomsToShow = chatroomList;
+        chatroomAdapterView.refresh(chatroomsToShow);
+
+        if(chatroomList.size()==0){
+            chatroomListView.showNoChatrooms();
+        } else {
+            chatroomListView.showChatrooms();
+        }
+    }
+
+    @Override
+    public void enterChatroom(int position) {
+        Chatroom chatroom = chatroomDataModel.getChatroom(position);
+        chatroomListView.moveToChatroom(chatroom.getId());
+    }
+
 }

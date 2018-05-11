@@ -23,4 +23,5 @@
     <string name="location_permission_not_granted">Location permission for this application is denied. RECO SDK may not work properly.</string>
     <string name="location_permission_rationale">Location permission is needed to monitor or range beacons.</string>
     <string name="hint_mysetting_nickname">닉네임</string>
+    <string name="no_chatrooms_all">참여하고 있는 채팅방이 없습니다.</string>
 </resources>

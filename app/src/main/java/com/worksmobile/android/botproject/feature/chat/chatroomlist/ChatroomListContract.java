@@ -11,12 +11,16 @@ public interface ChatroomListContract {
 
         void showChatrooms();
 
+        void showNoChatrooms();
+
+        void moveToChatroom(long chatroomId);
     }
 
     interface Presenter extends BasePresenter {
 
         void loadChatrooms(String userId);
 
+        void enterChatroom(int position);
     }
 
     interface AdapterView {

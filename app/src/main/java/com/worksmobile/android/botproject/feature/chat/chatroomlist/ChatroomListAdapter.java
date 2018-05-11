@@ -48,10 +48,9 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         this.listener = listener;
     }
 
-    public ChatroomListAdapter(Context context, ChatroomListClickListener listener) {
+    public ChatroomListAdapter(Context context) {
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.listener = listener;
     }
 
 
@@ -186,6 +185,10 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setOnRecyclerItemClickListener(ChatroomListClickListener onRecyclerItemClickListener) {
+        this.listener = onRecyclerItemClickListener;
     }
 
 }

@@ -34,11 +34,12 @@ import java.util.List;
 
 import static com.worksmobile.android.botproject.feature.login.LoginActivity.retrofitClient;
 
-public class ChatroomListActivity extends AppCompatActivity implements ChatroomListClickListener, ChatroomListContract.View {
+public class ChatroomListActivity extends AppCompatActivity implements ChatroomListContract.View {
 
     private ChatroomListContract.Presenter chatroomListPresenter;
 
     private View chatroomListView;
+    private View noChatroomListView;
     private RecyclerView chatroomRecyclerView;
 
     List<Chatroom> chatrooms = new ArrayList<Chatroom>();
@@ -52,21 +53,26 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chatroom_list);
+        setContentView(R.layout.activity_chatroomlist);
         getSupportActionBar().setTitle(R.string.barname_chatroomlist);
 
         chatroomListView = (View) findViewById(R.id.layout_chatlist);
+        noChatroomListView = (View) findViewById(R.id.no_chatroom_layout);
         chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        ChatroomListAdapter chatroomListAdapter = new ChatroomListAdapter(this, this);
+        ChatroomListAdapter chatroomListAdapter = new ChatroomListAdapter(this);
         chatroomRecyclerView.setAdapter(chatroomListAdapter);
         adapterView = chatroomListAdapter;
-        chatroomListPresenter = new ChatroomListPresenter(this, adapterView);
+        chatroomListPresenter = new ChatroomListPresenter(this, adapterView, chatroomListAdapter);
 
         String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
         chatroomListPresenter.loadChatrooms(employeeNumber);
+
+        chatroomListAdapter.setOnRecyclerItemClickListener((position) -> {
+            chatroomListPresenter.enterChatroom(position);
+        });
 
         //updateUI();
 
@@ -125,18 +131,6 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_new_chatting:
-//                Chatroom chatroom = new Chatroom();
-//                UserLab userLab = UserLab.get();
-//                List<User> users = userLab.getUsers();
-//                chatroom.setTitle("채팅방#"+(chatrooms.size()+1));
-//                chatroom.setTumbnail(R.drawable.thumb_default_team);
-//                Message msg = new Message();
-////                chatroom.setLatestMsg(msg);
-//                chatroom.setLastMessageContent();
-//                chatroom.setNumber(users.size());
-////                chatroom.setParticipants(users);
-//                chatrooms.add(chatroom);
-
                 startActivity(new Intent(this, NewchatActivity.class));
                 return true;
             case R.id.menu_item_my_setting:
@@ -164,14 +158,6 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         });
     }
 
-
-
-    @Override
-    public void onHolderClick(int position) {
-        Intent intent = ChatroomActivity.newIntent(this, chatrooms.get(position).getId());
-        startActivity(intent);
-    }
-
     private void requestLocationPermission() {
         if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, SettingInfo.REQUEST_LOCATION);
@@ -195,6 +181,18 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
     @Override
     public void showChatrooms() {
-        chatroomListView.setVisibility(View.VISIBLE);
+        chatroomRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showNoChatrooms() {
+        chatroomRecyclerView.setVisibility(View.GONE);
+        noChatroomListView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void moveToChatroom(long chatroomId) {
+        Intent intent = ChatroomActivity.newIntent(this, chatroomId);
+        startActivity(intent);
     }
 }
