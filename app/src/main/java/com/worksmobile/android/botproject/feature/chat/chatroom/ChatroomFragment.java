@@ -95,8 +95,9 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             public void success(Chatbox chatbox) {
                 Log.d("retrofit Success", chatbox.toString());
                 ChatroomFragment.this.chatbox = chatbox;
-
+                messages = chatbox.getMsgList();
                 drawFromChatbox();
+                updateIndoorUI();
             }
 
             @Override
@@ -105,11 +106,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             }
         });
 
-        //TODO 채팅방 아이디로 메시지 내역들을 가져옴
-        messages = MessageLab.get().getMessages();
         dropDownMenus = DropdownMenuLab.get(DROPDOWN_CHATROOM).getDropDownMenus();
-
-
 
         try {
             mqttClient.connect();
@@ -139,7 +136,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         createDropDownMenu();
-        updateIndoorUI();
 
         return view;
     }
@@ -210,9 +206,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     }
 
     private void updateIndoorUI() {
-        MessageLab messageLab = MessageLab.get();
-        List<Message> messages = messageLab.getMessages();
-
         if (messageAdapter == null) {
             messageAdapter = new MessageAdapter(getActivity(), messages, this);
             messageRecyclerView.setAdapter(messageAdapter);
@@ -244,8 +237,11 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         String strText = editTextChatroom.getText().toString();
 
         if (!strText.equals("")) {
-            //Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
-            Message msg = new Message(strText, messages.size() % 2, "WM060001");
+
+            String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
+
+            //TODO : Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
+            Message msg = new Message(chatbox.getChatroomId(), strText, messages.size() % 2, employeeNumber);
 
             Gson gson = new GsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()

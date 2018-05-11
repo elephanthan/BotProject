@@ -11,12 +11,12 @@ import java.util.Date;
  */
 
 public class Message {
-//    @Expose
-//    private int chatroomId;
+    @Expose
+    private long chatroomId;
 
     @SerializedName("messageId")
     private long id;
-    
+
     @Expose
     @SerializedName("srcUserId")
     private String senderId;
@@ -42,7 +42,8 @@ public class Message {
         this.senddate = new Date();
     }
 
-    public Message(String text, int type, String senderId){
+    public Message(long chatroomId, String text, int type, String senderId){
+        this.chatroomId = chatroomId;
         this.id = CommonUtil.generateUniqueId();
         this.senddate = new Date();
         this.content = text;
