@@ -31,7 +31,8 @@ import static com.worksmobile.android.botproject.util.ViewUtil.getResizedTextVie
  */
 
 public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder>
-        implements ChatroomListContract.AdapterView{
+                                    implements ChatroomListContract.AdapterView{
+
     private static Context context;
     private LayoutInflater inflater;
     private int layout;
@@ -49,7 +50,6 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     public ChatroomListAdapter(Context context, ChatroomListClickListener listener) {
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.chatrooms = new ArrayList<>();
         this.listener = listener;
     }
 
@@ -78,7 +78,8 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     }
 
     @Override
-    public void refresh() {
+    public void refresh(List<Chatroom> chatrooms) {
+        setList(chatrooms);
         notifyDataSetChanged();
     }
 

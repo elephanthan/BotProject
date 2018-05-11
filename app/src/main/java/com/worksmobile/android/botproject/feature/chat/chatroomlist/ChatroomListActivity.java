@@ -59,13 +59,17 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        chatroomListPresenter = new ChatroomListPresenter(this);
 
-        updateUI();
         ChatroomListAdapter chatroomListAdapter = new ChatroomListAdapter(this, this);
         chatroomRecyclerView.setAdapter(chatroomListAdapter);
-
         adapterView = chatroomListAdapter;
+        chatroomListPresenter = new ChatroomListPresenter(this, adapterView);
+
+        String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
+        chatroomListPresenter.loadChatrooms(employeeNumber);
+
+        //updateUI();
+
 
         //If a user device turns off bluetooth, request to turn it on.
         //사용자가 블루투스를 켜도록 요청합니다.
@@ -190,9 +194,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     }
 
     @Override
-    public void showChatrooms(List<Chatroom> chatrooms) {
-        adapterView.refresh();
+    public void showChatrooms() {
         chatroomListView.setVisibility(View.VISIBLE);
-
     }
 }

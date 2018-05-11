@@ -9,17 +9,17 @@ import java.util.List;
 public interface ChatroomListContract {
     interface View extends BaseView<ChatroomListContract.Presenter> {
 
-        void showChatrooms(List<Chatroom> chatrooms);
+        void showChatrooms();
 
     }
 
     interface Presenter extends BasePresenter {
 
-        void loadChatrooms();
+        void loadChatrooms(String userId);
 
     }
 
     interface AdapterView {
-        void refresh();
+        void refresh(List<Chatroom> chatrooms);
     }
 }

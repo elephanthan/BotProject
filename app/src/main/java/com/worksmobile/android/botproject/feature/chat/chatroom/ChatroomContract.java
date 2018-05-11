@@ -5,6 +5,7 @@ import com.worksmobile.android.botproject.BaseView;
 
 public interface ChatroomContract {
     interface View extends BaseView<Presenter> {
+        void refresh();
     }
 
     interface Presenter extends BasePresenter{
