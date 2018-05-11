@@ -8,6 +8,7 @@ public class User extends Talker {
     private String userId;
     private String userName;
     private int userImg;
+    private int isConnect;
 
     public User(){
         this.userId = "AA000001";

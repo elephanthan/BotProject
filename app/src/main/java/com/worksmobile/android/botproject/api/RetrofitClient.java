@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.model.User;
@@ -87,6 +88,21 @@ public class RetrofitClient implements  ApiRepository {
         });
     }
 
+    @Override
+    public void getChatbox(long chatroomId, String userId, RequestChatboxCallback callback) {
+        service.getChatbox(chatroomId, userId).enqueue(new Callback<Chatbox>() {
+            @Override
+            public void onResponse(Call<Chatbox> call, Response<Chatbox> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Chatbox> call, Throwable error) {
+                callback.error(error);
+            }
+        });
+    }
+
     public interface ApiService {
         @GET("comments")
         Call<List<Object>> getComment(@Query("id") int id);
@@ -129,5 +145,8 @@ public class RetrofitClient implements  ApiRepository {
 
         @POST("bots")
         Call<List<Map>> sendBotEvent(@Body List<Map> maps);
+
+        @GET("chatrooms/{chatroomId}")
+        Call<Chatbox> getChatbox(@Path("chatroomId") long chatroomId, @Query("userId") String userId);
     }
 }

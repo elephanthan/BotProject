@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
                 if(token.isComplete()){
+                    Log.i("deliveryComplete", "deliveryComplete");
                 }
             }
         });

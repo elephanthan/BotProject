@@ -1,5 +1,6 @@
 package com.worksmobile.android.botproject.api;
 
+import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.User;
 
@@ -18,7 +19,10 @@ public interface ApiRepository {
     public static final String IMAGE_PROFILE_EXT = ".jpeg";
 
     void loginUser(Map<String, String> map, RequestChatroomListCallback callback);
+
     void getChatroomList(String userId, RequestChatroomListCallback callback);
+
+    void getChatbox(long chatroomId, String employeeNumber, RequestChatboxCallback callback);
 
     interface RequestUserCallback {
         void success(User user);
@@ -35,5 +39,9 @@ public interface ApiRepository {
         void success(Chatroom chatroom);
         void error(Throwable throwable);
 
+    }
+    interface RequestChatboxCallback {
+        void success(Chatbox Chatbox);
+        void error(Throwable throwable);
     }
 }

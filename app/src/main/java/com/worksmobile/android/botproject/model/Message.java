@@ -1,5 +1,7 @@
 package com.worksmobile.android.botproject.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.worksmobile.android.botproject.util.CommonUtil;
 
 import java.util.Date;
@@ -9,10 +11,25 @@ import java.util.Date;
  */
 
 public class Message {
+//    @Expose
+//    private int chatroomId;
+
+    @SerializedName("messageId")
     private long id;
+    
+    @Expose
+    @SerializedName("srcUserId")
     private String senderId;
-    private String text;
+
+    @Expose
+    @SerializedName("content")
+    private String content;
+
+    @SerializedName("sendTime")
     private Date senddate;
+
+    @Expose
+    @SerializedName("messageType")
     private int type;
 
     public static final int VIEW_TYPE_MESSAGE_SENT = 0;
@@ -21,21 +38,21 @@ public class Message {
 
     public Message(){
         this.id = CommonUtil.generateUniqueId();
-        this.text = "This is a message.";
+        this.content = "This is a message.";
         this.senddate = new Date();
     }
 
     public Message(String text, int type, String senderId){
         this.id = CommonUtil.generateUniqueId();
         this.senddate = new Date();
-        this.text = text;
+        this.content = text;
         this.type = type;
         this.senderId = senderId;
     }
 
     public Message(int seq){
         this.id = CommonUtil.generateUniqueId();
-        this.text = "This is a message #" + seq;
+        this.content = "This is a message #" + seq;
         this.senddate = new Date();
         this.setType(seq%2);
         this.senderId = "User #"+(seq%2+1);
@@ -54,11 +71,11 @@ public class Message {
     }
 
     public String getText() {
-        return text;
+        return content;
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.content = text;
     }
 
     public String getSenderId() {
@@ -82,7 +99,7 @@ public class Message {
         return "Message{" +
                 "id=" + id +
                 ", senderId='" + senderId + '\'' +
-                ", text='" + text + '\'' +
+                ", text='" + content + '\'' +
                 ", senddate=" + senddate +
                 ", type=" + type +
                 '}';

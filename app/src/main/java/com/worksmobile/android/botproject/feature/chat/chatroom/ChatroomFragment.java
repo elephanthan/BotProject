@@ -20,14 +20,15 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.api.MqttRepository;
-import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomLab;
 import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomListActivity;
 import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
 import com.worksmobile.android.botproject.feature.dialog.SetnotiDialogFragment;
 import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
-import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.DropDownMenu;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
@@ -45,6 +46,7 @@ import butterknife.OnTouch;
 
 import static com.worksmobile.android.botproject.feature.chat.chatroom.DropdownMenuLab.DROPDOWN_CHATROOM;
 import static com.worksmobile.android.botproject.feature.login.LoginActivity.mqttClient;
+import static com.worksmobile.android.botproject.feature.login.LoginActivity.retrofitClient;
 
 public class ChatroomFragment extends Fragment implements ChatroomClickListener {
 
@@ -61,7 +63,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     private MessageAdapter messageAdapter;
 
-    private Chatroom chatroom;
+//    private Chatroom chatroom;
+    private Chatbox chatbox;
     private List<Message> messages;
     private List<DropDownMenu> dropDownMenus;
 
@@ -83,33 +86,49 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         setHasOptionsMenu(true);
 
         long chatroomId = (long) getArguments().getLong(ARG_CHATROOM_ID);
-        chatroom = ChatroomLab.get().getChatroom(chatroomId);
+        //chatroom = ChatroomLab.get().getChatroom(chatroomId);
+
+        String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
+        retrofitClient.getChatbox(chatroomId, employeeNumber, new ApiRepository.RequestChatboxCallback() {
+
+            @Override
+            public void success(Chatbox chatbox) {
+                Log.d("retrofit Success", chatbox.toString());
+                ChatroomFragment.this.chatbox = chatbox;
+
+                drawFromChatbox();
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+                Log.d("retrofit error", "Retrofit Error ::: getChatbox");
+            }
+        });
 
         //TODO 채팅방 아이디로 메시지 내역들을 가져옴
         messages = MessageLab.get().getMessages();
         dropDownMenus = DropdownMenuLab.get(DROPDOWN_CHATROOM).getDropDownMenus();
 
-        String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
+
 
         try {
             mqttClient.connect();
             Log.d("subtopic", MqttRepository.topic + chatroomId + "/users/" + employeeNumber);
-//            mqttClient.subscribe(MqttRepository.topic + chatroomId + "/users/" + employeeNumber, MqttRepository.qos);
-            mqttClient.subscribe(MqttRepository.topic + chatroom.getId(), MqttRepository.qos);
+            mqttClient.subscribe(MqttRepository.topic + chatroomId + "/users/" + employeeNumber, MqttRepository.qos);
+//            mqttClient.subscribe(MqttRepository.topic + chatroom.getId(), MqttRepository.qos);
 
         } catch (MqttException e) {
             e.printStackTrace();
         }
     }
 
-    private void makeMqtt(){
-
+    private void drawFromChatbox() {
+        ((ChatroomActivity) getActivity()).getSupportActionBar().setTitle(chatbox.getTitle());
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((ChatroomActivity) getActivity()).getSupportActionBar().setTitle(chatroom.getTitle());
     }
 
     @Override
@@ -173,7 +192,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                         break;
                     case R.string.action_setnoti :
                         FragmentManager fm = getActivity().getSupportFragmentManager();
-                        
+
                         String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
                         SetnotiDialogFragment dialogFragment = SetnotiDialogFragment.newInstance(employeeNumber);
 
@@ -228,12 +247,18 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             //Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
             Message msg = new Message(strText, messages.size() % 2, "WM060001");
 
-            String msgString = new Gson().toJson(msg);
+            Gson gson = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create();
+
+            String msgString = gson.toJson(msg);
+            Log.i("msgString", msgString);
 
             MqttMessage mqttMessage = new MqttMessage(msgString.getBytes());
             mqttMessage.setQos(MqttRepository.qos);
             try {
-                mqttClient.publish(MqttRepository.topic + chatroom.getId(), mqttMessage);
+                mqttClient.publish(MqttRepository.topic + chatbox.getChatroomId(), mqttMessage);
+                Log.d("pubtopic", MqttRepository.topic + chatbox.getChatroomId());
             } catch (MqttException e) {
                 e.printStackTrace();
             }
