@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.model.ChatroomDataModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,7 +32,7 @@ import static com.worksmobile.android.botproject.util.ViewUtil.getResizedTextVie
  */
 
 public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder>
-                                    implements ChatroomListContract.AdapterView{
+                                    implements ChatroomListContract.AdapterView, ChatroomDataModel{
 
     private static Context context;
     private LayoutInflater inflater;
@@ -63,13 +64,13 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
 
     @Override
     public void onBindViewHolder(final ChatroomHolder holder, int position) {
-        Chatroom chatroom = chatrooms.get(position);
+        Chatroom chatroom = getChatroom(position);
         holder.bindChatroom(chatroom);
     }
 
     @Override
     public int getItemCount() {
-        return chatrooms.size();
+        return getSize();
     }
 
 
@@ -81,6 +82,26 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     public void refresh(List<Chatroom> chatrooms) {
         setList(chatrooms);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void add(Chatroom chatroom) {
+        chatrooms.add(chatroom);
+    }
+
+    @Override
+    public Chatroom remove(int position) {
+        return chatrooms.remove(position);
+    }
+
+    @Override
+    public Chatroom getChatroom(int position) {
+        return chatrooms.get(position);
+    }
+
+    @Override
+    public int getSize() {
+        return chatrooms.size();
     }
 
 
