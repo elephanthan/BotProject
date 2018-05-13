@@ -32,11 +32,16 @@ import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.DropDownMenu;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
+import com.worksmobile.android.botproject.util.UnixEpochDateTypeAdapter;
 import com.worksmobile.android.botproject.util.ViewUtil;
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,7 +50,6 @@ import butterknife.OnClick;
 import butterknife.OnTouch;
 
 import static com.worksmobile.android.botproject.feature.chat.chatroom.DropdownMenuLab.DROPDOWN_CHATROOM;
-import static com.worksmobile.android.botproject.feature.login.LoginActivity.mqttClient;
 import static com.worksmobile.android.botproject.feature.login.LoginActivity.retrofitClient;
 
 public class ChatroomFragment extends Fragment implements ChatroomClickListener {
@@ -71,6 +75,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     MenuItem showhideMenuItem;
 
     GridView dropDownView;
+
+    MqttClient mqttClient;
 
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
@@ -108,6 +114,48 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
         dropDownMenus = DropdownMenuLab.get(DROPDOWN_CHATROOM).getDropDownMenus();
 
+
+
+        mqttClient = MqttRepository.getMqttClient(employeeNumber);
+        mqttClient.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+                cause.printStackTrace();
+                Log.i("connectionLost", cause.getMessage());
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                final Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, UnixEpochDateTypeAdapter.getUnixEpochDateTypeAdapter())
+                        .create();
+
+                final Message arrivedMessage = gson.fromJson(mqttMessage.toString(), Message.class);
+                Log.i("messageArrived", arrivedMessage.toString());
+
+                //TODO extract to method
+//                if(!employeeNumber.equals(arrivedMessage.getSenderId())) {
+                    messages.add(arrivedMessage);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            messageAdapter.notifyDataSetChanged();
+                            messageRecyclerView.scrollToPosition(messages.size()-1);
+                        }
+                    });
+
+//                }
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+                if(token.isComplete()){
+                    Log.i("deliveryComplete", "deliveryComplete");
+                }
+            }
+        });
+
         try {
             mqttClient.connect();
             Log.d("subtopic", MqttRepository.topic + chatroomId + "/users/" + employeeNumber);
@@ -138,6 +186,11 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         createDropDownMenu();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -208,10 +261,9 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     private void updateIndoorUI() {
         if (messageAdapter == null) {
             messageAdapter = new MessageAdapter(getActivity(), messages, this);
-            messageRecyclerView.setAdapter(messageAdapter);
-        } else {
-
         }
+        messageRecyclerView.setAdapter(messageAdapter);
+        messageRecyclerView.scrollToPosition(messages.size()-1);
     }
 
     @Override
@@ -241,7 +293,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
 
             //TODO : Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
-            Message msg = new Message(chatbox.getChatroomId(), strText, messages.size() % 2, employeeNumber);
+            Message msg = new Message(chatbox.getChatroomId(), strText, Message.VIEW_TYPE_MESSAGE_SENT, employeeNumber);
 
             Gson gson = new GsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
@@ -252,15 +304,20 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
             MqttMessage mqttMessage = new MqttMessage(msgString.getBytes());
             mqttMessage.setQos(MqttRepository.qos);
+
             try {
+                if (!mqttClient.isConnected()) {
+                    mqttClient.connect();
+                }
                 mqttClient.publish(MqttRepository.topic + chatbox.getChatroomId(), mqttMessage);
                 Log.d("pubtopic", MqttRepository.topic + chatbox.getChatroomId());
             } catch (MqttException e) {
                 e.printStackTrace();
             }
 
-            messages.add(msg);
-            messageAdapter.notifyDataSetChanged();
+            //TODO : 지금은 MQTT arrive 받고 메시지 그리도록함 향후 보내자마자 그리도록 변경
+//            messages.add(msg);
+//            messageAdapter.notifyDataSetChanged();
 
             editTextChatroom.setText("");
             messageRecyclerView.smoothScrollToPosition(messages.size());
