@@ -104,6 +104,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                 ChatroomFragment.this.chatbox = chatbox;
                 List<Message> loadedMessags = chatbox.getMsgList();
                 List<Message> typedMessages = messageAdapter.setMessagesByUserId(loadedMessags, employeeNumber);
+                typedMessages = messageAdapter.makeType3Message(typedMessages);
+
                 messages.addAll(typedMessages);
                 drawFromChatbox();
                 setMessageAdapter();
@@ -334,5 +336,9 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         ViewUtil.hideKeyboardFrom(getContext(), view);
         return false;
     }
+
+
+
+
 
 }
