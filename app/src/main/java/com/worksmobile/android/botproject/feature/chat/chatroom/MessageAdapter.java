@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Message;
+import com.worksmobile.android.botproject.model.MessageDataModel;
 import com.worksmobile.android.botproject.model.User;
 
 import java.text.SimpleDateFormat;
@@ -24,16 +25,15 @@ import butterknife.ButterKnife;
  * Created by user on 2018. 3. 30..
  */
 
-public class MessageAdapter extends RecyclerView.Adapter {
+public class MessageAdapter extends RecyclerView.Adapter implements MessageDataModel{
     private LayoutInflater inflater;
     private List<Message> messages = new ArrayList<>();
     private List<User> users;
 
     ChatroomClickListener listner;
 
+    public MessageAdapter() {
 
-    public MessageAdapter(List<Message> messages) {
-        this.messages = messages;
     }
 
     public MessageAdapter(Context context, @NonNull List<Message> messages) {
@@ -98,6 +98,18 @@ public class MessageAdapter extends RecyclerView.Adapter {
         //TODO: sendbird의 ID값과 Message의 USERID값을 비교해서 VIEWTYPE 결정해주기 (지금은 짝,홀 1,2 리턴)
 
         return msg.getType();
+    }
+
+    @Override
+    public List<Message> setMessagesByUserId(List<Message> messageList, String userId) {
+        for (Message msg : messageList) {
+            if (msg.getSenderId().equals(userId)) {
+                msg.setType(Message.VIEW_TYPE_MESSAGE_SENT);
+            } else {
+                msg.setType(Message.VIEW_TYPE_MESSAGE_RECEIVED);
+            }
+        }
+        return messageList;
     }
 
     static class SentMessageHolder extends RecyclerView.ViewHolder {

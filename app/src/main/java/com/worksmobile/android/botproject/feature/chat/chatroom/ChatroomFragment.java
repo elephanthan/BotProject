@@ -41,6 +41,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,11 +66,11 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     private View view;
 
-    private MessageAdapter messageAdapter;
+    private MessageAdapter messageAdapter = new MessageAdapter();
 
 //    private Chatroom chatroom;
     private Chatbox chatbox;
-    private List<Message> messages;
+    private List<Message> messages = new ArrayList<>();
     private List<DropDownMenu> dropDownMenus;
 
     MenuItem showhideMenuItem;
@@ -101,9 +102,11 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             public void success(Chatbox chatbox) {
                 Log.d("retrofit Success", chatbox.toString());
                 ChatroomFragment.this.chatbox = chatbox;
-                messages = chatbox.getMsgList();
+                List<Message> loadedMessags = chatbox.getMsgList();
+                List<Message> typedMessages = messageAdapter.setMessagesByUserId(loadedMessags, employeeNumber);
+                messages.addAll(typedMessages);
                 drawFromChatbox();
-                updateIndoorUI();
+                setMessageAdapter();
             }
 
             @Override
@@ -114,8 +117,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
         dropDownMenus = DropdownMenuLab.get(DROPDOWN_CHATROOM).getDropDownMenus();
 
-
-
         mqttClient = MqttRepository.getMqttClient(employeeNumber);
         mqttClient.setCallback(new MqttCallback() {
             @Override
@@ -125,7 +126,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+            public void messageArrived(String topic, MqttMessage mqttMessage) {
                 final Gson gson = new GsonBuilder()
                         .registerTypeAdapter(Date.class, UnixEpochDateTypeAdapter.getUnixEpochDateTypeAdapter())
                         .create();
@@ -134,18 +135,19 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                 Log.i("messageArrived", arrivedMessage.toString());
 
                 //TODO extract to method
-//                if(!employeeNumber.equals(arrivedMessage.getSenderId())) {
+                if(!employeeNumber.equals(arrivedMessage.getSenderId())) {
+                    arrivedMessage.setType(Message.VIEW_TYPE_MESSAGE_RECEIVED);
                     messages.add(arrivedMessage);
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            messageAdapter.notifyDataSetChanged();
-                            messageRecyclerView.scrollToPosition(messages.size()-1);
-                        }
-                    });
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            refreshMessage();
+//                        }
+//                    });
+                    getActivity().runOnUiThread(() -> refreshMessage());
 
-//                }
+                }
             }
 
             @Override
@@ -258,11 +260,14 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         });
     }
 
-    private void updateIndoorUI() {
-        if (messageAdapter == null) {
-            messageAdapter = new MessageAdapter(getActivity(), messages, this);
-        }
+    private void setMessageAdapter() {
+        messageAdapter = new MessageAdapter(getActivity(), messages, this);
         messageRecyclerView.setAdapter(messageAdapter);
+        messageRecyclerView.scrollToPosition(messages.size()-1);
+    }
+
+    private void refreshMessage() {
+        messageAdapter.notifyDataSetChanged();
         messageRecyclerView.scrollToPosition(messages.size()-1);
     }
 
@@ -316,11 +321,11 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             }
 
             //TODO : 지금은 MQTT arrive 받고 메시지 그리도록함 향후 보내자마자 그리도록 변경
-//            messages.add(msg);
-//            messageAdapter.notifyDataSetChanged();
+            messages.add(msg);
+            refreshMessage();
+
 
             editTextChatroom.setText("");
-            messageRecyclerView.smoothScrollToPosition(messages.size());
         }
     }
 
