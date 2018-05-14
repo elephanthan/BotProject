@@ -134,13 +134,9 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
             }
         }
 
-
-
-        int addedCnt = 0;
-        for (Pair<Integer, Message> pair : toAddDates) {
-            //TODO why minus?? not plus??
-            int index = pair.first - addedCnt++;
-            messages.add(index, pair.second);
+        for (int i=toAddDates.size()-1 ;i>=0; i--) {
+            Pair<Integer, Message> pair = toAddDates.get(i);
+            messages.add(pair.first, pair.second);
         }
         return messages;
     }
