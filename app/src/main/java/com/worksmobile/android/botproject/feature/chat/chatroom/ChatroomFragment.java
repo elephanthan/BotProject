@@ -104,7 +104,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                 ChatroomFragment.this.chatbox = chatbox;
                 List<Message> loadedMessags = chatbox.getMsgList();
                 List<Message> typedMessages = messageAdapter.setMessagesByUserId(loadedMessags, employeeNumber);
-                typedMessages = messageAdapter.makeType3Message(typedMessages);
+                typedMessages = messageAdapter.makeDayMessage(typedMessages);
 
                 messages.addAll(typedMessages);
                 drawFromChatbox();
@@ -113,7 +113,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
             @Override
             public void error(Throwable throwable) {
-                Log.d("retrofit error", "Retrofit Error ::: getChatbox");
+                Log.d("retrofit error", "Retrofit Error ::: getChatbox" + throwable);
             }
         });
 

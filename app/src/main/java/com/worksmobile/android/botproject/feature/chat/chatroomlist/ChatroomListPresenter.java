@@ -38,7 +38,7 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
         retrofitClient.getChatroomList(userId, new ApiRepository.RequestChatroomListCallback() {
             @Override
             public void success(List<Chatroom> chatroomList) {
-                Log.d("retrofit Success", chatroomList.toString());
+                Log.d("retrofit success", "getChatroomList");
                 processChatrooms(chatroomList);
             }
 
@@ -55,7 +55,7 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
         chatroomsToShow = chatroomList;
         chatroomAdapterView.refresh(chatroomsToShow);
 
-        if(chatroomList.size()==0){
+        if(chatroomList == null || chatroomList.size() == 0){
             chatroomListView.showNoChatrooms();
         } else {
             chatroomListView.showChatrooms();

@@ -63,6 +63,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
                 view = inflater.inflate(R.layout.item_message_received, parent, false);
                 holder = new ReceivedMessageHolder(view, listner);
                 break;
+            case Message.VIEW_TYPE_MESSAGE_DAY:
+                view = inflater.inflate(R.layout.item_message_day, parent, false);
+                holder = new DayMessageHolder(view);
+                break;
             default:
                 view = inflater.inflate(R.layout.item_message_sent, parent, false);
                 holder = new SentMessageHolder(view, listner);
@@ -80,6 +84,9 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
             case Message.VIEW_TYPE_MESSAGE_RECEIVED:
                  ((ReceivedMessageHolder) holder).bindMessage(msg);
                  break;
+            case Message.VIEW_TYPE_MESSAGE_DAY:
+                ((DayMessageHolder) holder).bindMessage(msg);
+                break;
              default:
                  ((SentMessageHolder) holder).bindMessage(msg);
                  break;
@@ -113,7 +120,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
     }
 
     @Override
-    public List<Message> makeType3Message(List<Message> messageList) {
+    public List<Message> makeDayMessage(List<Message> messageList) {
         List<Message> messages = new ArrayList<>(messageList);
 //        System.out.println("messages size : " + messages.size());
         List<Pair<Integer, Message>> toAddDates = new ArrayList<>();
@@ -172,11 +179,8 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
 
         void bindMessage(Message message) {
             messageTextView.setText(message.getText());
-
-            if(message.getType()==Message.VIEW_TYPE_MESSAGE_SENT) {
-                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
-                timeTextView.setText(sdf.format(message.getSenddate()));
-            }
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+            timeTextView.setText(sdf.format(message.getSenddate()));
         }
     }
 
@@ -224,6 +228,20 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
             nameTextView.setText(message.getSenderId());
+        }
+    }
+
+    static class DayMessageHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.text_message_day)
+        TextView messageDayTextView;
+
+        public DayMessageHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        void bindMessage(Message message) {
+            messageDayTextView.setText(message.getText());
         }
     }
 

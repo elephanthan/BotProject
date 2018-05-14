@@ -11,7 +11,6 @@ public class Bot extends Talker {
     private int botId;
     @SerializedName("name")
     private String botName;
-    @SerializedName("profile")
     private int botImage;
 
     public Bot(){

@@ -12,7 +12,7 @@ import java.util.Date;
  */
 
 public class Message {
-    public static final int VIEW_TYPE_MESSAGE_DAY = 3;
+    public static final int VIEW_TYPE_MESSAGE_DAY = 2;
     public static final int VIEW_TYPE_MESSAGE_SENT = 0;
     public static final int VIEW_TYPE_MESSAGE_RECEIVED = 1;
 
@@ -66,7 +66,6 @@ public class Message {
         //TODO 요일 설정하기 (ENUM 사용해서)
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
         this.content = sdf.format(date);
-        this.content = "-------" + content + "-------";
         this.type = type;
     }
 
