@@ -101,17 +101,18 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             @Override
             public void success(Chatbox chatbox) {
                 //TODO : Check Null
-
                 ChatroomFragment.this.chatbox = chatbox;
                 List<Message> loadedMessags = chatbox.getMsgList();
-                Log.d("retrofit Success", loadedMessags.size()+"!!");
+//                Log.d("retrofit Success", loadedMessags.size()+"!!");
+                if(loadedMessags!=null && loadedMessags.size() > 0) {
+                    List<Message> typedMessages = messageAdapter.setMessagesByUserId(loadedMessags, employeeNumber);
+                    typedMessages = messageAdapter.makeDayMessage(typedMessages);
+                    messages.addAll(typedMessages);
 
-                List<Message> typedMessages = messageAdapter.setMessagesByUserId(loadedMessags, employeeNumber);
-                typedMessages = messageAdapter.makeDayMessage(typedMessages);
-
-                messages.addAll(typedMessages);
+                }
                 drawFromChatbox();
                 setMessageAdapter();
+
             }
 
             @Override
@@ -203,7 +204,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                 if (!recyclerView.canScrollVertically(-1) && !loading) {
                     loading = true;
 
-                    retrofitClient.getMessagesByScroll(chatbox.getChatroomId(), messages.get(0).getId(), 0, new ApiRepository.RequestMessagesCallback() {
+                    //TODO :     make static variable for scroll direction
+                    retrofitClient.getMessagesByScroll(chatbox.getChatroomId(), messages.get(0).getId(), 1, new ApiRepository.RequestMessagesCallback() {
                         @Override
                         public void success(List<Message> messages) {
                             //TODO : Check Null
@@ -293,7 +295,9 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     private void setMessageAdapter() {
         messageAdapter = new MessageAdapter(getActivity(), messages, this);
         messageRecyclerView.setAdapter(messageAdapter);
-        messageRecyclerView.scrollToPosition(messages.size()-1);
+        if(messages != null && messages.size() > 1) {
+            messageRecyclerView.scrollToPosition(messages.size() - 1);
+        }
     }
 
     private void refreshMessage() {
