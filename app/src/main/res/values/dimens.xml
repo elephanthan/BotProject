@@ -2,4 +2,6 @@
 <resources>
     <dimen name="list_item_padding">8dp</dimen>
     <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_big">25sp</dimen>
+    <dimen name="text_size_medium">20sp</dimen>
 </resources>
