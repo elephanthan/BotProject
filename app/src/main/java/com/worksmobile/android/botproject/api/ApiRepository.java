@@ -2,6 +2,7 @@ package com.worksmobile.android.botproject.api;
 
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.model.User;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public interface ApiRepository {
 
     void getChatbox(long chatroomId, String employeeNumber, RequestChatboxCallback callback);
 
+    void getMessagesByScroll(long chatroomId, long id, int scrollDirection, RequestMessagesCallback requestMessagesCallback);
+
     interface RequestUserCallback {
         void success(User user);
         void error(Throwable throwable);
@@ -42,6 +45,11 @@ public interface ApiRepository {
     }
     interface RequestChatboxCallback {
         void success(Chatbox Chatbox);
+        void error(Throwable throwable);
+    }
+
+    interface RequestMessagesCallback {
+        void success(List<Message> messages);
         void error(Throwable throwable);
     }
 }

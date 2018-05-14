@@ -35,6 +35,8 @@ public class Message {
 
     @Expose
     @SerializedName("messageType")
+    private int messageType;
+
     private int type;
 
     public Message(){
@@ -109,15 +111,24 @@ public class Message {
         return chatroomId;
     }
 
+    public int getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(int messageType) {
+        this.messageType = messageType;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
-                "id=" + id +
+                "chatroomId=" + chatroomId +
+                ", id=" + id +
                 ", senderId='" + senderId + '\'' +
-                ", text='" + content + '\'' +
+                ", content='" + content + '\'' +
                 ", senddate=" + senddate +
+                ", messageType=" + messageType +
                 ", type=" + type +
                 '}';
     }
-
 }

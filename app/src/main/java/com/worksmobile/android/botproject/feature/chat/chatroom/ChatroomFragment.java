@@ -100,9 +100,12 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
             @Override
             public void success(Chatbox chatbox) {
-                Log.d("retrofit Success", chatbox.toString());
+                //TODO : Check Null
+
                 ChatroomFragment.this.chatbox = chatbox;
                 List<Message> loadedMessags = chatbox.getMsgList();
+                Log.d("retrofit Success", loadedMessags.size()+"!!");
+
                 List<Message> typedMessages = messageAdapter.setMessagesByUserId(loadedMessags, employeeNumber);
                 typedMessages = messageAdapter.makeDayMessage(typedMessages);
 
@@ -139,17 +142,11 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                 //TODO extract to method
                 if(!employeeNumber.equals(arrivedMessage.getSenderId())) {
                     arrivedMessage.setType(Message.VIEW_TYPE_MESSAGE_RECEIVED);
-                    messages.add(arrivedMessage);
-
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            refreshMessage();
-//                        }
-//                    });
-                    getActivity().runOnUiThread(() -> refreshMessage());
-
+                } else {
+                    arrivedMessage.setType(Message.VIEW_TYPE_MESSAGE_SENT);
                 }
+                messages.add(arrivedMessage);
+                getActivity().runOnUiThread(() -> refreshMessage());
             }
 
             @Override
@@ -192,9 +189,40 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         return view;
     }
 
+    boolean loading = false;
+
     @Override
     public void onResume() {
         super.onResume();
+
+
+        RecyclerView.OnScrollListener listener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(-1) && !loading) {
+                    loading = true;
+
+                    retrofitClient.getMessagesByScroll(chatbox.getChatroomId(), messages.get(0).getId(), 0, new ApiRepository.RequestMessagesCallback() {
+                        @Override
+                        public void success(List<Message> messages) {
+                            //TODO : Check Null
+                            loading = false;
+                            ChatroomFragment.this.messages.addAll(0, messages);
+                            messageAdapter.notifyDataSetChanged();
+                            //TODO : compute scroll position when new data loaded
+                            recyclerView.scrollToPosition(messages.size()-1 + 5);
+                        }
+                        @Override
+                        public void error(Throwable throwable) {
+                            Log.i("retrofit error", "Retrofit Error ::: getMessagesByScroll" + throwable);
+                        }
+                    });
+
+                }
+            }
+        };
+        messageRecyclerView.addOnScrollListener(listener);
     }
 
     @Override
@@ -323,8 +351,9 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             }
 
             //TODO : 지금은 MQTT arrive 받고 메시지 그리도록함 향후 보내자마자 그리도록 변경
-            messages.add(msg);
-            refreshMessage();
+            //TODO : send 누르자마자 일단 그림! => 그리고 메시지 arrived받으면 그것의 객체를 찾아서 수정해야함..
+//            messages.add(msg);
+//            refreshMessage();
 
 
             editTextChatroom.setText("");
@@ -336,9 +365,5 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         ViewUtil.hideKeyboardFrom(getContext(), view);
         return false;
     }
-
-
-
-
 
 }

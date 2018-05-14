@@ -103,6 +103,22 @@ public class RetrofitClient implements  ApiRepository {
         });
     }
 
+    @Override
+    public void getMessagesByScroll(long chatroomId, long id, int scrollDirection, RequestMessagesCallback callback) {
+        service.getMessagesByScroll(chatroomId, id, scrollDirection).enqueue(new Callback<List<Message>>() {
+
+            @Override
+            public void onResponse(Call<List<Message>> call, Response<List<Message>> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Message>> call, Throwable error) {
+                callback.error(error);
+            }
+        });
+    }
+
     public interface ApiService {
         @GET("comments")
         Call<List<Object>> getComment(@Query("id") int id);
@@ -148,5 +164,8 @@ public class RetrofitClient implements  ApiRepository {
 
         @GET("chatrooms/{chatroomId}")
         Call<Chatbox> getChatbox(@Path("chatroomId") long chatroomId, @Query("userId") String userId);
+
+        @GET("messages")
+        Call<List<Message>> getMessagesByScroll(@Query("chatroomId") long chatroomId, @Query("messageId")long id, @Query("actionDirection")int scrollDirection);
     }
 }
