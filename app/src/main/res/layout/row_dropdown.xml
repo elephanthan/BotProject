@@ -8,8 +8,8 @@
     android:minHeight="100dp">
     <ImageView
         android:id="@+id/dd_imageview"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:gravity="center"/>
 
     <TextView

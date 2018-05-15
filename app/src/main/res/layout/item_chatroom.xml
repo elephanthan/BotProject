@@ -7,8 +7,9 @@
 
     <ImageView
         android:id="@+id/list_item_chatroom_thumbnail_img"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:background="@drawable/bg_chatroomlist_profile"
         android:layout_marginBottom="16dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"

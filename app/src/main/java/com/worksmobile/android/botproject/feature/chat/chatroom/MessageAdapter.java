@@ -245,7 +245,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
                 messageImageView.setVisibility(View.VISIBLE);
                 timeTextViewForImageView.setVisibility(View.VISIBLE);
 
-                Glide.with(context).load(message.getText()).into(messageImageView);
+                Glide.with(context).load(message.getText()).override(520,520).into(messageImageView);
                 timeTextViewForImageView.setText(sdf.format(message.getSenddate()));
             } else {
 
