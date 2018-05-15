@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Message;
@@ -28,10 +29,10 @@ import butterknife.ButterKnife;
  */
 
 public class MessageAdapter extends RecyclerView.Adapter implements MessageDataModel{
+    private Context context;
     private LayoutInflater inflater;
     private List<Message> messages = new ArrayList<>();
     private ChatroomClickListener listner;
-
     private Chatbox chatbox;
 
     public MessageAdapter() {
@@ -39,6 +40,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
     }
 
     public MessageAdapter(Context context, @NonNull List<Message> messages, ChatroomClickListener listener) {
+        this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messages = messages;
         this.listner = listener;
@@ -60,7 +62,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
                 break;
             case Message.VIEW_TYPE_MESSAGE_RECEIVED:
                 view = inflater.inflate(R.layout.item_message_received, parent, false);
-                holder = new ReceivedMessageHolder(view, MessageAdapter.this.chatbox, listner);
+                holder = new ReceivedMessageHolder(view, context, MessageAdapter.this.chatbox, listner);
                 break;
             case Message.VIEW_TYPE_MESSAGE_DAY:
                 view = inflater.inflate(R.layout.item_message_day, parent, false);
@@ -182,8 +184,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
 
         @BindView(R.id.text_message_body)
         TextView messageTextView;
+        @BindView(R.id.image_message_body)
+        ImageView messageImageView;
         @BindView(R.id.text_message_time)
         TextView timeTextView;
+        @BindView(R.id.text_message_time_for_image)
+        TextView timeTextViewForImageView;
         @BindView(R.id.image_message_profile)
         ImageView profileImageView;
         @BindView(R.id.text_message_name)
@@ -191,12 +197,14 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
         @BindView(R.id.layout_message_item)
         ViewGroup layout;
 
+        private Context context;
         private Chatbox chatbox;
 
-        public ReceivedMessageHolder(View itemView, Chatbox chatbox, final ChatroomClickListener listener) {
+        public ReceivedMessageHolder(View itemView, Context context, Chatbox chatbox, final ChatroomClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
+            this.context = context;
             this.chatbox = chatbox;
 
             this.profileImageView.setOnClickListener(new View.OnClickListener(){
@@ -222,12 +230,35 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
         }
 
         void bindMessage(Message message) {
-            messageTextView.setText(message.getText());
             SimpleDateFormat sdf = new SimpleDateFormat("a hh:mm");
-            timeTextView.setText(sdf.format(message.getSenddate()));
+            if (message.getMessageType() == 0) {
+                messageTextView.setVisibility(View.VISIBLE);
+                timeTextView.setVisibility(View.VISIBLE);
+                messageImageView.setVisibility(View.GONE);
+                timeTextViewForImageView.setVisibility(View.GONE);
 
+                messageTextView.setText(message.getText());
+                timeTextView.setText(sdf.format(message.getSenddate()));
+            } else if (message.getMessageType() == 1) {
+                messageTextView.setVisibility(View.GONE);
+                timeTextView.setVisibility(View.GONE);
+                messageImageView.setVisibility(View.VISIBLE);
+                timeTextViewForImageView.setVisibility(View.VISIBLE);
+
+                Glide.with(context).load(message.getText()).into(messageImageView);
+                timeTextViewForImageView.setText(sdf.format(message.getSenddate()));
+            } else {
+
+            }
+
+            String name = getName(message);
+            nameTextView.setText(name);
+        }
+
+        private String getName(Message message) {
             if(chatbox.getChatroomType() == 1) {
-                nameTextView.setText(chatbox.getChatBot().getName());
+                return chatbox.getChatBot().getName();
+
             } else {
                 String userNickname = message.getSenderId();
 
@@ -238,7 +269,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
                         break;
                     }
                 }
-                nameTextView.setText(userNickname);
+                return userNickname;
             }
         }
     }

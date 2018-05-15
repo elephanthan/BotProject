@@ -6,9 +6,13 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.api.RetrofitClient;
 import com.worksmobile.android.botproject.feature.login.LoginActivity;
 
 public class SplashActivity extends AppCompatActivity {
+
+    public static final RetrofitClient retrofitClient = new RetrofitClient();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

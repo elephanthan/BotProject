@@ -9,7 +9,6 @@ import android.widget.EditText;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
-import com.worksmobile.android.botproject.api.RetrofitClient;
 import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomListActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
@@ -22,6 +21,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,8 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     Button btnLogin;
     @BindView(R.id.edittext_login)
     EditText editTextLogin;
-
-    public static final RetrofitClient retrofitClient = new RetrofitClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -10,7 +10,7 @@ import com.worksmobile.android.botproject.model.ChatroomDataModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worksmobile.android.botproject.feature.login.LoginActivity.retrofitClient;
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 public class ChatroomListPresenter implements ChatroomListContract.Presenter{
 

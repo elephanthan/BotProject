@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.worksmobile.android.botproject.feature.login.LoginActivity.retrofitClient;
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 /**
  * RECOBackgroundMonitoringService is to monitor regions in the background.

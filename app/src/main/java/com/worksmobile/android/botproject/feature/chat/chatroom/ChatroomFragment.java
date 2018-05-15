@@ -51,7 +51,7 @@ import butterknife.OnClick;
 import butterknife.OnTouch;
 
 import static com.worksmobile.android.botproject.feature.chat.chatroom.DropdownMenuLab.DROPDOWN_CHATROOM;
-import static com.worksmobile.android.botproject.feature.login.LoginActivity.retrofitClient;
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 public class ChatroomFragment extends Fragment implements ChatroomClickListener {
 

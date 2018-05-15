@@ -31,7 +31,7 @@ import com.worksmobile.android.botproject.util.SharedPrefUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worksmobile.android.botproject.feature.login.LoginActivity.retrofitClient;
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 public class ChatroomListActivity extends AppCompatActivity implements ChatroomListContract.View {
 
