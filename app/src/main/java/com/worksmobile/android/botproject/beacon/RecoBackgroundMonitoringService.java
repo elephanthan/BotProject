@@ -47,8 +47,8 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
         retrofitClient.moveRegion("WM060001", "24DDF411-8CF1-440C-87CD-E368DAF9C93E", 801, 3712, 1, 3.333, new ApiRepository.RequestVoidCallback() {
 
             @Override
-            public void success(String s) {
-                Log.i("moveRegion", s);
+            public void success() {
+                Log.i("moveRegion", "success");
             }
 
             @Override
@@ -196,7 +196,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
         for (RECOBeacon beacon : beacons) {
             retrofitClient.moveRegion(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
                 @Override
-                public void success(String response) {
+                public void success() {
                 }
 
                 @Override
@@ -231,7 +231,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
         Log.i("BackMonitoringService", "popupNotification()");
         String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(new Date());
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher_works)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_icon_noti)
                 .setContentTitle(msg + " " + currentTime)
                 .setContentText(msg);
 

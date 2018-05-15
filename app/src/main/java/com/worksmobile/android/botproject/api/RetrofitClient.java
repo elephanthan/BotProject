@@ -126,18 +126,26 @@ public class RetrofitClient implements  ApiRepository {
 
     @Override
     public void moveRegion(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback callback) {
-        Log.i("moveRegion", signal + " moved" );
         String beaconJson = makeBeaconJson(userId, new WorksBeacon(uuid, major, minor, signal, distance)).toString();
+        Log.i("beaconJson", beaconJson );
         service.moveRegion(beaconJson).enqueue(new Callback<Void>(){
 
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                callback.success(response.headers().toString());
+                if (response.code() >= 400 && response.code() < 599) {
+                    onFailure(call, new ApiConnectionLostException("Connection lost Exception has been occured."));
+                } else {
+                    callback.success();
+                }
+            }
+
+            public void onSuccess(Response<Void> response) {
+
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable error) {
-                callback.error(error);
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.error(t);
             }
         });
     }

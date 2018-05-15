@@ -79,6 +79,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     MqttClient mqttClient;
 
+    private EndlessRecyclerViewScrollListener scrollListener;
+
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
         args.putLong(ARG_CHATROOM_ID, chatroomId);
@@ -108,7 +110,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                     List<Message> typedMessages = messageAdapter.setMessagesByUserId(loadedMessags, employeeNumber);
                     typedMessages = messageAdapter.makeDayMessage(typedMessages);
                     messages.addAll(typedMessages);
-
+                    Log.i("loaded size", messages.size()+"");
                 }
                 drawFromChatbox();
                 setMessageAdapter();
@@ -190,45 +192,51 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         return view;
     }
 
-    boolean loading = false;
-
     @Override
     public void onResume() {
         super.onResume();
 
-//        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-//        mLayoutManager.setReverseLayout(false);
-//        mLayoutManager.setStackFromEnd(true);
-//        messageRecyclerView.setLayoutManager(mLayoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        messageRecyclerView.setLayoutManager(linearLayoutManager);
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        messageRecyclerView.addOnScrollListener(scrollListener);
+    }
 
-//        RecyclerView.OnScrollListener listener = new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//                if (!recyclerView.canScrollVertically(-1) && !loading) {
-//                    loading = true;
-//
-//                    //TODO :     make static variable for scroll direction
-//                    retrofitClient.getMessagesByScroll(chatbox.getChatroomId(), messages.get(0).getId(), 0, new ApiRepository.RequestMessagesCallback() {
-//                        @Override
-//                        public void success(List<Message> messages) {
-//                            //TODO : Check Null
-//                            loading = false;
-//                            ChatroomFragment.this.messages.addAll(0, messages);
-//                            messageAdapter.notifyDataSetChanged();
-//                            //TODO : compute scroll position when new data loaded
-//                            recyclerView.scrollToPosition(messages.size()-1 + 5);
-//                        }
-//                        @Override
-//                        public void error(Throwable throwable) {
-//                            Log.i("retrofit error", "Retrofit Error ::: getMessagesByScroll" + throwable);
-//                        }
-//                    });
-//
-//                }
-//            }
-//        };
-//        messageRecyclerView.addOnScrollListener(listener);
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+
+        retrofitClient.getMessagesByScroll(chatbox.getChatroomId(), messages.get(0).getId(), 1, new ApiRepository.RequestMessagesCallback() {
+            @Override
+            public void success(List<Message> messages) {
+                //TODO : Check Null
+                if (messages != null && messages.size() > 0) {
+                    ChatroomFragment.this.messages.addAll(0, messages);
+                    messageAdapter.notifyItemRangeInserted(0, messages.size() - 1);
+                    scrollListener.onComplete();
+                }
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+                Log.i("retrofit error", "Retrofit Error ::: getMessagesByScroll" + throwable);
+            }
+        });
+
     }
 
     @Override

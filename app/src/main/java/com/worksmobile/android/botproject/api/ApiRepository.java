@@ -14,7 +14,7 @@ import java.util.Map;
 
 public interface ApiRepository {
     public static String SCHEME = "http";
-    public static String AUTHORITY = "10.106.151.135:8080";
+    public static String AUTHORITY = "10.106.150.71:8080";
 //    public static String AUTHORITY2 = "10.66.76.25:8084";
 
 
@@ -58,7 +58,7 @@ public interface ApiRepository {
     }
 
     interface RequestVoidCallback {
-        void success(String s);
+        void success();
         void error(Throwable throwable);
     }
 }

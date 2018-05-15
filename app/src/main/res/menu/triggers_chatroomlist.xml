@@ -4,15 +4,13 @@
 
     <item
         android:id="@+id/menu_item_new_chatting"
-        android:icon="@drawable/ic_action_newchat"
+        android:icon="@drawable/ic_icon_newchat"
         android:title="@string/new_chatting"
-        app:showAsAction="ifRoom|withText"
-        />
-
+        app:showAsAction="ifRoom|withText"/>
 
     <item
         android:id="@+id/menu_item_my_setting"
-        android:icon="@drawable/ic_action_setting"
+        android:icon="@drawable/ic_icon_setting"
         android:title="@string/my_setting"
         app:showAsAction="ifRoom|withText" />
 
