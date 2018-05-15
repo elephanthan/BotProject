@@ -31,6 +31,7 @@ import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.DropDownMenu;
 import com.worksmobile.android.botproject.model.Message;
+import com.worksmobile.android.botproject.util.FullScreenImage;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
 import com.worksmobile.android.botproject.util.UnixEpochDateTypeAdapter;
 import com.worksmobile.android.botproject.util.ViewUtil;
@@ -102,15 +103,13 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
             @Override
             public void success(Chatbox chatbox) {
-                //TODO : Check Null
                 ChatroomFragment.this.chatbox = chatbox;
                 List<Message> loadedMessags = chatbox.getMsgList();
-//                Log.d("retrofit Success", loadedMessags.size()+"!!");
+                Log.i("loaded size", messages.size()+"");
                 if(loadedMessags!=null && loadedMessags.size() > 0) {
                     List<Message> typedMessages = messageAdapter.setMessagesByUserId(loadedMessags, employeeNumber);
                     typedMessages = messageAdapter.makeDayMessage(typedMessages);
                     messages.addAll(typedMessages);
-                    Log.i("loaded size", messages.size()+"");
                 }
                 drawFromChatbox();
                 setMessageAdapter();
@@ -333,6 +332,13 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     @Override
     public void onHolderClick() {
         ViewUtil.hideKeyboardFrom(getContext(), view);
+    }
+
+    @Override
+    public void onMessageImageClick(int position) {
+        Toast.makeText(getActivity(), "onMessageImageClick", Toast.LENGTH_SHORT).show();
+        Intent intent = FullScreenImage.newIntent(getActivity(), messages.get(position).getText());
+        startActivity(intent);
     }
 
     @OnClick(R.id.button_chatroom_send)

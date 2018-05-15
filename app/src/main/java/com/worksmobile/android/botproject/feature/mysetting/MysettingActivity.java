@@ -51,7 +51,7 @@ public class MysettingActivity extends AppCompatActivity {
 
         ImageView imageView = (ImageView) findViewById(R.id.imageview_profile);
         String imageUrl = IMAGE_URL + employeeNumber + IMAGE_PROFILE_EXT;
-        Glide.with(this).load(imageUrl).into(imageView);
+        Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_icon_man).into(imageView);
 
         bgmonitoringSwitch = (Switch) findViewById(R.id.switch_beacon_monitoring);
         bgmonitoringSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -75,7 +75,7 @@ public class MysettingActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_ok:
-                Toast.makeText(this, "유저 정보 수정", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "유저 설정 변경", Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

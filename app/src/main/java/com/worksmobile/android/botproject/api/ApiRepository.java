@@ -18,7 +18,7 @@ public interface ApiRepository {
 //    public static String AUTHORITY2 = "10.66.76.25:8084";
 
 
-    public static final String IMAGE_URL = "http://10.66.76.40:8081/image/";
+    public static final String IMAGE_URL = "http://10.106.150.71:8080/image/";
     public static final String IMAGE_PROFILE_EXT = ".jpeg";
 
     void loginUser(Map<String, String> map, RequestChatroomListCallback callback);

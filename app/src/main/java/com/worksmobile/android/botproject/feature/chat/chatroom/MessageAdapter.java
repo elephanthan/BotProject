@@ -227,6 +227,13 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
                     listener.onHolderClick();
                 }
             });
+
+            this.messageImageView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    listener.onMessageImageClick(getAdapterPosition());
+                }
+            });
         }
 
         void bindMessage(Message message) {
