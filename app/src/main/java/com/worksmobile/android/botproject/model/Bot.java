@@ -14,8 +14,7 @@ public class Bot extends Talker {
     private int botImage;
 
     public Bot(){
-        this.botId = 0;
-        this.botName = "chatbot";
+
     }
 
     public Bot(int id, String name){

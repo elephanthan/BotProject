@@ -1,9 +1,12 @@
 package com.worksmobile.android.botproject.api;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.worksmobile.android.botproject.beacon.WorksBeacon;
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
@@ -39,6 +42,8 @@ public class RetrofitClient implements  ApiRepository {
     private ApiService service;
     Gson gson;
 
+
+    //test code
     public RetrofitClient(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(new Uri.Builder().scheme(SCHEME).encodedAuthority(AUTHORITY).build().toString())
@@ -119,6 +124,43 @@ public class RetrofitClient implements  ApiRepository {
         });
     }
 
+    @Override
+    public void moveRegion(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback callback) {
+        Log.i("moveRegion", signal + " moved" );
+        String beaconJson = makeBeaconJson(userId, new WorksBeacon(uuid, major, minor, signal, distance)).toString();
+        service.moveRegion(beaconJson).enqueue(new Callback<Void>(){
+
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                callback.success(response.headers().toString());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable error) {
+                callback.error(error);
+            }
+        });
+    }
+
+    private JsonObject makeBeaconJson(String userId, WorksBeacon worksBeacon) {
+        Gson gson = new Gson();
+        JsonObject userIdObj = new JsonObject();
+        JsonObject beaconObj = new JsonObject();
+
+        userIdObj.addProperty("userId", userId);
+        beaconObj.add("beacon", gson.toJsonTree(worksBeacon));
+//        beaconObj.addProperty("beacon", gson.toJson(worksBeacon)); ==> trigger error
+
+        JsonObject returnJson = new JsonObject();
+        returnJson.add("source", userIdObj);
+        returnJson.add("data", beaconObj);
+
+        Log.i("JSONTEST", returnJson.toString());
+
+        return returnJson;
+    }
+
+
     public interface ApiService {
         @GET("comments")
         Call<List<Object>> getComment(@Query("id") int id);
@@ -167,5 +209,8 @@ public class RetrofitClient implements  ApiRepository {
 
         @GET("messages")
         Call<List<Message>> getMessagesByScroll(@Query("chatroomId") long chatroomId, @Query("messageId")long id, @Query("actionDirection")int scrollDirection);
+
+        @POST("beacons")
+        Call<Void> moveRegion(@Body String beaconJson);
     }
 }

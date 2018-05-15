@@ -14,7 +14,9 @@ import java.util.Map;
 
 public interface ApiRepository {
     public static String SCHEME = "http";
-    public static String AUTHORITY = "10.106.150.71:8080";
+    public static String AUTHORITY = "10.106.151.135:8080";
+//    public static String AUTHORITY2 = "10.66.76.25:8084";
+
 
     public static final String IMAGE_URL = "http://10.66.76.40:8081/image/";
     public static final String IMAGE_PROFILE_EXT = ".jpeg";
@@ -26,6 +28,8 @@ public interface ApiRepository {
     void getChatbox(long chatroomId, String employeeNumber, RequestChatboxCallback callback);
 
     void getMessagesByScroll(long chatroomId, long id, int scrollDirection, RequestMessagesCallback requestMessagesCallback);
+
+    void moveRegion(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback requestVoidCallback);
 
     interface RequestUserCallback {
         void success(User user);
@@ -50,6 +54,11 @@ public interface ApiRepository {
 
     interface RequestMessagesCallback {
         void success(List<Message> messages);
+        void error(Throwable throwable);
+    }
+
+    interface RequestVoidCallback {
+        void success(String s);
         void error(Throwable throwable);
     }
 }

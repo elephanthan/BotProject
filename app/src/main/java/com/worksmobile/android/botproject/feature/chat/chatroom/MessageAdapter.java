@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.model.MessageDataModel;
 import com.worksmobile.android.botproject.model.User;
@@ -29,24 +30,22 @@ import butterknife.ButterKnife;
 public class MessageAdapter extends RecyclerView.Adapter implements MessageDataModel{
     private LayoutInflater inflater;
     private List<Message> messages = new ArrayList<>();
-    private List<User> users;
     private ChatroomClickListener listner;
+
+    private Chatbox chatbox;
 
     public MessageAdapter() {
 
     }
 
-    public MessageAdapter(Context context, @NonNull List<Message> messages) {
-        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.messages = messages;
-        this.users = UserLab.get().getUsers();
-    }
-
     public MessageAdapter(Context context, @NonNull List<Message> messages, ChatroomClickListener listener) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messages = messages;
-        this.users = UserLab.get().getUsers();
         this.listner = listener;
+    }
+
+    public void setChatBox(Chatbox chatbox) {
+        this.chatbox = chatbox;
     }
 
     @Override
@@ -61,7 +60,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
                 break;
             case Message.VIEW_TYPE_MESSAGE_RECEIVED:
                 view = inflater.inflate(R.layout.item_message_received, parent, false);
-                holder = new ReceivedMessageHolder(view, listner);
+                holder = new ReceivedMessageHolder(view, MessageAdapter.this.chatbox, listner);
                 break;
             case Message.VIEW_TYPE_MESSAGE_DAY:
                 view = inflater.inflate(R.layout.item_message_day, parent, false);
@@ -141,7 +140,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
         return messages;
     }
 
-
     static class SentMessageHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.text_message_body)
         TextView messageTextView;
@@ -175,7 +173,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
 
         void bindMessage(Message message) {
             messageTextView.setText(message.getText());
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+            SimpleDateFormat sdf = new SimpleDateFormat("a hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
         }
     }
@@ -193,9 +191,13 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
         @BindView(R.id.layout_message_item)
         ViewGroup layout;
 
-        public ReceivedMessageHolder(View itemView, final ChatroomClickListener listener) {
+        private Chatbox chatbox;
+
+        public ReceivedMessageHolder(View itemView, Chatbox chatbox, final ChatroomClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            this.chatbox = chatbox;
 
             this.profileImageView.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -221,9 +223,23 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
 
         void bindMessage(Message message) {
             messageTextView.setText(message.getText());
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+            SimpleDateFormat sdf = new SimpleDateFormat("a hh:mm");
             timeTextView.setText(sdf.format(message.getSenddate()));
-            nameTextView.setText(message.getSenderId());
+
+            if(chatbox.getChatroomType() == 1) {
+                nameTextView.setText(chatbox.getChatBot().getName());
+            } else {
+                String userNickname = message.getSenderId();
+
+                List<User> users = chatbox.getChatUsers();
+                for (User user: users) {
+                    if (user.getUserId().equals(userNickname)) {
+                        userNickname = user.getName();
+                        break;
+                    }
+                }
+                nameTextView.setText(userNickname);
+            }
         }
     }
 

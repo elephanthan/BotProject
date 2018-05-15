@@ -45,21 +45,12 @@ public class Message {
         this.senddate = new Date();
     }
 
-    public Message(long chatroomId, String text, int type, String senderId){
+    public Message(long chatroomId, String text, String senderId){
         this.chatroomId = chatroomId;
         this.id = CommonUtil.generateUniqueId();
         this.senddate = new Date();
         this.content = text;
-        this.type = type;
         this.senderId = senderId;
-    }
-
-    public Message(int seq){
-        this.id = CommonUtil.generateUniqueId();
-        this.content = "This is a message #" + seq;
-        this.senddate = new Date();
-        this.setType(seq%2);
-        this.senderId = "User #"+(seq%2+1);
     }
 
     public Message(long chatroomId, Date date, int type) {
@@ -70,6 +61,8 @@ public class Message {
         this.content = sdf.format(date);
         this.type = type;
     }
+
+
 
     public long getId() {
         return id;

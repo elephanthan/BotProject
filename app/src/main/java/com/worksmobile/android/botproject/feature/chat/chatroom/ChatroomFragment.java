@@ -112,7 +112,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                 }
                 drawFromChatbox();
                 setMessageAdapter();
-
+                messageAdapter.setChatBox(chatbox);
             }
 
             @Override
@@ -196,35 +196,39 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     public void onResume() {
         super.onResume();
 
+//        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+//        mLayoutManager.setReverseLayout(false);
+//        mLayoutManager.setStackFromEnd(true);
+//        messageRecyclerView.setLayoutManager(mLayoutManager);
 
-        RecyclerView.OnScrollListener listener = new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(-1) && !loading) {
-                    loading = true;
-
-                    //TODO :     make static variable for scroll direction
-                    retrofitClient.getMessagesByScroll(chatbox.getChatroomId(), messages.get(0).getId(), 1, new ApiRepository.RequestMessagesCallback() {
-                        @Override
-                        public void success(List<Message> messages) {
-                            //TODO : Check Null
-                            loading = false;
-                            ChatroomFragment.this.messages.addAll(0, messages);
-                            messageAdapter.notifyDataSetChanged();
-                            //TODO : compute scroll position when new data loaded
-                            recyclerView.scrollToPosition(messages.size()-1 + 5);
-                        }
-                        @Override
-                        public void error(Throwable throwable) {
-                            Log.i("retrofit error", "Retrofit Error ::: getMessagesByScroll" + throwable);
-                        }
-                    });
-
-                }
-            }
-        };
-        messageRecyclerView.addOnScrollListener(listener);
+//        RecyclerView.OnScrollListener listener = new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                if (!recyclerView.canScrollVertically(-1) && !loading) {
+//                    loading = true;
+//
+//                    //TODO :     make static variable for scroll direction
+//                    retrofitClient.getMessagesByScroll(chatbox.getChatroomId(), messages.get(0).getId(), 0, new ApiRepository.RequestMessagesCallback() {
+//                        @Override
+//                        public void success(List<Message> messages) {
+//                            //TODO : Check Null
+//                            loading = false;
+//                            ChatroomFragment.this.messages.addAll(0, messages);
+//                            messageAdapter.notifyDataSetChanged();
+//                            //TODO : compute scroll position when new data loaded
+//                            recyclerView.scrollToPosition(messages.size()-1 + 5);
+//                        }
+//                        @Override
+//                        public void error(Throwable throwable) {
+//                            Log.i("retrofit error", "Retrofit Error ::: getMessagesByScroll" + throwable);
+//                        }
+//                    });
+//
+//                }
+//            }
+//        };
+//        messageRecyclerView.addOnScrollListener(listener);
     }
 
     @Override
@@ -331,8 +335,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
             String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
 
-            //TODO : Message msg = new Message(strText, Message.VIEW_TYPE_MESSAGE_SENT);
-            Message msg = new Message(chatbox.getChatroomId(), strText, Message.VIEW_TYPE_MESSAGE_SENT, employeeNumber);
+            Message msg = new Message(chatbox.getChatroomId(), strText, employeeNumber);
 
             Gson gson = new GsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()

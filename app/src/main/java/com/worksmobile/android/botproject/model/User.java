@@ -1,18 +1,20 @@
 package com.worksmobile.android.botproject.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by user on 2018. 3. 30..
  */
 
 public class User extends Talker {
     private String userId;
+    @SerializedName("nickname")
     private String userName;
     private int userImg;
     private int isConnect;
 
-    public User(){
-        this.userId = "AA000001";
-        this.userName = "user_unknown";
+    public User() {
+
     }
 
     public User(String userName){
