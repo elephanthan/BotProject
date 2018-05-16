@@ -6,7 +6,6 @@ import android.util.Log;
 import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.model.Chatroom;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
@@ -16,8 +15,6 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
     private final ChatroomListContract.View chatroomListView;
     private final ChatroomListContract.AdapterView chatroomAdapterView;
     private final ChatroomListDataModel chatroomDataModel;
-
-    List<Chatroom> chatroomsToShow = new ArrayList<Chatroom>();
 
     public ChatroomListPresenter(@NonNull ChatroomListContract.View view, ChatroomListContract.AdapterView adapterView, @NonNull ChatroomListDataModel dataModel) {
         this.chatroomListView = view;
@@ -33,7 +30,6 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
 
     @Override
     public void loadChatrooms(String userId) {
-        //List<Chatroom> chatroomsToShow = new ArrayList<Chatroom>();
         retrofitClient.getChatroomList(userId, new ApiRepository.RequestChatroomListCallback() {
             @Override
             public void success(List<Chatroom> chatroomList) {
@@ -49,8 +45,7 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
     }
 
     private void processChatrooms(List<Chatroom> chatroomList) {
-        chatroomsToShow = chatroomList;
-        chatroomAdapterView.refresh(chatroomsToShow);
+        chatroomAdapterView.refresh(chatroomList);
 
         if(chatroomList == null || chatroomList.size() == 0){
             chatroomListView.showNoChatrooms();

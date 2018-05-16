@@ -121,7 +121,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
     }
 
     @Override
-    public List<Message> makeDayMessage(List<Message> messageList) {
+    public List<Message> insertDayMessage(List<Message> messageList) {
         List<Message> messages = new ArrayList<>(messageList);
         List<Pair<Integer, Message>> toAddDates = new ArrayList<>();
 
@@ -265,7 +265,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
         private String getName(Message message) {
             if(chatbox.getChatroomType() == Chatbox.CHATROOM_TYPE_BOT) {
                 return chatbox.getChatBot().getName();
-
             } else {
                 String userNickname = message.getSenderId();
 

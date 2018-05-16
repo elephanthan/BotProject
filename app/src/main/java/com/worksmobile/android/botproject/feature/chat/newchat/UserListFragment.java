@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.api.ApiRepository;
+import com.worksmobile.android.botproject.model.Bot;
 import com.worksmobile.android.botproject.model.Talker;
 
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 /**
  * Created by user on 2018. 4. 25..
@@ -30,7 +34,7 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     @BindView(R.id.newchat_recycler_view)
     RecyclerView userRecyclerView;
     private TalkerAdapter talkerAdapter;
-    List<Talker> talkers = new ArrayList<Talker>();
+    List<? extends Talker> talkers = new ArrayList<Talker>();
 
     private MenuItem checkMenuItem;
 
@@ -90,17 +94,32 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     }
 
     private void updateUI() {
-        TalkerFactory talkerFactory = new TalkerFactory();
-        talkers = talkerFactory.getTalkers(Talker.TALKER_TYPE_USER);
+        retrofitClient.getTalkers(new ApiRepository.RequestTalkerCallback() {
+            @Override
+            public void success(TalkerDataModel talkerDataModel) {
+                talkerDataModel.setUsers(talkerDataModel.getUsers());
+                talkerDataModel.setBots((ArrayList<Bot>) talkerDataModel.getBots());
+                talkers = talkerDataModel.getTalkers(Talker.TALKER_TYPE_USER);
 
-        if (talkerAdapter == null) {
-            talkerAdapter = new TalkerAdapter(getActivity(), talkers, this);
-            userRecyclerView.setAdapter(talkerAdapter);
-        }
+                if (talkerAdapter == null) {
+                    talkerAdapter = new TalkerAdapter(getActivity(), talkers, UserListFragment.this);
+                    userRecyclerView.setAdapter(talkerAdapter);
+                }
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+
+            }
+        });
     }
 
     @Override
     public void onHolderClick(int position) {
+        //onCheckBoxClick(position);
+        Toast.makeText(getActivity(), "###", Toast.LENGTH_SHORT).show();
+        talkerAdapter.updateCheckBox(position);
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -111,10 +130,12 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     }
 
     private List<Talker> getCheckedTalkers() {
-        List<Talker> result = new ArrayList<Talker>();
-        for (Talker t : talkers) {
-            if (t.isChecked()) {
-                result.add(t);
+        List<Talker> result = new ArrayList<>();
+        if (talkers != null) {
+            for (Talker t : talkers) {
+                if (t.isChecked()) {
+                    result.add(t);
+                }
             }
         }
         return result;

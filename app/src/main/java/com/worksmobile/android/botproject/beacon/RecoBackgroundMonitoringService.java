@@ -185,7 +185,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
         String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
 
         for (RECOBeacon beacon : beacons) {
-            retrofitClient.moveRegion(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
+            retrofitClient.sendBeaconEvent(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
                 @Override
                 public void success() {
                     popupNotification(region.getUniqueIdentifier() + "입장");

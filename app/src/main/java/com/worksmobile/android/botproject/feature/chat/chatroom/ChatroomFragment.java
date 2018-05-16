@@ -105,7 +105,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                 Log.i("loaded size", messages.size()+"");
                 if(loadedMessags!=null && loadedMessags.size() > 0) {
                     List<Message> typedMessages = messageAdapter.setMessagesByUserId(loadedMessags, employeeNumber);
-                    typedMessages = messageAdapter.makeDayMessage(typedMessages);
+                    typedMessages = messageAdapter.insertDayMessage(typedMessages);
                     messages.addAll(typedMessages);
                 }
                 drawFromChatbox();
@@ -215,6 +215,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             @Override
             public void success(List<Message> messages) {
                 if (messages != null && messages.size() > 0) {
+                    messages = messageAdapter.insertDayMessage(messages);
                     ChatroomFragment.this.messages.addAll(0, messages);
                     messageAdapter.notifyItemRangeInserted(0, messages.size() - 1);
                     scrollListener.onComplete();

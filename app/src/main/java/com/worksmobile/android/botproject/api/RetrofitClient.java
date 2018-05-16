@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.worksmobile.android.botproject.beacon.WorksBeacon;
+import com.worksmobile.android.botproject.feature.chat.newchat.TalkerDataModel;
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
@@ -185,10 +186,10 @@ public class RetrofitClient implements  ApiRepository {
     }
 
     @Override
-    public void moveRegion(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback callback) {
+    public void sendBeaconEvent(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback callback) {
         JsonObject beaconJson = makeBeaconJson(userId, new WorksBeacon(uuid, major, minor, signal, distance));
 
-        service.moveRegion(beaconJson).enqueue(new Callback<Void>(){
+        service.sendBeaconEvent(beaconJson).enqueue(new Callback<Void>(){
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.code() >= 400 && response.code() < 599) {
@@ -230,7 +231,35 @@ public class RetrofitClient implements  ApiRepository {
          return returnJson;
      }
 
-     public interface ApiService {
+    public void getTalkers(RequestTalkerCallback callback) {
+        service.getTalkers().enqueue(new Callback<TalkerDataModel>(){
+            @Override
+            public void onResponse(Call<TalkerDataModel> call, Response<TalkerDataModel> response) {
+                if (response.code() >= 400 && response.code() < 599) {
+                    try {
+                        if(response.errorBody() != null) {
+                            onFailure(call, new ApiConnectionLostException(response.errorBody().string()));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    onSuccess(response);
+                }
+            }
+
+            public void onSuccess(Response<TalkerDataModel> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<TalkerDataModel> call, Throwable t) {
+                callback.error(t);
+            }
+        });
+    }
+
+    public interface ApiService {
         @POST("login")
         Call<String> loginUser(@Body JsonObject json);
 
@@ -267,9 +296,6 @@ public class RetrofitClient implements  ApiRepository {
         @GET("messages")
         Call<List<Message>> getMessages(@QueryMap Message message);
 
-        @POST("bots")
-        Call<List<Map>> sendBotEvent(@Body List<Map> maps);
-
         @GET("chatrooms/{chatroomId}")
         Call<Chatbox> getChatbox(@Path("chatroomId") long chatroomId, @Query("userId") String userId);
 
@@ -277,6 +303,9 @@ public class RetrofitClient implements  ApiRepository {
         Call<List<Message>> getMessagesByScroll(@Query("chatroomId") long chatroomId, @Query("messageId")long id, @Query("actionDirection")int scrollDirection);
 
         @POST("beacons")
-        Call<Void> moveRegion(@Body JsonObject beaconJson);
+        Call<Void> sendBeaconEvent(@Body JsonObject beaconJson);
+
+        @GET("users")
+        Call<TalkerDataModel> getTalkers();
     }
 }

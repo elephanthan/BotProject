@@ -5,5 +5,5 @@ import java.util.List;
 public interface MessageDataModel {
     List<Message> setMessagesByUserId(List<Message> messageList, String userId);
 
-    List<Message> makeDayMessage(List<Message> messageList);
+    List<Message> insertDayMessage(List<Message> messageList);
 }

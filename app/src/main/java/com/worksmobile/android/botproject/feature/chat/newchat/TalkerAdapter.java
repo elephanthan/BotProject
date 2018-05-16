@@ -1,6 +1,7 @@
 package com.worksmobile.android.botproject.feature.chat.newchat;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +10,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Talker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,11 +25,11 @@ import butterknife.ButterKnife;
 
 public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.TalkerHolder> {
     private LayoutInflater inflater;
-    private List<Talker> talkers = new ArrayList<>();
-    TalkerClickListener listener;
+    private List<? extends Talker> talkers;
+    private TalkerClickListener listener;
     private static Context context;
 
-    public TalkerAdapter(Context context, List<Talker> talkers, TalkerClickListener listener) {
+    public TalkerAdapter(Context context, @NonNull List<? extends Talker> talkers, TalkerClickListener listener) {
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.talkers = talkers;
@@ -49,16 +50,28 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.TalkerHold
 
     @Override
     public int getItemCount() {
+        if (talkers == null) {
+            return 0;
+        }
         return talkers.size();
+    }
+
+    public void updateCheckBox(int position) {
+        Talker talker = getItem(position);
+        talker.setChecked(!talker.isChecked());
+        notifyDataSetChanged();
+    }
+
+    private Talker getItem(int position) {
+        return talkers.get(position);
     }
 
     static class TalkerHolder extends RecyclerView.ViewHolder {
 
-
         @BindView(R.id.item_newchat_checkbox)
         CheckBox checkBox;
         @BindView(R.id.item_newchat_image)
-        ImageView imageView;
+        ImageView profileImageView;
         @BindView(R.id.item_newchat_nickname)
         TextView nicknameTextView;
         @BindView(R.id.layout_newchat_item)
@@ -68,24 +81,16 @@ public class TalkerAdapter extends RecyclerView.Adapter<TalkerAdapter.TalkerHold
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            this.checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onCheckBoxClick(getAdapterPosition());
-                }
-            });
+            this.checkBox.setOnClickListener(v -> listener.onCheckBoxClick(getAdapterPosition()));
+            this.layout.setOnClickListener(v -> listener.onHolderClick(getAdapterPosition()));
         }
 
         public void bindInvitable(Talker talker) {
-            //TODO check talker which type is
-            if (talker.getType() == Talker.TALKER_TYPE_USER) {
-                this.imageView.setImageResource(R.drawable.ic_profile_default);
-            }
+            int defaultImage = R.drawable.ic_icon_man;
             if (talker.getType() == Talker.TALKER_TYPE_BOT) {
-                this.imageView.setImageResource(R.drawable.ic_profile_chatbot);
-                this.imageView.setPadding(16, 16, 16, 16);
-                this.imageView.setBackground(context.getResources().getDrawable(R.drawable.fg_circle));
+                defaultImage = R.drawable.ic_icon_bot;
             }
+            Glide.with(context).load(talker.getProfile()).placeholder(defaultImage).error(defaultImage).into(profileImageView);
 
             this.nicknameTextView.setText(talker.getName());
             this.checkBox.setChecked(talker.isChecked());

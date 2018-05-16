@@ -17,6 +17,7 @@
         android:id="@+id/item_newchat_image"
         android:layout_width="46dp"
         android:layout_height="46dp"
+        android:background="@drawable/bg_profile"
         android:layout_toRightOf="@id/item_newchat_checkbox"
         android:layout_marginLeft="8dp"/>
 

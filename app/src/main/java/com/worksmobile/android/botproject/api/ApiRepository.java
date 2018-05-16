@@ -1,5 +1,6 @@
 package com.worksmobile.android.botproject.api;
 
+import com.worksmobile.android.botproject.feature.chat.newchat.TalkerDataModel;
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
@@ -27,7 +28,7 @@ public interface ApiRepository {
 
     void getMessagesByScroll(long chatroomId, long id, int scrollDirection, RequestMessagesCallback requestMessagesCallback);
 
-    void moveRegion(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback requestVoidCallback);
+    void sendBeaconEvent(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback requestVoidCallback);
 
     interface RequestUserCallback {
         void success(User user);
@@ -63,6 +64,11 @@ public interface ApiRepository {
 
     interface RequestVoidCallback {
         void success();
+        void error(Throwable throwable);
+    }
+
+    interface RequestTalkerCallback {
+        void success(TalkerDataModel talkerDataModel);
         void error(Throwable throwable);
     }
 }
