@@ -10,22 +10,22 @@ import java.util.List;
  * Created by user on 2018. 5. 7..
  */
 
-public class DropdownMenuLab {
+public class DropdownMenuDataModel {
 
     public final static int DROPDOWN_CHATROOM = 0;
 
-    private static DropdownMenuLab dropdownMenuLab;
+    private static DropdownMenuDataModel dropdownMenuDataModel;
 
     private List<DropDownMenu> dropDownMenus = new ArrayList<>();
 
-    public static DropdownMenuLab get(int type) {
-        if(dropdownMenuLab == null){
-            dropdownMenuLab = new DropdownMenuLab(type);
+    public static DropdownMenuDataModel get(int type) {
+        if(dropdownMenuDataModel == null){
+            dropdownMenuDataModel = new DropdownMenuDataModel(type);
         }
-        return dropdownMenuLab;
+        return dropdownMenuDataModel;
     }
 
-    private DropdownMenuLab(int type) {
+    private DropdownMenuDataModel(int type) {
         if(type == DROPDOWN_CHATROOM){
             dropDownMenus.add(new DropDownMenu(R.string.action_invite, R.drawable.ic_icon_add_user));
             dropDownMenus.add(new DropDownMenu(R.string.action_setnoti, R.drawable.ic_icon_notification));

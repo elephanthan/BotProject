@@ -57,9 +57,9 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
             getSupportActionBar().setTitle(R.string.barname_chatroomlist);
         }
 
-        chatroomListView = (View) findViewById(R.id.layout_chatlist);
-        noChatroomListView = (View) findViewById(R.id.no_chatroom_layout);
-        chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
+        chatroomListView = findViewById(R.id.layout_chatlist);
+        noChatroomListView = findViewById(R.id.no_chatroom_layout);
+        chatroomRecyclerView =  findViewById(R.id.chat_room_recycler_view);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
@@ -77,8 +77,6 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
         BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter mBluetoothAdapter = mBluetoothManager.getAdapter();
-
-
 
         if(mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);

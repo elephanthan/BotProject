@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -24,14 +24,11 @@ import com.google.gson.GsonBuilder;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.api.MqttRepository;
-import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomListActivity;
-import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
-import com.worksmobile.android.botproject.feature.dialog.SetnotiDialogFragment;
+import com.worksmobile.android.botproject.feature.FullScreenImageActivity;
 import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.DropDownMenu;
 import com.worksmobile.android.botproject.model.Message;
-import com.worksmobile.android.botproject.feature.FullScreenImageActivity;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
 import com.worksmobile.android.botproject.util.UnixEpochDateTypeAdapter;
 import com.worksmobile.android.botproject.util.ViewUtil;
@@ -51,7 +48,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 
-import static com.worksmobile.android.botproject.feature.chat.chatroom.DropdownMenuLab.DROPDOWN_CHATROOM;
+import static com.worksmobile.android.botproject.feature.chat.chatroom.DropdownMenuDataModel.DROPDOWN_CHATROOM;
 import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 public class ChatroomFragment extends Fragment implements ChatroomClickListener {
@@ -59,6 +56,9 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     private static final String ARG_CHATROOM_ID = "chatroom_id";
     private final int REQUEST_POSITION = 100;
     private final int RESULT_OK = -1;
+    int beforeImageClickPosition = -1;
+
+    MqttClient mqttClient;
 
     @BindView(R.id.button_chatroom_send)
     Button btnChatroomSend;
@@ -68,23 +68,16 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     RecyclerView messageRecyclerView;
 
     private View view;
+    GridView dropDownView;
+    MenuItem showhideMenuItem;
 
     private MessageAdapter messageAdapter = new MessageAdapter();
 
-//    private Chatroom chatroom;
     private Chatbox chatbox;
     private List<Message> messages = new ArrayList<>();
     private List<DropDownMenu> dropDownMenus;
 
-    MenuItem showhideMenuItem;
-
-    GridView dropDownView;
-
-    MqttClient mqttClient;
-
     private EndlessRecyclerViewScrollListener scrollListener;
-
-    int beforeImageClickPosition = -1;
 
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
@@ -126,7 +119,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             }
         });
 
-        dropDownMenus = DropdownMenuLab.get(DROPDOWN_CHATROOM).getDropDownMenus();
+        dropDownMenus = DropdownMenuDataModel.get(DROPDOWN_CHATROOM).getDropDownMenus();
 
         mqttClient = MqttRepository.getMqttClient(employeeNumber);
         mqttClient.setCallback(new MqttCallback() {
@@ -165,10 +158,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
         try {
             mqttClient.connect();
-            Log.d("subtopic", MqttRepository.topic + chatroomId + "/users/" + employeeNumber);
             mqttClient.subscribe(MqttRepository.topic + chatroomId + "/users/" + employeeNumber, MqttRepository.qos);
-//            mqttClient.subscribe(MqttRepository.topic + chatroom.getId(), MqttRepository.qos);
-
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -202,7 +192,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                loadNextDataFromApi(page);
+                loadNextDataFromApi();
             }
         };
         // Adds the scroll listener to RecyclerView
@@ -220,19 +210,10 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         }
     }
 
-    // Append the next page of data into the adapter
-    // This method probably sends out a network request and appends new data items to your adapter.
-    public void loadNextDataFromApi(int offset) {
-        // Send an API request to retrieve appropriate paginated data
-        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
-        //  --> Deserialize and construct new model objects from the API response
-        //  --> Append the new data objects to the existing set of items inside the array of items
-        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
-
+    public void loadNextDataFromApi() {
         retrofitClient.getMessagesByScroll(chatbox.getChatroomId(), messages.get(0).getId(), 1, new ApiRepository.RequestMessagesCallback() {
             @Override
             public void success(List<Message> messages) {
-                //TODO : Check Null
                 if (messages != null && messages.size() > 0) {
                     ChatroomFragment.this.messages.addAll(0, messages);
                     messageAdapter.notifyItemRangeInserted(0, messages.size() - 1);
@@ -256,15 +237,13 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             if (resultCode == RESULT_OK) {
                 int position = intent.getIntExtra("position", messages.size());
                 setBeforeImageClickPosition(position);
-                //not working here!
+                //TODO : not working here!
                 //messageRecyclerView.scrollToPosition(position);
             } else {
 
             }
         }
     }
-
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -280,17 +259,28 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                     item.setChecked(true);
                     item.setIcon(R.drawable.ic_action_arrow_up);
                     item.setTitle(R.string.action_hidemenu);
-                    ((ChatroomActivity)getActivity()).getSupportActionBar().setElevation(0);
+
+                    ActionBar actionBar = ((ChatroomActivity)getActivity()).getSupportActionBar();
+                    if (actionBar != null) {
+                        actionBar.setElevation(0);
+                    }
+
                     dropDownView.setVisibility(View.VISIBLE);
                 } else {
                     item.setChecked(false);
                     item.setTitle(R.string.action_showmenu);
                     item.setIcon(R.drawable.ic_action_arrow_down);
-                    ((ChatroomActivity)getActivity()).getSupportActionBar().setElevation(8);
+
+                    ActionBar actionBar = ((ChatroomActivity)getActivity()).getSupportActionBar();
+                    if (actionBar != null) {
+                        actionBar.setElevation(0);
+                    }
+
                     dropDownView.setVisibility(View.INVISIBLE);
                 }
                 break;
             default:
+                Toast.makeText(getActivity(), R.string.alert_wrong_access, Toast.LENGTH_SHORT).show();
                 break;
         }
         return false;
@@ -300,33 +290,22 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         DropdownMenuAdapter dropdownMenuAdapter = new DropdownMenuAdapter(getActivity(), dropDownMenus);
         dropDownView = (GridView)view.findViewById(R.id.gridView1);
         dropDownView.setAdapter(dropdownMenuAdapter);
-        dropDownView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DropDownMenu dropDownMenu = dropDownMenus.get(position);
-                int action = dropDownMenu.getName();
-                switch (action) {
-                    case R.string.action_invite :
-                        long chatroomId = (long) getArguments().getLong(ARG_CHATROOM_ID);
-                        Intent intent = new Intent(getActivity(), NewchatActivity.class);
-                        intent.putExtra(ARG_CHATROOM_ID, chatroomId);
-                        startActivity(intent);
-                        break;
-                    case R.string.action_setnoti :
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-
-                        String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
-                        SetnotiDialogFragment dialogFragment = SetnotiDialogFragment.newInstance(employeeNumber);
-
-                        dialogFragment.show(fm, "fragment_dialog_test");
-                        break;
-                    case R.string.action_exit :
-                        //TODO Call API Server Exit Room
-                        startActivity(new Intent(getActivity(), ChatroomListActivity.class));
-                        break;
-                    default:
-
-                }
+        dropDownView.setOnItemClickListener((parent, view, position, id) -> {
+            DropDownMenu dropDownMenu = dropDownMenus.get(position);
+            int action = dropDownMenu.getName();
+            switch (action) {
+                case R.string.action_invite :
+                    Toast.makeText(getActivity(), R.string.alert_not_supply, Toast.LENGTH_SHORT).show();
+                    break;
+                case R.string.action_setnoti :
+                    Toast.makeText(getActivity(), R.string.alert_not_supply, Toast.LENGTH_SHORT).show();
+                    break;
+                case R.string.action_exit :
+                    Toast.makeText(getActivity(), R.string.alert_not_supply, Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    Toast.makeText(getActivity(), R.string.alert_wrong_access, Toast.LENGTH_SHORT).show();
+                    break;
             }
         });
     }
@@ -373,7 +352,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         String strText = editTextChatroom.getText().toString();
 
         if (!strText.equals("")) {
-
             String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
 
             Message msg = new Message(chatbox.getChatroomId(), strText, employeeNumber);

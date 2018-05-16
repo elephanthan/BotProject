@@ -1,7 +1,6 @@
 package com.worksmobile.android.botproject.feature.chat.chatroomlist;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,14 +36,6 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     private int layout;
     private List<Chatroom> chatrooms = new ArrayList<>();
     private ChatroomListClickListener listener;
-
-
-    public ChatroomListAdapter(Context context, @NonNull List<Chatroom> chatrooms, ChatroomListClickListener listener) {
-        this.context = context;
-        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.chatrooms = chatrooms;
-        this.listener = listener;
-    }
 
     public ChatroomListAdapter(Context context) {
         this.context = context;

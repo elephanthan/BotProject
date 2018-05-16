@@ -24,4 +24,6 @@
     <string name="location_permission_rationale">Location permission is needed to monitor or range beacons.</string>
     <string name="hint_mysetting_nickname">닉네임</string>
     <string name="no_chatrooms_all">참여하고 있는 채팅방이 없습니다.</string>
+    <string name="alert_not_supply">제공하지 않는 기능입니다.</string>
+    <string name="alert_wrong_access">잘못된 접근입니다.</string>
 </resources>
