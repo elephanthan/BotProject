@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.factory.TalkerFactory;
 import com.worksmobile.android.botproject.model.Talker;
 
 import java.util.ArrayList;

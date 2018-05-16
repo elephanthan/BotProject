@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +35,7 @@ import java.util.List;
 import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 public class ChatroomListActivity extends AppCompatActivity implements ChatroomListContract.View {
+    public static final String TAG = ChatroomListActivity.class.getSimpleName();
 
     private ChatroomListContract.Presenter chatroomListPresenter;
 
@@ -41,10 +43,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     private View noChatroomListView;
     private RecyclerView chatroomRecyclerView;
 
-    List<Chatroom> chatrooms = new ArrayList<Chatroom>();
-
-    private BluetoothManager mBluetoothManager;
-    private BluetoothAdapter mBluetoothAdapter;
+    List<Chatroom> chatrooms = new ArrayList<>();
 
     ChatroomListContract.AdapterView adapterView;
 
@@ -52,7 +51,11 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroomlist);
-        getSupportActionBar().setTitle(R.string.barname_chatroomlist);
+
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            getSupportActionBar().setTitle(R.string.barname_chatroomlist);
+        }
 
         chatroomListView = (View) findViewById(R.id.layout_chatlist);
         noChatroomListView = (View) findViewById(R.id.no_chatroom_layout);
@@ -72,14 +75,8 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
             chatroomListPresenter.enterChatroom(position);
         });
 
-        //updateUI();
-
-        //TODO restore code when finished multi user test
-        //If a user device turns off bluetooth, request to turn it on.
-        //사용자가 블루투스를 켜도록 요청합니다.
-
-        mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = mBluetoothManager.getAdapter();
+        BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothAdapter mBluetoothAdapter = mBluetoothManager.getAdapter();
 
 
 
@@ -88,24 +85,12 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
             startActivityForResult(enableBTIntent, SettingInfo.REQUEST_ENABLE_BT);
         }
 
-        /**
-         * In order to use RECO SDK for Android API 23 (Marshmallow) or higher,
-         * the location permission (ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION) is required.
-         * Please refer to the following permission guide and sample code provided by Google.
-         *
-         * 안드로이드 API 23 (마시멜로우)이상 버전부터, 정상적으로 RECO SDK를 사용하기 위해서는
-         * 위치 권한 (ACCESS_COARSE_LOCATION 혹은 ACCESS_FINE_LOCATION)을 요청해야 합니다.
-         * 권한 요청의 경우, 구글에서 제공하는 가이드를 참고하시기 바랍니다.
-         *
-         * http://www.google.com/design/spec/patterns/permissions.html
-         * https://github.com/googlesamples/android-RuntimePermissions
-         */
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.i("MainActivity", "The location permission (ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION) is not granted.");
+                Log.i(TAG, "The location permission (ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION) is not granted.");
                 requestLocationPermission();
             } else {
-                Log.i("MainActivity", "The location permission (ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION) is already granted.");
+                Log.i(TAG, "The location permission (ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION) is already granted.");
             }
         }
     }
@@ -113,8 +98,6 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SettingInfo.REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            //If the request to turn on bluetooth is denied, the app will be finished.
-            //사용자가 블루투스 요청을 허용하지 않았을 경우, 어플리케이션은 종료됩니다.
             finish();
             return;
         }

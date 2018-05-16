@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.factory;
+package com.worksmobile.android.botproject.feature.chat.newchat;
 
 import com.worksmobile.android.botproject.feature.chat.chatroom.UserLab;
 import com.worksmobile.android.botproject.feature.chat.newchat.BotLab;

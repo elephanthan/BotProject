@@ -18,11 +18,13 @@ public class MqttRepository {
     public static MqttClient getMqttClient(String clientId){
         MqttClient mqttClient = null;
         MemoryPersistence persistence = new MemoryPersistence();
+
         try {
             mqttClient = new MqttClient(broker, clientId, persistence);
         } catch (MqttException e) {
             e.printStackTrace();
         }
+
         MqttConnectOptions connOpts = new MqttConnectOptions();
         connOpts.setCleanSession(true);
 

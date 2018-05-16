@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -36,9 +35,6 @@ public class MysettingActivity extends AppCompatActivity {
 
     private View mysettingLayout;
     private Switch bgmonitoringSwitch;
-
-    private BluetoothManager mBluetoothManager;
-    private BluetoothAdapter mBluetoothAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,28 +88,14 @@ public class MysettingActivity extends AppCompatActivity {
 
     private void bgmonitoringSwitchChanged(boolean bChecked) {
         if (bChecked) {
-            //If a user device turns off bluetooth, request to turn it on.
-            //사용자가 블루투스를 켜도록 요청합니다.
-            mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            mBluetoothAdapter = mBluetoothManager.getAdapter();
+            BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            BluetoothAdapter mBluetoothAdapter = mBluetoothManager.getAdapter();
 
             if(mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
                 Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBTIntent, SettingInfo.REQUEST_ENABLE_BT);
             }
 
-            /**
-             * In order to use RECO SDK for Android API 23 (Marshmallow) or higher,
-             * the location permission (ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION) is required.
-             * Please refer to the following permission guide and sample code provided by Google.
-             *
-             * 안드로이드 API 23 (마시멜로우)이상 버전부터, 정상적으로 RECO SDK를 사용하기 위해서는
-             * 위치 권한 (ACCESS_COARSE_LOCATION 혹은 ACCESS_FINE_LOCATION)을 요청해야 합니다.
-             * 권한 요청의 경우, 구글에서 제공하는 가이드를 참고하시기 바랍니다.
-             *
-             * http://www.google.com/design/spec/patterns/permissions.html
-             * https://github.com/googlesamples/android-RuntimePermissions
-             */
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     Log.i("MainActivity", "The location permission (ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION) is not granted.");
@@ -123,12 +105,9 @@ public class MysettingActivity extends AppCompatActivity {
                 }
             }
 
-            Log.i("MysettingActivity", "onMonitoringToggleButtonClicked off to on");
-
             Intent intent = new Intent(this, RecoBackgroundMonitoringService.class);
             startService(intent);
         } else {
-            Log.i("MysettingActivity", "onMonitoringToggleButtonClicked on to off");
             stopService(new Intent(this, RecoBackgroundMonitoringService.class));
         }
     }
