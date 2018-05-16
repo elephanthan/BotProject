@@ -33,7 +33,6 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
 
     private static Context context;
     private LayoutInflater inflater;
-    private int layout;
     private List<Chatroom> chatrooms = new ArrayList<>();
     private ChatroomListClickListener listener;
 
@@ -46,8 +45,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     @Override
     public ChatroomHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_chatroom, parent, false);
-        ChatroomHolder holder = new ChatroomHolder(view, listener);
-        return holder;
+        return new ChatroomHolder(view, listener);
     }
 
     @Override
@@ -114,12 +112,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            this.layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onHolderClick(getAdapterPosition());
-                }
-            });
+            this.layout.setOnClickListener(v -> listener.onHolderClick(getAdapterPosition()));
         }
 
         public void bindChatroom(Chatroom chatroom_) {

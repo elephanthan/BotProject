@@ -123,10 +123,9 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
     @Override
     public List<Message> makeDayMessage(List<Message> messageList) {
         List<Message> messages = new ArrayList<>(messageList);
-//        System.out.println("messages size : " + messages.size());
         List<Pair<Integer, Message>> toAddDates = new ArrayList<>();
+
         for (int i=1; i<messages.size(); i++) {
-//            System.out.println("messages day!!! : " + i + ")))(((" + messages.get(i).getSenddate().getDay() );
             //TODO : change deprecated get Day method
             if (messages.get(i-1).getSenddate().getDay() != messages.get(i).getSenddate().getDay()) {
                 Message type3message = new Message(messages.get(i).getChatroomId(), messages.get(i).getSenddate(), Message.VIEW_TYPE_MESSAGE_DAY);
@@ -150,27 +149,15 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
         @BindView(R.id.layout_message_item)
         ViewGroup layout;
 
-        //ChatroomClickListener listener;
-
         public SentMessageHolder(View itemView, final ChatroomClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            //this.listener = listener;
-            this.messageTextView.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    //this.listener.onItemClick(v, getAdapterPosition());
-                    listener.onMsgClick(getAdapterPosition());
-                }
+            this.messageTextView.setOnClickListener(v -> {
+                listener.onMsgClick(getAdapterPosition());
             });
 
-            this.layout.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    listener.onHolderClick();
-                }
-            });
+            this.layout.setOnClickListener(v -> listener.onHolderClick());
         }
 
         void bindMessage(Message message) {
@@ -207,33 +194,13 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
             this.context = context;
             this.chatbox = chatbox;
 
-            this.profileImageView.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    listener.onProfileClick(getAdapterPosition());
-                }
-            });
+            this.profileImageView.setOnClickListener(v -> listener.onProfileClick(getAdapterPosition()));
 
-            this.messageTextView.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    listener.onMsgClick(getAdapterPosition());
-                }
-            });
+            this.messageTextView.setOnClickListener(v -> listener.onMsgClick(getAdapterPosition()));
 
-            this.layout.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    listener.onHolderClick();
-                }
-            });
+            this.layout.setOnClickListener(v -> listener.onHolderClick());
 
-            this.messageImageView.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    listener.onMessageImageClick(getAdapterPosition());
-                }
-            });
+            this.messageImageView.setOnClickListener(v -> listener.onMessageImageClick(getAdapterPosition()));
         }
 
         void bindMessage(Message message) {

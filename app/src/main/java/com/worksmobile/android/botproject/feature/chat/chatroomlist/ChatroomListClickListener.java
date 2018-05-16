@@ -5,5 +5,5 @@ package com.worksmobile.android.botproject.feature.chat.chatroomlist;
  */
 
 public interface ChatroomListClickListener {
-    public void onHolderClick(int position);
+    void onHolderClick(int position);
 }

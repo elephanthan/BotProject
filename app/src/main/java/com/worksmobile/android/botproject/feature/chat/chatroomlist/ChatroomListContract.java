@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface ChatroomListContract {
     interface View extends BaseView<ChatroomListContract.Presenter> {
-
         void showChatrooms();
 
         void showNoChatrooms();
@@ -17,7 +16,6 @@ public interface ChatroomListContract {
     }
 
     interface Presenter extends BasePresenter {
-
         void loadChatrooms(String userId);
 
         void enterChatroom(int position);

@@ -19,12 +19,10 @@ import java.util.List;
  */
 
 public class DropdownMenuAdapter extends BaseAdapter {
-    Context context;
-    LayoutInflater inflator;
-    List<DropDownMenu> dropDownMenus = new ArrayList<DropDownMenu>();
+    private LayoutInflater inflator;
+    private List<DropDownMenu> dropDownMenus = new ArrayList<DropDownMenu>();
 
     public DropdownMenuAdapter(Context context, List<DropDownMenu> dropDownMenuList) {
-        this.context = context;
         this.dropDownMenus = dropDownMenuList;
         inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -48,8 +46,8 @@ public class DropdownMenuAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView==null)
             convertView = inflator.inflate(R.layout.row_dropdown, null);
-        ImageView iconImageView = (ImageView)convertView.findViewById(R.id.dd_imageview);
-        TextView nameTextView = (TextView)convertView.findViewById(R.id.dd_textview);
+        ImageView iconImageView = convertView.findViewById(R.id.dd_imageview);
+        TextView nameTextView = convertView.findViewById(R.id.dd_textview);
 
         iconImageView.setImageResource(dropDownMenus.get(position).getIconImg());
         nameTextView.setText(dropDownMenus.get(position).getName());
