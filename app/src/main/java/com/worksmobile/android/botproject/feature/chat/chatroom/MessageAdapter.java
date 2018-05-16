@@ -74,7 +74,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
         }
         return holder;
     }
-    //TODO Make Third Holder
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Message msg = messages.get(position);

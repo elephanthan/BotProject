@@ -169,9 +169,6 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
                 e.printStackTrace();
             }
         }
-
-        private void centerCropTransform() {
-        }
     }
 
     public void setOnRecyclerItemClickListener(ChatroomListClickListener onRecyclerItemClickListener) {
