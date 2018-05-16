@@ -57,6 +57,8 @@ import static com.worksmobile.android.botproject.feature.splash.SplashActivity.r
 public class ChatroomFragment extends Fragment implements ChatroomClickListener {
 
     private static final String ARG_CHATROOM_ID = "chatroom_id";
+    private final int REQUEST_POSITION = 100;
+    private final int RESULT_OK = -1;
 
     @BindView(R.id.button_chatroom_send)
     Button btnChatroomSend;
@@ -81,6 +83,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     MqttClient mqttClient;
 
     private EndlessRecyclerViewScrollListener scrollListener;
+
+    int beforeImageClickPosition = -1;
 
     public static ChatroomFragment newInstance(long chatroomId) {
         Bundle args = new Bundle();
@@ -175,11 +179,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_chatroom, container, false);
         ButterKnife.bind(this, view);
@@ -208,6 +207,11 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         };
         // Adds the scroll listener to RecyclerView
         messageRecyclerView.addOnScrollListener(scrollListener);
+
+        if (beforeImageClickPosition > 0) {
+            messageRecyclerView.scrollToPosition(beforeImageClickPosition);
+            setBeforeImageClickPosition(-1);
+        }
     }
 
     // Append the next page of data into the adapter
@@ -237,6 +241,24 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         });
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == REQUEST_POSITION) {
+            if (resultCode == RESULT_OK) {
+                int position = intent.getIntExtra("position", messages.size());
+                setBeforeImageClickPosition(position);
+                //not working here!
+                //messageRecyclerView.scrollToPosition(position);
+            } else {
+
+            }
+        }
+    }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -336,9 +358,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     @Override
     public void onMessageImageClick(int position) {
-        Toast.makeText(getActivity(), "onMessageImageClick", Toast.LENGTH_SHORT).show();
-        Intent intent = FullScreenImage.newIntent(getActivity(), messages.get(position).getText());
-        startActivity(intent);
+        Intent intent = FullScreenImage.newIntent(getActivity(), messages.get(position).getText(), position);
+        startActivityForResult(intent, REQUEST_POSITION);
     }
 
     @OnClick(R.id.button_chatroom_send)
@@ -387,4 +408,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         return false;
     }
 
+    public void setBeforeImageClickPosition(int beforeImageClickPosition) {
+        this.beforeImageClickPosition = beforeImageClickPosition;
+    }
 }

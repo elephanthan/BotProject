@@ -145,17 +145,17 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
 
             msgTextView.setText(chatroom.getLastMessageContent());
 
-            int placeholder;
+            int defaultImage;
             if (chatroom.getChatroomType() == Chatroom.CHATROOM_TYPE_BOT) {
-                placeholder = R.drawable.ic_icon_bot;
+                defaultImage = R.drawable.ic_icon_bot;
             } else {
                 if (chatroom.getNumber() <= 2) {
-                    placeholder = R.drawable.ic_icon_man;
+                    defaultImage = R.drawable.ic_icon_man;
                 } else {
-                    placeholder = R.drawable.ic_icon_men;
+                    defaultImage = R.drawable.ic_icon_men;
                 }
             }
-            Glide.with(context).load(chatroom.getProfile()).placeholder(placeholder).into(thumbnailImageView);
+            Glide.with(context).load(chatroom.getProfile()).placeholder(defaultImage).error(defaultImage).into(thumbnailImageView);
 
             SimpleDateFormat pattern = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             String displayformat = "MM-dd HH:mm";

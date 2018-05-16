@@ -14,10 +14,14 @@ import com.worksmobile.android.botproject.R;
 public class FullScreenImage extends Activity {
 
     final public static String EXTRA_IMAGE_URL = "imageUrl";
+    final public static String EXTRA_POSITION = "position";
 
-    public static Intent newIntent(Context context, String imageUrl){
+    int position;
+
+    public static Intent newIntent(Context context, String imageUrl, int position){
         Intent intent = new Intent(context, FullScreenImage.class);
         intent.putExtra(EXTRA_IMAGE_URL, imageUrl);
+        intent.putExtra(EXTRA_POSITION, position);
         return intent;
     }
 
@@ -29,6 +33,7 @@ public class FullScreenImage extends Activity {
 
         Bundle extras = getIntent().getExtras();
         String imageUrl = extras.getString(EXTRA_IMAGE_URL);
+        position = extras.getInt(EXTRA_POSITION);
 
         ImageView imageViewFullScreen = (ImageView) findViewById(R.id.image_fullscreen);;
         Button btnClose = (Button) findViewById(R.id.button_close);;
@@ -39,8 +44,21 @@ public class FullScreenImage extends Activity {
             }
         });
 
-        Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_icon_noshow).into(imageViewFullScreen);
+        Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_icon_noshow).error(R.drawable.ic_icon_noshow).into(imageViewFullScreen);
     }
 
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_POSITION, position);
+        setResult(RESULT_OK, intent);
+
+        super.finish();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+    }
 
 }

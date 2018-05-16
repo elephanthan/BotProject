@@ -51,7 +51,7 @@ public class MysettingActivity extends AppCompatActivity {
 
         ImageView imageView = (ImageView) findViewById(R.id.imageview_profile);
         String imageUrl = IMAGE_URL + employeeNumber + IMAGE_PROFILE_EXT;
-        Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_icon_man).into(imageView);
+        Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_icon_man).error(R.drawable.ic_icon_man).into(imageView);
 
         bgmonitoringSwitch = (Switch) findViewById(R.id.switch_beacon_monitoring);
         bgmonitoringSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
