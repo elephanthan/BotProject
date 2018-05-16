@@ -55,7 +55,6 @@ public class MysettingActivity extends AppCompatActivity {
 
         bgmonitoringSwitch = (Switch) findViewById(R.id.switch_beacon_monitoring);
         bgmonitoringSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                 bgmonitoringSwitchChanged(bChecked);
@@ -91,7 +90,6 @@ public class MysettingActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void bgmonitoringSwitchChanged(boolean bChecked) {
         if (bChecked) {
             //If a user device turns off bluetooth, request to turn it on.
