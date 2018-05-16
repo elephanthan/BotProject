@@ -42,8 +42,6 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
                 processChatrooms(chatroomList);
             }
 
-
-
             @Override
             public void error(Throwable throwable) {
                 Log.d("retrofit error", "Retrofit Error ::: loginUser");

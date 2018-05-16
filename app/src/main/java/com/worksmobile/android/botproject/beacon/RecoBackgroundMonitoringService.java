@@ -44,18 +44,18 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     public void onCreate() {
         Log.i("BackMonitoringService", "onCreate()");
         super.onCreate();
-        retrofitClient.moveRegion("WM060001", "24DDF411-8CF1-440C-87CD-E368DAF9C93E", 801, 3712, 1, 3.333, new ApiRepository.RequestVoidCallback() {
-
-            @Override
-            public void success() {
-                Log.i("moveRegion", "success");
-            }
-
-            @Override
-            public void error(Throwable throwable) {
-                Log.i("moveRegion", "error");
-            }
-        });
+//        retrofitClient.moveRegion("WM060001", "24DDF4118CF1440C87CDE368DAF9C93E!", 801, 3712, 1, 3.333, new ApiRepository.RequestVoidCallback() {
+//
+//            @Override
+//            public void success() {
+//                Log.i("moveRegion", "success");
+//            }
+//
+//            @Override
+//            public void error(Throwable throwable) {
+//                Log.i("moveRegion", "error");
+//            }
+//        });
     }
 
     @Override
@@ -107,11 +107,15 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
         RECOBeaconRegion recoRegion;
 
-        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_A, "Commute_Region_A");
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_A, "출퇴근 봇 지역 A");
         recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
         mRegions.add(recoRegion);
 
-        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_B, "Commute_Region_B");
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_B, "출퇴근 봇 지역 B");
+        recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
+        mRegions.add(recoRegion);
+
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_INTRODUCE_LOCATION, "장소 소개 봇");
         recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
         mRegions.add(recoRegion);
     }
@@ -188,15 +192,15 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
         //Get the region and found beacon list in the entered region
         Log.i("BackMonitoringService", "didEnterRegion() - " + region.getUniqueIdentifier());
-        this.popupNotification("Inside of " + region.getUniqueIdentifier());
-        //Write the code when the device is enter the region
 
+        //Write the code when the device is enter the region
         String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
 
         for (RECOBeacon beacon : beacons) {
             retrofitClient.moveRegion(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
                 @Override
                 public void success() {
+                    popupNotification("Inside of " + region.getUniqueIdentifier());
                 }
 
                 @Override
@@ -217,7 +221,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
          */
 
         Log.i("BackMonitoringService", "didExitRegion() - " + region.getUniqueIdentifier());
-        this.popupNotification("Outside of " + region.getUniqueIdentifier());
+//        this.popupNotification("Outside of " + region.getUniqueIdentifier());
         //Write the code when the device is exit the region
     }
 

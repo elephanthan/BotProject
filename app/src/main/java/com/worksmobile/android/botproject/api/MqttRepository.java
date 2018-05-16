@@ -13,9 +13,9 @@ public class MqttRepository {
 
     final String LOG_TAG_MQTT = this.getClass().getSimpleName();
 
-    public final static String topic        = "/chatrooms/";
-    public final static int qos             = 2;
-    private final static String broker       = "tcp://10.105.185.60";
+    public final static String topic = "/chatrooms/";
+    public final static int qos = 2;
+    private final static String broker = "tcp://10.105.185.60";
 
     public static MqttClient getMqttClient(String clientId){
         MqttClient mqttClient = null;

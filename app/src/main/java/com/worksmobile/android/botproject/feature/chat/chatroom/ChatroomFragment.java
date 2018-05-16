@@ -208,9 +208,15 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         // Adds the scroll listener to RecyclerView
         messageRecyclerView.addOnScrollListener(scrollListener);
 
+        setScrollPosition();
+    }
+
+    private void setScrollPosition() {
         if (beforeImageClickPosition > 0) {
             messageRecyclerView.scrollToPosition(beforeImageClickPosition);
             setBeforeImageClickPosition(-1);
+        } else {
+            messageRecyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
         }
     }
 
@@ -396,7 +402,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             //TODO : send 누르자마자 일단 그림! => 그리고 메시지 arrived받으면 그것의 객체를 찾아서 수정해야함..
 //            messages.add(msg);
 //            refreshMessage();
-
 
             editTextChatroom.setText("");
         }

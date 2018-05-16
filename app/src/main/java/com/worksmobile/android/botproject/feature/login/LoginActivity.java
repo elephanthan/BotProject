@@ -6,16 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomListActivity;
-import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,21 +40,19 @@ public class LoginActivity extends AppCompatActivity {
         String userId = editTextLogin.getText().toString();
         SharedPrefUtil.setStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID, userId);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("userId", userId);
-        retrofitClient.loginUser(map, new ApiRepository.RequestChatroomListCallback() {
+        retrofitClient.loginUser(userId, new ApiRepository.RequestStringCallback() {
             @Override
-            public void success(List<Chatroom> chatrooms) {
-//                Log.d("rf loginUser Success", chatrooms.toString());
+            public void success(String message) {
+                Log.i("Login Success", message);
+                startActivity(new Intent(getApplicationContext(), ChatroomListActivity.class));
             }
 
             @Override
-            public void error(Throwable throwable) {
-                Log.d("retrofit error", "Retrofit Error ::: loginUser");
+            public void error(Throwable throwable, String message) {
+                Log.d("Login error", throwable.toString());
+                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
-
-        startActivity(new Intent(getApplicationContext(), ChatroomListActivity.class));
     }
 
 }

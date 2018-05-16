@@ -7,7 +7,7 @@ package com.worksmobile.android.botproject.beacon;
 public class SettingInfo {
 
     //This is a default proximity uuid of the RECO
-    public static final String RECO_UUID = "24DDF411-8CF1-440C-87CD-E368DAF9C93E";
+    public static final String RECO_UUID = "24DDF4118CF1440C87CDE368DAF9C93E";
 
     /**
      * SCAN_RECO_ONLY:
@@ -65,4 +65,5 @@ public class SettingInfo {
 
     public static final int RECO_MAJOR_COMUTE_A  = 701;
     public static final int RECO_MAJOR_COMUTE_B  = 702;
+    public static final int RECO_MAJOR_INTRODUCE_LOCATION  = 801;
 }

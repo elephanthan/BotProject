@@ -12,6 +12,7 @@ import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.model.User;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -45,14 +46,14 @@ public class RetrofitClient implements  ApiRepository {
 
     //test code
     public RetrofitClient(){
+        gson = new GsonBuilder().setLenient().setPrettyPrinting().create();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(new Uri.Builder().scheme(SCHEME).encodedAuthority(AUTHORITY).build().toString())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(createOkHttpClient())
                 .build();
         service = retrofit.create(ApiService.class);
-
-        gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
     private OkHttpClient createOkHttpClient() {
@@ -64,18 +65,38 @@ public class RetrofitClient implements  ApiRepository {
     }
 
     @Override
-    public void loginUser(Map<String, String> map, final RequestChatroomListCallback callback){
-        service.loginUser(gson.toJson(map)).enqueue(new Callback<List<Chatroom>>() {
+    public void loginUser(String userId, final RequestStringCallback callback){
+        service.loginUser(getSourceJson(userId)).enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<List<Chatroom>> call, Response<List<Chatroom>> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.code() >= 400 && response.code() < 599) {
+                    try {
+                        if(response.errorBody() != null) {
+                            onFailure(call, new ApiConnectionLostException(response.errorBody().string()));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    onSuccess(response);
+                }
+            }
+
+            public void onSuccess(Response<String> response) {
                 callback.success(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<Chatroom>> call, Throwable error) {
-                callback.error(error);
+            public void onFailure(Call<String> call, Throwable error) {
+                callback.error(error, error.getMessage());
             }
         });
+    }
+
+    private JsonObject getSourceJson(String userId) {
+        JsonObject sourceJson = new JsonObject();
+        sourceJson.addProperty("userId", userId);
+        return sourceJson;
     }
 
     @Override
@@ -83,6 +104,20 @@ public class RetrofitClient implements  ApiRepository {
         service.getChatroomList(userId).enqueue(new Callback<List<Chatroom>>() {
             @Override
             public void onResponse(Call<List<Chatroom>> call, Response<List<Chatroom>> response) {
+                if (response.code() >= 400 && response.code() < 599) {
+                    try {
+                        if(response.errorBody() != null) {
+                            onFailure(call, new ApiConnectionLostException(response.errorBody().string()));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    onSuccess(response);
+                }
+            }
+
+            public void onSuccess(Response<List<Chatroom>> response) {
                 callback.success(response.body());
             }
 
@@ -98,6 +133,20 @@ public class RetrofitClient implements  ApiRepository {
         service.getChatbox(chatroomId, userId).enqueue(new Callback<Chatbox>() {
             @Override
             public void onResponse(Call<Chatbox> call, Response<Chatbox> response) {
+                if (response.code() >= 400 && response.code() < 599) {
+                    try {
+                        if(response.errorBody() != null) {
+                            onFailure(call, new ApiConnectionLostException(response.errorBody().string()));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    onSuccess(response);
+                }
+            }
+
+            public void onSuccess(Response<Chatbox> response) {
                 callback.success(response.body());
             }
 
@@ -114,6 +163,20 @@ public class RetrofitClient implements  ApiRepository {
 
             @Override
             public void onResponse(Call<List<Message>> call, Response<List<Message>> response) {
+                if (response.code() >= 400 && response.code() < 599) {
+                    try {
+                        if(response.errorBody() != null) {
+                            onFailure(call, new ApiConnectionLostException(response.errorBody().string()));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    onSuccess(response);
+                }
+            }
+
+            public void onSuccess(Response<List<Message>> response) {
                 callback.success(response.body());
             }
 
@@ -126,21 +189,29 @@ public class RetrofitClient implements  ApiRepository {
 
     @Override
     public void moveRegion(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback callback) {
-        String beaconJson = makeBeaconJson(userId, new WorksBeacon(uuid, major, minor, signal, distance)).toString();
-        Log.i("beaconJson", beaconJson );
+//        String beaconJson = makeBeaconJson(userId, new WorksBeacon(uuid, major, minor, signal, distance));
+        JsonObject beaconJson = makeBeaconJson(userId, new WorksBeacon(uuid, major, minor, signal, distance));
+        //Log.i("beaconJson", beaconJson );
+
         service.moveRegion(beaconJson).enqueue(new Callback<Void>(){
 
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.code() >= 400 && response.code() < 599) {
-                    onFailure(call, new ApiConnectionLostException("Connection lost Exception has been occured."));
+                    try {
+                        if(response.errorBody() != null) {
+                            onFailure(call, new ApiConnectionLostException(response.errorBody().string()));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
-                    callback.success();
+                    onSuccess(response);
                 }
             }
 
             public void onSuccess(Response<Void> response) {
-
+                callback.success();
             }
 
             @Override
@@ -150,31 +221,32 @@ public class RetrofitClient implements  ApiRepository {
         });
     }
 
-    private JsonObject makeBeaconJson(String userId, WorksBeacon worksBeacon) {
-        Gson gson = new Gson();
-        JsonObject userIdObj = new JsonObject();
-        JsonObject beaconObj = new JsonObject();
+     private JsonObject makeBeaconJson(String userId, WorksBeacon worksBeacon) {
+         Gson gson = new Gson();
+         JsonObject userIdObj = new JsonObject();
+         JsonObject beaconObj = new JsonObject();
 
-        userIdObj.addProperty("userId", userId);
-        beaconObj.add("beacon", gson.toJsonTree(worksBeacon));
-//        beaconObj.addProperty("beacon", gson.toJson(worksBeacon)); ==> trigger error
+         userIdObj.addProperty("userId", userId);
+         beaconObj.add("beacon", gson.toJsonTree(worksBeacon));
+         //        beaconObj.addProperty("beacon", gson.toJson(worksBeacon)); ==> trigger error
 
-        JsonObject returnJson = new JsonObject();
-        returnJson.add("source", userIdObj);
-        returnJson.add("data", beaconObj);
+         JsonObject returnJson = new JsonObject();
+         returnJson.add("source", userIdObj);
+         returnJson.add("data", beaconObj);
 
-        Log.i("JSONTEST", returnJson.toString());
+         Log.i("JSONTEST", returnJson.toString());
 
-        return returnJson;
-    }
+         return returnJson;
+     }
 
 
-    public interface ApiService {
+
+            public interface ApiService {
         @GET("comments")
         Call<List<Object>> getComment(@Query("id") int id);
 
         @POST("login")
-        Call<List<Chatroom>> loginUser(@Body String json);
+        Call<String> loginUser(@Body JsonObject json);
 
         @GET("chatrooms")
         Call<List<Chatroom>> getChatroomList(@Query("userId") String userId);
@@ -219,6 +291,6 @@ public class RetrofitClient implements  ApiRepository {
         Call<List<Message>> getMessagesByScroll(@Query("chatroomId") long chatroomId, @Query("messageId")long id, @Query("actionDirection")int scrollDirection);
 
         @POST("beacons")
-        Call<Void> moveRegion(@Body String beaconJson);
+        Call<Void> moveRegion(@Body JsonObject beaconJson);
     }
 }
