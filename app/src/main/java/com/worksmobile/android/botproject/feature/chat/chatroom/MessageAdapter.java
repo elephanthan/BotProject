@@ -237,6 +237,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
         }
 
         void bindMessage(Message message) {
+            String profile = getTalkerProfile(message);
+            int defaultProfile = getDefaultProfile();
+            Glide.with(context).load(profile).placeholder(defaultProfile).error(defaultProfile).into(profileImageView);
+
             SimpleDateFormat sdf = new SimpleDateFormat("a hh:mm");
             if (message.getMessageType() == 0) {
                 messageTextView.setVisibility(View.VISIBLE);
@@ -262,8 +266,37 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
             nameTextView.setText(name);
         }
 
+        private int getDefaultProfile() {
+            if(chatbox.getChatroomType()==Chatbox.CHATROOM_TYPE_BOT) {
+                return R.drawable.ic_icon_bot;
+            } else {
+                return R.drawable.ic_icon_man;
+            }
+        }
+
+        private String getTalkerProfile(Message message) {
+            if(chatbox.getChatroomType() == Chatbox.CHATROOM_TYPE_BOT) {
+                return chatbox.getChatBot().getProfile();
+
+            } else {
+                //TODO : how to init this var ...
+                String profile = null;
+
+                String senderId = message.getSenderId();
+
+                List<User> users = chatbox.getChatUsers();
+                for (User user: users) {
+                    if (user.getUserId().equals(senderId)) {
+                        profile = user.getProfile();
+                        break;
+                    }
+                }
+                return profile;
+            }
+        }
+
         private String getName(Message message) {
-            if(chatbox.getChatroomType() == 1) {
+            if(chatbox.getChatroomType() == Chatbox.CHATROOM_TYPE_BOT) {
                 return chatbox.getChatBot().getName();
 
             } else {

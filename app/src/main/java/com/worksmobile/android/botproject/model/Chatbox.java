@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Chatbox {
+    public final static int CHATROOM_TYPE_USER = 0;
+    public final static int CHATROOM_TYPE_BOT = 1;
+
     private long chatroomId;
     private String title;
     private int chatroomType;
