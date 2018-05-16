@@ -4,11 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -48,7 +48,6 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
     ChatroomListContract.AdapterView adapterView;
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,13 +77,16 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         //TODO restore code when finished multi user test
         //If a user device turns off bluetooth, request to turn it on.
         //사용자가 블루투스를 켜도록 요청합니다.
-//        mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//        mBluetoothAdapter = mBluetoothManager.getAdapter();
-//
-//        if(mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-//            Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableBTIntent, SettingInfo.REQUEST_ENABLE_BT);
-//        }
+
+        mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
+
+
+
+        if(mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+            Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBTIntent, SettingInfo.REQUEST_ENABLE_BT);
+        }
 
         /**
          * In order to use RECO SDK for Android API 23 (Marshmallow) or higher,
