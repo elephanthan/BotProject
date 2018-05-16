@@ -4,9 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,45 +26,65 @@ import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity
 import com.worksmobile.android.botproject.feature.chat.newchat.NewchatActivity;
 import com.worksmobile.android.botproject.feature.mysetting.MysettingActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worksmobile.android.botproject.feature.login.LoginActivity.retrofitClient;
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
-public class ChatroomListActivity extends AppCompatActivity implements ChatroomListClickListener {
+public class ChatroomListActivity extends AppCompatActivity implements ChatroomListContract.View {
 
-    private View chatroomLayout;
+    private ChatroomListContract.Presenter chatroomListPresenter;
+
+    private View chatroomListView;
+    private View noChatroomListView;
     private RecyclerView chatroomRecyclerView;
 
-    private ChatroomListAdapter chatroomListAdapter;
     List<Chatroom> chatrooms = new ArrayList<Chatroom>();
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
 
+    ChatroomListContract.AdapterView adapterView;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chatroom_list);
+        setContentView(R.layout.activity_chatroomlist);
         getSupportActionBar().setTitle(R.string.barname_chatroomlist);
 
+        chatroomListView = (View) findViewById(R.id.layout_chatlist);
+        noChatroomListView = (View) findViewById(R.id.no_chatroom_layout);
         chatroomRecyclerView = (RecyclerView) findViewById(R.id.chat_room_recycler_view);
-        chatroomLayout = (View) findViewById(R.id.layout_chatlist);
         chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        updateUI();
 
+        ChatroomListAdapter chatroomListAdapter = new ChatroomListAdapter(this);
+        chatroomRecyclerView.setAdapter(chatroomListAdapter);
+        adapterView = chatroomListAdapter;
+        chatroomListPresenter = new ChatroomListPresenter(this, adapterView, chatroomListAdapter);
+
+        String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
+        chatroomListPresenter.loadChatrooms(employeeNumber);
+
+        chatroomListAdapter.setOnRecyclerItemClickListener((position) -> {
+            chatroomListPresenter.enterChatroom(position);
+        });
+
+        //updateUI();
+
+        //TODO restore code when finished multi user test
         //If a user device turns off bluetooth, request to turn it on.
         //사용자가 블루투스를 켜도록 요청합니다.
-        mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = mBluetoothManager.getAdapter();
-
-        if(mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBTIntent, SettingInfo.REQUEST_ENABLE_BT);
-        }
+//        mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//        mBluetoothAdapter = mBluetoothManager.getAdapter();
+//
+//        if(mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+//            Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableBTIntent, SettingInfo.REQUEST_ENABLE_BT);
+//        }
 
         /**
          * In order to use RECO SDK for Android API 23 (Marshmallow) or higher,
@@ -112,18 +130,6 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_new_chatting:
-//                Chatroom chatroom = new Chatroom();
-//                UserLab userLab = UserLab.get();
-//                List<User> users = userLab.getUsers();
-//                chatroom.setTitle("채팅방#"+(chatrooms.size()+1));
-//                chatroom.setTumbnail(R.drawable.thumb_default_team);
-//                Message msg = new Message();
-////                chatroom.setLatestMsg(msg);
-//                chatroom.setLastMessageContent();
-//                chatroom.setNumber(users.size());
-////                chatroom.setParticipants(users);
-//                chatrooms.add(chatroom);
-
                 startActivity(new Intent(this, NewchatActivity.class));
                 return true;
             case R.id.menu_item_my_setting:
@@ -136,33 +142,19 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
 
     private void updateUI(){
-        SharedPreferences sharedPref =  getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-        String employeeNumber = sharedPref.getString("employee_number", "WM060001");
+        String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
         retrofitClient.getChatroomList(employeeNumber, new ApiRepository.RequestChatroomListCallback() {
             @Override
             public void success(List<Chatroom> chatroomList) {
                 Log.d("retrofit Success", chatroomList.toString());
                 chatrooms = chatroomList;
-                onLoadGetChatrooms();
             }
 
             @Override
             public void error(Throwable throwable) {
                 Log.d("retrofit error", "Retrofit Error ::: loginUser");
-                onLoadGetChatrooms();
             }
         });
-    }
-
-    private void onLoadGetChatrooms(){
-        chatroomListAdapter = new ChatroomListAdapter(this, chatrooms, this) ;
-        chatroomRecyclerView.setAdapter(chatroomListAdapter);
-    }
-
-    @Override
-    public void onHolderClick(int position) {
-        Intent intent = ChatroomActivity.newIntent(this, chatrooms.get(position).getId());
-        startActivity(intent);
     }
 
     private void requestLocationPermission() {
@@ -171,7 +163,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
             return;
         }
 
-        Snackbar.make(chatroomLayout, R.string.location_permission_rationale, Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(chatroomListView, R.string.location_permission_rationale, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.command_OK, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -179,5 +171,27 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void setChatroomListPresenter(ChatroomListContract.Presenter chatroomListPresenter) {
+        this.chatroomListPresenter = chatroomListPresenter;
+    }
+
+    @Override
+    public void showChatrooms() {
+        chatroomRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showNoChatrooms() {
+        chatroomRecyclerView.setVisibility(View.GONE);
+        noChatroomListView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void moveToChatroom(long chatroomId) {
+        Intent intent = ChatroomActivity.newIntent(this, chatroomId);
+        startActivity(intent);
     }
 }

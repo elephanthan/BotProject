@@ -7,9 +7,9 @@ package com.worksmobile.android.botproject.model;
 public abstract class Talker {
     public static final int TALKER_TYPE_USER = 0;
     public static final int TALKER_TYPE_BOT = 1;
+    private String profile;
 
     private boolean isChecked = false;
-    private String name;
 
     abstract public int getType();
 
@@ -23,7 +23,8 @@ public abstract class Talker {
 
     abstract public String getName();
 
-    public void setName(String name) {
-        this.name = name;
+    public String getProfile() {
+        return profile;
     }
+
 }

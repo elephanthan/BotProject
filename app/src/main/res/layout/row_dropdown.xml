@@ -8,15 +8,16 @@
     android:minHeight="100dp">
     <ImageView
         android:id="@+id/dd_imageview"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:gravity="center"/>
 
     <TextView
         android:id="@+id/dd_textview"
-        android:layout_width="46dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:textColor="@color/color_white"
+        android:layout_marginTop="@dimen/list_item_margin"
         android:textAlignment="center"
         android:gravity="center"/>
 

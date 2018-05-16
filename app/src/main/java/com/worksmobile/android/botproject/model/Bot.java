@@ -1,17 +1,20 @@
 package com.worksmobile.android.botproject.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by user on 2018. 4. 26..
  */
 
 public class Bot extends Talker {
+    @SerializedName("botId")
     private int botId;
+    @SerializedName("name")
     private String botName;
     private int botImage;
 
     public Bot(){
-        this.botId = 0;
-        this.botName = "chatbot";
+
     }
 
     public Bot(int id, String name){

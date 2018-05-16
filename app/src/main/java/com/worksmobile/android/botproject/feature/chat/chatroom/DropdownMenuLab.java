@@ -27,9 +27,9 @@ public class DropdownMenuLab {
 
     private DropdownMenuLab(int type) {
         if(type == DROPDOWN_CHATROOM){
-            dropDownMenus.add(new DropDownMenu(R.string.action_invite, R.drawable.ic_action_invite));
-            dropDownMenus.add(new DropDownMenu(R.string.action_setnoti, R.drawable.ic_action_setnoti));
-            dropDownMenus.add(new DropDownMenu(R.string.action_exit, R.drawable.ic_action_exit));
+            dropDownMenus.add(new DropDownMenu(R.string.action_invite, R.drawable.ic_icon_add_user));
+            dropDownMenus.add(new DropDownMenu(R.string.action_setnoti, R.drawable.ic_icon_notification));
+            dropDownMenus.add(new DropDownMenu(R.string.action_exit, R.drawable.ic_icon_exit));
         }
 
     }

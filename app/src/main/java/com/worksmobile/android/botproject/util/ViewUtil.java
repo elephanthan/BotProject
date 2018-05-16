@@ -44,6 +44,11 @@ public class ViewUtil {
     }
 
     public static String getResizedTextViewText(Context context, TextView titleTextView, String title){
+
+        if (title == null) {
+            return null;
+        }
+
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int widthPx = metrics.widthPixels;
         float density = metrics.density;
@@ -51,9 +56,9 @@ public class ViewUtil {
 
         float titleTextViewWidthDp = widthDp;
         if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            titleTextViewWidthDp *= 0.9f;
+            titleTextViewWidthDp *= 0.8f;
         } else {
-            titleTextViewWidthDp *= 0.7f;
+            titleTextViewWidthDp *= 0.9f;
         }
 
         float textSize = titleTextView.getTextSize() / metrics.scaledDensity;;

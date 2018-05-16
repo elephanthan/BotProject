@@ -1,9 +1,13 @@
 package com.worksmobile.android.botproject.api;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.worksmobile.android.botproject.beacon.WorksBeacon;
+import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.model.User;
@@ -38,6 +42,8 @@ public class RetrofitClient implements  ApiRepository {
     private ApiService service;
     Gson gson;
 
+
+    //test code
     public RetrofitClient(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(new Uri.Builder().scheme(SCHEME).encodedAuthority(AUTHORITY).build().toString())
@@ -87,6 +93,82 @@ public class RetrofitClient implements  ApiRepository {
         });
     }
 
+    @Override
+    public void getChatbox(long chatroomId, String userId, RequestChatboxCallback callback) {
+        service.getChatbox(chatroomId, userId).enqueue(new Callback<Chatbox>() {
+            @Override
+            public void onResponse(Call<Chatbox> call, Response<Chatbox> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Chatbox> call, Throwable error) {
+                callback.error(error);
+            }
+        });
+    }
+
+    @Override
+    public void getMessagesByScroll(long chatroomId, long id, int scrollDirection, RequestMessagesCallback callback) {
+        service.getMessagesByScroll(chatroomId, id, scrollDirection).enqueue(new Callback<List<Message>>() {
+
+            @Override
+            public void onResponse(Call<List<Message>> call, Response<List<Message>> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Message>> call, Throwable error) {
+                callback.error(error);
+            }
+        });
+    }
+
+    @Override
+    public void moveRegion(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback callback) {
+        String beaconJson = makeBeaconJson(userId, new WorksBeacon(uuid, major, minor, signal, distance)).toString();
+        Log.i("beaconJson", beaconJson );
+        service.moveRegion(beaconJson).enqueue(new Callback<Void>(){
+
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() >= 400 && response.code() < 599) {
+                    onFailure(call, new ApiConnectionLostException("Connection lost Exception has been occured."));
+                } else {
+                    callback.success();
+                }
+            }
+
+            public void onSuccess(Response<Void> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.error(t);
+            }
+        });
+    }
+
+    private JsonObject makeBeaconJson(String userId, WorksBeacon worksBeacon) {
+        Gson gson = new Gson();
+        JsonObject userIdObj = new JsonObject();
+        JsonObject beaconObj = new JsonObject();
+
+        userIdObj.addProperty("userId", userId);
+        beaconObj.add("beacon", gson.toJsonTree(worksBeacon));
+//        beaconObj.addProperty("beacon", gson.toJson(worksBeacon)); ==> trigger error
+
+        JsonObject returnJson = new JsonObject();
+        returnJson.add("source", userIdObj);
+        returnJson.add("data", beaconObj);
+
+        Log.i("JSONTEST", returnJson.toString());
+
+        return returnJson;
+    }
+
+
     public interface ApiService {
         @GET("comments")
         Call<List<Object>> getComment(@Query("id") int id);
@@ -129,5 +211,14 @@ public class RetrofitClient implements  ApiRepository {
 
         @POST("bots")
         Call<List<Map>> sendBotEvent(@Body List<Map> maps);
+
+        @GET("chatrooms/{chatroomId}")
+        Call<Chatbox> getChatbox(@Path("chatroomId") long chatroomId, @Query("userId") String userId);
+
+        @GET("messages")
+        Call<List<Message>> getMessagesByScroll(@Query("chatroomId") long chatroomId, @Query("messageId")long id, @Query("actionDirection")int scrollDirection);
+
+        @POST("beacons")
+        Call<Void> moveRegion(@Body String beaconJson);
     }
 }

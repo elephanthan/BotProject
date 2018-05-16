@@ -17,12 +17,16 @@ import com.perples.recosdk.RECOErrorCode;
 import com.perples.recosdk.RECOMonitoringListener;
 import com.perples.recosdk.RECOServiceConnectListener;
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.api.ApiRepository;
+import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
+
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 /**
  * RECOBackgroundMonitoringService is to monitor regions in the background.
@@ -40,6 +44,18 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     public void onCreate() {
         Log.i("BackMonitoringService", "onCreate()");
         super.onCreate();
+        retrofitClient.moveRegion("WM060001", "24DDF411-8CF1-440C-87CD-E368DAF9C93E", 801, 3712, 1, 3.333, new ApiRepository.RequestVoidCallback() {
+
+            @Override
+            public void success() {
+                Log.i("moveRegion", "success");
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+                Log.i("moveRegion", "error");
+            }
+        });
     }
 
     @Override
@@ -174,6 +190,20 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
         Log.i("BackMonitoringService", "didEnterRegion() - " + region.getUniqueIdentifier());
         this.popupNotification("Inside of " + region.getUniqueIdentifier());
         //Write the code when the device is enter the region
+
+        String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
+
+        for (RECOBeacon beacon : beacons) {
+            retrofitClient.moveRegion(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
+                @Override
+                public void success() {
+                }
+
+                @Override
+                public void error(Throwable throwable) {
+                }
+            });
+        }
     }
 
     @Override
@@ -201,7 +231,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
         Log.i("BackMonitoringService", "popupNotification()");
         String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(new Date());
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher_works)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_icon_noti)
                 .setContentTitle(msg + " " + currentTime)
                 .setContentText(msg);
 

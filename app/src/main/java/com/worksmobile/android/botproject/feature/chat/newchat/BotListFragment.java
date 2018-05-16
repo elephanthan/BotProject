@@ -79,6 +79,7 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
             case R.id.menu_item_ok:
                 Talker talker = getCheckedTalker();
                 Toast.makeText(getActivity(), talker.getName() + "과 시작", Toast.LENGTH_LONG).show();
+                //TODO : add chatroom and refresh chatroom Adapter
 //                startActivity(new Intent(getActivity(), ChatroomActivity.class));
             default:
                 break;

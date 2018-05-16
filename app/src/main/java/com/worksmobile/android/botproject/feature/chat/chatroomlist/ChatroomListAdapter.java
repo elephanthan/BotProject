@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
+import com.worksmobile.android.botproject.model.ChatroomDataModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +30,9 @@ import static com.worksmobile.android.botproject.util.ViewUtil.getResizedTextVie
  * Created by user on 2018. 3. 28..
  */
 
-public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder> {
+public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder>
+                                    implements ChatroomListContract.AdapterView, ChatroomDataModel{
+
     private static Context context;
     private LayoutInflater inflater;
     private int layout;
@@ -45,6 +47,11 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         this.listener = listener;
     }
 
+    public ChatroomListAdapter(Context context) {
+        this.context = context;
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
 
     @Override
     public ChatroomHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -55,12 +62,43 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
 
     @Override
     public void onBindViewHolder(final ChatroomHolder holder, int position) {
-        Chatroom chatroom = chatrooms.get(position);
+        Chatroom chatroom = getChatroom(position);
         holder.bindChatroom(chatroom);
     }
 
     @Override
     public int getItemCount() {
+        return getSize();
+    }
+
+
+    public void setList(List<Chatroom> chatrooms) {
+        this.chatrooms = chatrooms;
+    }
+
+    @Override
+    public void refresh(List<Chatroom> chatrooms) {
+        setList(chatrooms);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void add(Chatroom chatroom) {
+        chatrooms.add(chatroom);
+    }
+
+    @Override
+    public Chatroom remove(int position) {
+        return chatrooms.remove(position);
+    }
+
+    @Override
+    public Chatroom getChatroom(int position) {
+        return chatrooms.get(position);
+    }
+
+    @Override
+    public int getSize() {
         return chatrooms.size();
     }
 
@@ -107,32 +145,17 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
 
             msgTextView.setText(chatroom.getLastMessageContent());
 
+            int defaultImage;
             if (chatroom.getChatroomType() == Chatroom.CHATROOM_TYPE_BOT) {
-//                thumbnailImageView.setBackground(context.getResources().getDrawable(R.drawable.fg_circle));
-//                thumbnailImageView.setPadding(16, 16, 16, 16);
-//                thumbnailImageView.setImageResource(R.drawable.ic_profile_chatbot);
-
-                String imageUrl = "https://media.istockphoto.com/vectors/chat-bots-icon-vector-id802349040";
-                Glide.with(context).load(imageUrl).into(thumbnailImageView);
-
+                defaultImage = R.drawable.ic_icon_bot;
             } else {
                 if (chatroom.getNumber() <= 2) {
-                    //thumbnailImageView.setImageResource(R.drawable.ic_profile_default);
-                    //DESIGN TEST CODE
-                    Random random = new Random();
-                    int randInt = random.nextInt(50)+1;
-                    String imageUrl = "http://www.designskilz.com/random-users/images/imageF" + randInt + ".jpg";
-                    Glide.with(context).load(imageUrl).into(thumbnailImageView);
+                    defaultImage = R.drawable.ic_icon_man;
                 } else {
-                    thumbnailImageView.setImageResource(R.drawable.ic_profile_group);
-
-                    //DESIGN TEST CODE
-                    Random random = new Random();
-                    int randInt = random.nextInt(50)+1;
-                    String imageUrl = "http://www.designskilz.com/random-users/images/imageM" + randInt + ".jpg";
-                    Glide.with(context).load(imageUrl).into(thumbnailImageView);
+                    defaultImage = R.drawable.ic_icon_men;
                 }
             }
+            Glide.with(context).load(chatroom.getProfile()).placeholder(defaultImage).error(defaultImage).into(thumbnailImageView);
 
             SimpleDateFormat pattern = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             String displayformat = "MM-dd HH:mm";
@@ -146,6 +169,10 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setOnRecyclerItemClickListener(ChatroomListClickListener onRecyclerItemClickListener) {
+        this.listener = onRecyclerItemClickListener;
     }
 
 }

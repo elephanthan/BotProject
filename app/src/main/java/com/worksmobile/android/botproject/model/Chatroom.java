@@ -24,7 +24,8 @@ public class Chatroom {
     private String lastMessageContent;
     @SerializedName("lastMessageTime")
     private String lastMessageTime;
-    private int thumbnail;
+    @SerializedName("profile")
+    private String profile;
 
     public int getNumber() {
         return number;
@@ -58,14 +59,6 @@ public class Chatroom {
         this.title = title;
     }
 
-    public int getTumbnail() {
-        return thumbnail;
-    }
-
-    public void setTumbnail(int resId) {
-        this.thumbnail = resId;
-    }
-
     public long getId() {
         return id;
     }
@@ -93,5 +86,13 @@ public class Chatroom {
 
     public void setChatroomType(int chatroomType) {
         this.chatroomType = chatroomType;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 }
