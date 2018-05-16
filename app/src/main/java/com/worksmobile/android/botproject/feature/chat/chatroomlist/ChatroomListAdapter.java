@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
-import com.worksmobile.android.botproject.model.ChatroomDataModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,7 +30,7 @@ import static com.worksmobile.android.botproject.util.ViewUtil.getResizedTextVie
  */
 
 public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder>
-                                    implements ChatroomListContract.AdapterView, ChatroomDataModel{
+                                    implements ChatroomListContract.AdapterView, ChatroomListDataModel {
 
     private static Context context;
     private LayoutInflater inflater;

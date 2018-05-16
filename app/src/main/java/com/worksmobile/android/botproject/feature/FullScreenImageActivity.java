@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.util;
+package com.worksmobile.android.botproject.feature;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
 
-public class FullScreenImage extends Activity {
+public class FullScreenImageActivity extends Activity {
 
     final public static String EXTRA_IMAGE_URL = "imageUrl";
     final public static String EXTRA_POSITION = "position";
@@ -19,7 +19,7 @@ public class FullScreenImage extends Activity {
     int position;
 
     public static Intent newIntent(Context context, String imageUrl, int position){
-        Intent intent = new Intent(context, FullScreenImage.class);
+        Intent intent = new Intent(context, FullScreenImageActivity.class);
         intent.putExtra(EXTRA_IMAGE_URL, imageUrl);
         intent.putExtra(EXTRA_POSITION, position);
         return intent;
@@ -40,7 +40,7 @@ public class FullScreenImage extends Activity {
 
         btnClose.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                FullScreenImage.this.finish();
+                FullScreenImageActivity.this.finish();
             }
         });
 

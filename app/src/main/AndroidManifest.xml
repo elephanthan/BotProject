@@ -36,7 +36,7 @@
         <service android:name="com.perples.recosdk.RECOBeaconService" />
         <service android:name=".beacon.RecoBackgroundMonitoringService" />
 
-        <activity android:name=".util.FullScreenImage"/>
+        <activity android:name=".feature.FullScreenImageActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

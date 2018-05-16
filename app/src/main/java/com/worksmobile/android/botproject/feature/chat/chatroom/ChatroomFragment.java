@@ -31,7 +31,7 @@ import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.DropDownMenu;
 import com.worksmobile.android.botproject.model.Message;
-import com.worksmobile.android.botproject.util.FullScreenImage;
+import com.worksmobile.android.botproject.feature.FullScreenImageActivity;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
 import com.worksmobile.android.botproject.util.UnixEpochDateTypeAdapter;
 import com.worksmobile.android.botproject.util.ViewUtil;
@@ -364,7 +364,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     @Override
     public void onMessageImageClick(int position) {
-        Intent intent = FullScreenImage.newIntent(getActivity(), messages.get(position).getText(), position);
+        Intent intent = FullScreenImageActivity.newIntent(getActivity(), messages.get(position).getText(), position);
         startActivityForResult(intent, REQUEST_POSITION);
     }
 

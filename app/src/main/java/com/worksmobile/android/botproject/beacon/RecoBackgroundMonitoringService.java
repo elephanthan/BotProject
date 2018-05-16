@@ -44,18 +44,6 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     public void onCreate() {
         Log.i("BackMonitoringService", "onCreate()");
         super.onCreate();
-//        retrofitClient.moveRegion("WM060001", "24DDF4118CF1440C87CDE368DAF9C93E!", 801, 3712, 1, 3.333, new ApiRepository.RequestVoidCallback() {
-//
-//            @Override
-//            public void success() {
-//                Log.i("moveRegion", "success");
-//            }
-//
-//            @Override
-//            public void error(Throwable throwable) {
-//                Log.i("moveRegion", "error");
-//            }
-//        });
     }
 
     @Override
@@ -200,11 +188,12 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
             retrofitClient.moveRegion(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
                 @Override
                 public void success() {
-                    popupNotification("Inside of " + region.getUniqueIdentifier());
+                    popupNotification(region.getUniqueIdentifier() + "입장");
                 }
 
                 @Override
                 public void error(Throwable throwable) {
+
                 }
             });
         }

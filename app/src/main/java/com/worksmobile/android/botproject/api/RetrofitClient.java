@@ -1,7 +1,6 @@
 package com.worksmobile.android.botproject.api;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -43,8 +42,6 @@ public class RetrofitClient implements  ApiRepository {
     private ApiService service;
     Gson gson;
 
-
-    //test code
     public RetrofitClient(){
         gson = new GsonBuilder().setLenient().setPrettyPrinting().create();
 
@@ -189,12 +186,9 @@ public class RetrofitClient implements  ApiRepository {
 
     @Override
     public void moveRegion(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback callback) {
-//        String beaconJson = makeBeaconJson(userId, new WorksBeacon(uuid, major, minor, signal, distance));
         JsonObject beaconJson = makeBeaconJson(userId, new WorksBeacon(uuid, major, minor, signal, distance));
-        //Log.i("beaconJson", beaconJson );
 
         service.moveRegion(beaconJson).enqueue(new Callback<Void>(){
-
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.code() >= 400 && response.code() < 599) {
@@ -228,23 +222,15 @@ public class RetrofitClient implements  ApiRepository {
 
          userIdObj.addProperty("userId", userId);
          beaconObj.add("beacon", gson.toJsonTree(worksBeacon));
-         //        beaconObj.addProperty("beacon", gson.toJson(worksBeacon)); ==> trigger error
 
          JsonObject returnJson = new JsonObject();
          returnJson.add("source", userIdObj);
          returnJson.add("data", beaconObj);
 
-         Log.i("JSONTEST", returnJson.toString());
-
          return returnJson;
      }
 
-
-
-            public interface ApiService {
-        @GET("comments")
-        Call<List<Object>> getComment(@Query("id") int id);
-
+     public interface ApiService {
         @POST("login")
         Call<String> loginUser(@Body JsonObject json);
 
