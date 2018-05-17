@@ -123,10 +123,18 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
 
             int chatroomNumber = chatroom.getNumber();
             if(chatroomNumber > 2) {
+                numberTextView.setVisibility(View.VISIBLE);
                 numberTextView.setText("(" + chatroomNumber + ")");
+            } else {
+                numberTextView.setVisibility(View.INVISIBLE);
             }
 
-            msgTextView.setText(chatroom.getLastMessageContent());
+            if (chatroom.getLastMessageContent() != null) {
+                msgTextView.setVisibility(View.VISIBLE);
+                msgTextView.setText(chatroom.getLastMessageContent());
+            } else {
+                msgTextView.setVisibility(View.INVISIBLE);
+            }
 
             int defaultImage;
             if (chatroom.getChatroomType() == Chatroom.CHATROOM_TYPE_BOT) {
@@ -147,6 +155,9 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
                 if (chatroom.getLastMessageTime() != null) {
                     Date myDate = pattern.parse(chatroom.getLastMessageTime());
                     msgDateTextView.setText(destFormat.format(myDate));
+                    msgDateTextView.setVisibility(View.VISIBLE);
+                } else {
+                    msgDateTextView.setVisibility(View.INVISIBLE);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();

@@ -15,8 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -75,24 +73,6 @@ public class MysettingActivity extends AppCompatActivity {
                 Toast.makeText(MysettingActivity.this, R.string.alert_network_connection_fail, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.triggers_ok, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_item_ok:
-                Toast.makeText(this, R.string.alert_not_supply, Toast.LENGTH_LONG).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
