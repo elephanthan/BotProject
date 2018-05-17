@@ -9,12 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.model.Chatroom;
 
 public class NewchatActivity extends AppCompatActivity {
 
-    final public String EXTRA_CHATROOMID = "chatroomId";
+    final public String EXTRA_CHATROOMID = "chatroom_id";
+    final public String EXTRA_CHATROOM_TYPE = "chatroom_type";
     private long chatroomId = -1;
-
+    private int chatroomType = Chatroom.CHATROOM_TYPE_USER;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,7 @@ public class NewchatActivity extends AppCompatActivity {
         Intent intent = new Intent();
         if (this.chatroomId > 0) {
             intent.putExtra(EXTRA_CHATROOMID, this.chatroomId);
+            intent.putExtra(EXTRA_CHATROOM_TYPE, this.chatroomType);
             setResult(RESULT_OK, intent);
 
             super.finish();
@@ -74,6 +77,10 @@ public class NewchatActivity extends AppCompatActivity {
 
     public void setChatroomId(long chatroomId) {
         this.chatroomId = chatroomId;
+    }
+
+    public void setChatroomType(int chatroomType) {
+        this.chatroomType = chatroomType;
     }
 
     @Override

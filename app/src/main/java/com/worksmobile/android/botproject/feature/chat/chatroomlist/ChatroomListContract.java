@@ -12,7 +12,7 @@ public interface ChatroomListContract {
 
         void showNoChatrooms();
 
-        void moveToChatroom(long chatroomId);
+        void moveToChatroom(long chatroomId, int chatroomType);
     }
 
     interface Presenter extends BasePresenter {

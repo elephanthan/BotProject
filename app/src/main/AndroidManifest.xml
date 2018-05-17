@@ -44,8 +44,6 @@
         <service android:name=".beacon.MonitoringService" />
 
         <activity android:name=".feature.FullScreenImageActivity" />
-
-        <activity android:name=".beacon.TestActivity"/>
     </application>
 
 </manifest>

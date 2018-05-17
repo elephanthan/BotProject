@@ -8,7 +8,7 @@ import com.perples.recosdk.RECOBeaconRegion;
 
 import java.util.ArrayList;
 
-public abstract class RecoActivity extends Fragment {
+public abstract class RangingFragment extends Fragment {
     protected RECOBeaconManager mRecoManager;
     protected ArrayList<RECOBeaconRegion> mRegions;
 
@@ -42,11 +42,11 @@ public abstract class RecoActivity extends Fragment {
 
         RECOBeaconRegion recoRegion;
 
-        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_A, SettingInfo.RECO_IDENTIFIER_COMUTE_A);
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMMUTE_A, SettingInfo.RECO_IDENTIFIER_COMMUTE_A);
         recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
         regions.add(recoRegion);
 
-        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_B, SettingInfo.RECO_IDENTIFIER_COMUTE_B);
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMMUTE_B, SettingInfo.RECO_IDENTIFIER_COMMUTE_B);
         recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
         regions.add(recoRegion);
 

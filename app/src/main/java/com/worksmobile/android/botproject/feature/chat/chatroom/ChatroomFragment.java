@@ -2,7 +2,7 @@ package com.worksmobile.android.botproject.feature.chat.chatroom;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.RemoteException;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,14 +21,23 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.perples.recosdk.RECOBeacon;
+import com.perples.recosdk.RECOBeaconRegion;
+import com.perples.recosdk.RECOErrorCode;
+import com.perples.recosdk.RECORangingListener;
+import com.perples.recosdk.RECOServiceConnectListener;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.api.MqttRepository;
+import com.worksmobile.android.botproject.beacon.RangingFragment;
+import com.worksmobile.android.botproject.beacon.SettingInfo;
 import com.worksmobile.android.botproject.feature.FullScreenImageActivity;
 import com.worksmobile.android.botproject.feature.dialog.UserinfoDialogFragment;
 import com.worksmobile.android.botproject.model.Chatbox;
+import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.DropDownMenu;
 import com.worksmobile.android.botproject.model.Message;
+import com.worksmobile.android.botproject.util.BeaconUtil;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
 import com.worksmobile.android.botproject.util.UnixEpochDateTypeAdapter;
 import com.worksmobile.android.botproject.util.ViewUtil;
@@ -40,6 +49,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -51,12 +61,16 @@ import butterknife.OnTouch;
 import static com.worksmobile.android.botproject.feature.chat.chatroom.DropdownMenuDataModel.DROPDOWN_CHATROOM;
 import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
-public class ChatroomFragment extends Fragment implements ChatroomClickListener {
+public class ChatroomFragment extends RangingFragment implements ChatroomClickListener, RECORangingListener, RECOServiceConnectListener {
+
+    public static final String TAG = ChatroomFragment.class.getSimpleName();
 
     private static final String ARG_CHATROOM_ID = "chatroom_id";
+    private static final String ARG_CHATROOM_TYPE = "chatroom_type";
     private final int REQUEST_POSITION = 100;
     private final int RESULT_OK = -1;
     int beforeImageClickPosition = -1;
+    int chatroomType;
 
     MqttClient mqttClient;
 
@@ -79,9 +93,10 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     private EndlessRecyclerViewScrollListener scrollListener;
 
-    public static ChatroomFragment newInstance(long chatroomId) {
+    public static ChatroomFragment newInstance(long chatroomId, int chatroomType) {
         Bundle args = new Bundle();
         args.putLong(ARG_CHATROOM_ID, chatroomId);
+        args.putInt(ARG_CHATROOM_TYPE, chatroomType);
         ChatroomFragment fragment = new ChatroomFragment();
         fragment.setArguments(args);
         return fragment;
@@ -92,8 +107,8 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        long chatroomId = (long) getArguments().getLong(ARG_CHATROOM_ID);
-        //chatroom = ChatroomLab.get().getChatroom(chatroomId);
+        long chatroomId = getArguments().getLong(ARG_CHATROOM_ID);
+        chatroomType = getArguments().getInt(ARG_CHATROOM_TYPE);
 
         String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
         retrofitClient.getChatbox(chatroomId, employeeNumber, new ApiRepository.RequestChatboxCallback() {
@@ -161,6 +176,63 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
             mqttClient.subscribe(MqttRepository.topic + chatroomId + "/users/" + employeeNumber, MqttRepository.qos);
         } catch (MqttException e) {
             e.printStackTrace();
+        }
+
+        if (chatroomType == Chatroom.CHATROOM_TYPE_BOT) {
+            bindRangingListener();
+        }
+    }
+
+    private void bindRangingListener() {
+        mRecoManager.setRangingListener(this);
+        mRecoManager.bind(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (chatroomType == Chatroom.CHATROOM_TYPE_BOT) {
+            this.stop(mRegions);
+            this.unbind();
+        }
+    }
+
+    private void unbind() {
+        try {
+            mRecoManager.unbind();
+        } catch (RemoteException e) {
+            Log.i("RECORangingActivity", "Remote Exception");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void start(ArrayList<RECOBeaconRegion> regions) {
+        for(RECOBeaconRegion region : regions) {
+            try {
+                mRecoManager.startRangingBeaconsInRegion(region);
+            } catch (RemoteException e) {
+                Log.i("RECORangingActivity", "Remote Exception");
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                Log.i("RECORangingActivity", "Null Pointer Exception");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void stop(ArrayList<RECOBeaconRegion> regions) {
+        for(RECOBeaconRegion region : regions) {
+            try {
+                mRecoManager.stopRangingBeaconsInRegion(region);
+            } catch (RemoteException e) {
+                Log.i("RECORangingActivity", "Remote Exception");
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                Log.i("RECORangingActivity", "Null Pointer Exception");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -360,7 +432,7 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                     .create();
 
             String msgString = gson.toJson(msg);
-            Log.i("msgString", msgString);
+            Log.i(TAG, msgString);
 
             MqttMessage mqttMessage = new MqttMessage(msgString.getBytes());
             mqttMessage.setQos(MqttRepository.qos);
@@ -370,7 +442,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                     mqttClient.connect();
                 }
                 mqttClient.publish(MqttRepository.topic + chatbox.getChatroomId(), mqttMessage);
-                Log.d("pubtopic", MqttRepository.topic + chatbox.getChatroomId());
             } catch (MqttException e) {
                 e.printStackTrace();
             }
@@ -392,5 +463,46 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
 
     public void setBeforeImageClickPosition(int beforeImageClickPosition) {
         this.beforeImageClickPosition = beforeImageClickPosition;
+    }
+
+    @Override
+    public void didRangeBeaconsInRegion(Collection<RECOBeacon> beacons, RECOBeaconRegion region) {
+        Log.i(TAG, "didRangeBeaconsInRegion() region: " + region.getUniqueIdentifier() + ", number of beacons ranged: " + beacons.size());
+
+        String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
+        if(!BeaconUtil.checkIsSendedRecently(getActivity(), region)) {
+            for (RECOBeacon beacon : beacons) {
+                retrofitClient.sendBeaconEvent(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
+                    @Override
+                    public void success() {
+                        BeaconUtil.popupNotification(getActivity(), region.getUniqueIdentifier() + "입장");
+                    }
+
+                    @Override
+                    public void error(Throwable throwable) {
+
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    public void rangingBeaconsDidFailForRegion(RECOBeaconRegion recoBeaconRegion, RECOErrorCode recoErrorCode) {
+        return;
+    }
+
+    @Override
+    public void onServiceConnect() {
+        if (chatroomType == Chatroom.CHATROOM_TYPE_BOT) {
+            Log.i(TAG, "onServiceConnect()");
+            mRecoManager.setDiscontinuousScan(SettingInfo.DISCONTINUOUS_SCAN);
+            this.start(mRegions);
+        }
+    }
+
+    @Override
+    public void onServiceFail(RECOErrorCode recoErrorCode) {
+        return;
     }
 }

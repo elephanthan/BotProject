@@ -1,12 +1,10 @@
 package com.worksmobile.android.botproject.beacon;
 
 
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.perples.recosdk.RECOBeacon;
@@ -16,15 +14,12 @@ import com.perples.recosdk.RECOBeaconRegionState;
 import com.perples.recosdk.RECOErrorCode;
 import com.perples.recosdk.RECOMonitoringListener;
 import com.perples.recosdk.RECOServiceConnectListener;
-import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
+import com.worksmobile.android.botproject.util.BeaconUtil;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Locale;
 
 import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
@@ -37,8 +32,6 @@ public class MonitoringService extends Service implements RECOMonitoringListener
 
     private RECOBeaconManager recoManager;
     private ArrayList<RECOBeaconRegion> regions;
-
-    private int notificationID = 9999;
 
     @Override
     public void onCreate() {
@@ -84,11 +77,11 @@ public class MonitoringService extends Service implements RECOMonitoringListener
 
         RECOBeaconRegion recoRegion;
 
-        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_A, SettingInfo.RECO_IDENTIFIER_COMUTE_A);
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMMUTE_A, SettingInfo.RECO_IDENTIFIER_COMMUTE_A);
         recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
         regions.add(recoRegion);
 
-        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_B, SettingInfo.RECO_IDENTIFIER_COMUTE_B);
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMMUTE_B, SettingInfo.RECO_IDENTIFIER_COMMUTE_B);
         recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
         regions.add(recoRegion);
 
@@ -174,12 +167,12 @@ public class MonitoringService extends Service implements RECOMonitoringListener
         Log.i("BackMonitoringService", "didEnterRegion() - " + region.getUniqueIdentifier());
 
         String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
-        if(!checkIsSendedRecently(region)) {
+        if(!BeaconUtil.checkIsSendedRecently(this, region)) {
             for (RECOBeacon beacon : beacons) {
                 retrofitClient.sendBeaconEvent(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
                     @Override
                     public void success() {
-                        popupNotification(region.getUniqueIdentifier() + "입장");
+                        BeaconUtil.popupNotification(MonitoringService.this, region.getUniqueIdentifier() + "입장");
                     }
 
                     @Override
@@ -188,40 +181,6 @@ public class MonitoringService extends Service implements RECOMonitoringListener
                     }
                 });
             }
-        }
-    }
-
-    private boolean checkIsSendedRecently(RECOBeaconRegion region) {
-        String key = region.getProximityUuid().substring(0,4).concat("_");
-
-        if (region.getMajor() != null) {
-            key = key.concat(region.getMajor().toString());
-        }
-        if (region.getMinor() != null) {
-            key = key.concat(region.getMinor().toString());
-        }
-
-        long millisecondsNow = new Date().getTime();
-        long minutesNow = ((millisecondsNow / 1000) / 60);
-
-        long millisecondsRecently = SharedPrefUtil.getLongPreference(this, key);
-
-        long minutesRecently = ((millisecondsRecently / 1000) / 60);
-
-        //if get default value return to confirm api request
-        if (millisecondsRecently < 0) {
-            SharedPrefUtil.setMiliSecondsPreference(this, key);
-            return false;
-        }
-
-        if(minutesNow - minutesRecently < 30) {
-            Log.i("### Reject : < 30", region.getUniqueIdentifier() + new Date(millisecondsNow) + " vs " + new Date(millisecondsRecently));
-            return true;
-        }
-        else {
-            Log.i("### Confirm : > 30", region.getUniqueIdentifier() + new Date(millisecondsNow) + " vs " + new Date(millisecondsRecently));
-            SharedPrefUtil.setMiliSecondsPreference(this, key);
-            return false;
         }
     }
 
@@ -234,23 +193,6 @@ public class MonitoringService extends Service implements RECOMonitoringListener
     @Override
     public void didStartMonitoringForRegion(RECOBeaconRegion region) {
         Log.i("BackMonitoringService", "didStartMonitoringForRegion() - " + region.getUniqueIdentifier());
-    }
-
-    private void popupNotification(String msg) {
-        Log.i("BackMonitoringService", "popupNotification()");
-        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(new Date());
-        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_icon_noti)
-                .setContentTitle(msg + " " + currentTime)
-                .setContentText(msg);
-
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        builder.setStyle(inboxStyle);
-
-        if (nm != null) {
-            nm.notify(notificationID, builder.build());
-            notificationID = (notificationID - 1) % 1000 + 9000;
-        }
     }
 
     @Override

@@ -92,6 +92,7 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
                     @Override
                     public void success(Chatroom chatroom) {
                         ((NewchatActivity)getActivity()).setChatroomId(chatroom.getId());
+                        ((NewchatActivity)getActivity()).setChatroomType(chatroom.getChatroomType());
                         getActivity().finish();
                     }
 

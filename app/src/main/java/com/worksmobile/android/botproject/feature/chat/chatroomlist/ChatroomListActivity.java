@@ -100,12 +100,13 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         }
         if (requestCode == REQUEST_NEWCHAT) {
             if (resultCode == RESULT_OK) {
-                long chatroomId = intent.getLongExtra("chatroomId", -1);
+                long chatroomId = intent.getLongExtra("chatroom_id", -1);
+                int chatroomType = intent.getIntExtra("chatroom_type", Chatroom.CHATROOM_TYPE_USER);
                 if(chatroomId > 0) {
                     String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
                     chatroomListPresenter.loadChatrooms(employeeNumber);
 
-                    moveToChatroom(chatroomId);
+                    moveToChatroom(chatroomId, chatroomType);
                 }
             } else {
 
@@ -181,8 +182,8 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     }
 
     @Override
-    public void moveToChatroom(long chatroomId) {
-        Intent intent = ChatroomActivity.newIntent(this, chatroomId);
+    public void moveToChatroom(long chatroomId, int chatroomType) {
+        Intent intent = ChatroomActivity.newIntent(this, chatroomId, chatroomType);
         startActivity(intent);
     }
 

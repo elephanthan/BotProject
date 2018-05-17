@@ -57,7 +57,7 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
     @Override
     public void enterChatroom(int position) {
         Chatroom chatroom = chatroomDataModel.getChatroom(position);
-        chatroomListView.moveToChatroom(chatroom.getId());
+        chatroomListView.moveToChatroom(chatroom.getId(), chatroom.getChatroomType());
     }
 
 }
