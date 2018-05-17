@@ -253,7 +253,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
 
                 List<User> users = chatbox.getChatUsers();
                 for (User user: users) {
-                    if (user.getUserId().equals(senderId)) {
+                    if (user.getId().equals(senderId)) {
                         profile = user.getProfile();
                         break;
                     }
@@ -270,7 +270,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements MessageDataM
 
                 List<User> users = chatbox.getChatUsers();
                 for (User user: users) {
-                    if (user.getUserId().equals(userNickname)) {
+                    if (user.getId().equals(userNickname)) {
                         userNickname = user.getName();
                         break;
                     }

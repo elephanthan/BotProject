@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.worksmobile.android.botproject.beacon.WorksBeacon;
+import com.worksmobile.android.botproject.feature.chat.newchat.NewchatDataModel;
 import com.worksmobile.android.botproject.feature.chat.newchat.TalkerDataModel;
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Chatroom;
@@ -258,6 +259,35 @@ public class RetrofitClient implements  ApiRepository {
         });
     }
 
+    public void startNewchat(NewchatDataModel newchatDataModel, RequestChatroomCallback callback) {
+        JsonObject jsonNewchat = newchatDataModel.getJsonObject();
+        service.startNewchat(jsonNewchat).enqueue(new Callback<Chatroom>(){
+            @Override
+            public void onResponse(Call<Chatroom> call, Response<Chatroom> response) {
+                if (response.code() >= 400 && response.code() < 599) {
+                    try {
+                        if(response.errorBody() != null) {
+                            onFailure(call, new ApiConnectionLostException(response.errorBody().string()));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    onSuccess(response);
+                }
+            }
+
+            public void onSuccess(Response<Chatroom> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Chatroom> call, Throwable t) {
+                callback.error(t);
+            }
+        });
+    }
+
     public interface ApiService {
         @POST("login")
         Call<String> loginUser(@Body JsonObject json);
@@ -278,7 +308,7 @@ public class RetrofitClient implements  ApiRepository {
         Call<TalkerDataModel> getTalkers();
 
         @POST("chatrooms")
-        Call<Chatroom> createChatroom(@Body Chatroom chatroom);
+        Call<Chatroom> startNewchat(@Body JsonObject newchat);
 
         @PATCH("chatrooms/{chatroomId}")
         Call<Chatroom> updateChatroom(@Body Map<String, String> map);

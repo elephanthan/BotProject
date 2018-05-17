@@ -26,7 +26,7 @@ public class User extends Talker {
         return TALKER_TYPE_USER;
     }
 
-    public String getUserId() {
+    public String getId() {
         return userId;
     }
 

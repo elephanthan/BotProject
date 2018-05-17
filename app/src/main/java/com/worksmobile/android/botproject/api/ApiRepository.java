@@ -1,5 +1,6 @@
 package com.worksmobile.android.botproject.api;
 
+import com.worksmobile.android.botproject.feature.chat.newchat.NewchatDataModel;
 import com.worksmobile.android.botproject.feature.chat.newchat.TalkerDataModel;
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Chatroom;
@@ -15,7 +16,7 @@ import java.util.List;
 public interface ApiRepository {
     public static String SCHEME = "http";
     public static String AUTHORITY = "10.106.150.71:8080";
-//    public static String AUTHORITY = "10.66.76.43:8080";
+//    public static String AUTHORITY = "10.66.76.25:8080";
 
     public static final String IMAGE_URL = "http://10.106.150.71:8080/image/";
     public static final String IMAGE_PROFILE_EXT = ".jpeg";
@@ -29,6 +30,8 @@ public interface ApiRepository {
     void getMessagesByScroll(long chatroomId, long id, int scrollDirection, RequestMessagesCallback requestMessagesCallback);
 
     void sendBeaconEvent(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback requestVoidCallback);
+
+    void startNewchat(NewchatDataModel newchatDataModel, RequestChatroomCallback requestChatroomCallback);
 
     interface RequestUserCallback {
         void success(User user);

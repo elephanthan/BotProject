@@ -45,8 +45,6 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
     List<Chatroom> chatrooms = new ArrayList<>();
 
-    ChatroomListContract.AdapterView adapterView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +63,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
         ChatroomListAdapter chatroomListAdapter = new ChatroomListAdapter(this);
         chatroomRecyclerView.setAdapter(chatroomListAdapter);
-        adapterView = chatroomListAdapter;
-        chatroomListPresenter = new ChatroomListPresenter(this, adapterView, chatroomListAdapter);
+        chatroomListPresenter = new ChatroomListPresenter(this, chatroomListAdapter, chatroomListAdapter);
 
         String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
         chatroomListPresenter.loadChatrooms(employeeNumber);

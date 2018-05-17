@@ -95,4 +95,17 @@ public class Chatroom {
     public void setProfile(String profile) {
         this.profile = profile;
     }
+
+    @Override
+    public String toString() {
+        return "Chatroom{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", number=" + number +
+                ", chatroomType=" + chatroomType +
+                ", lastMessageContent='" + lastMessageContent + '\'' +
+                ", lastMessageTime='" + lastMessageTime + '\'' +
+                ", profile='" + profile + '\'' +
+                '}';
+    }
 }

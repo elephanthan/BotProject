@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Bot extends Talker {
     @SerializedName("botId")
-    private int botId;
+    private String botId;
     @SerializedName("name")
     private String botName;
     private int botImage;
@@ -17,12 +17,12 @@ public class Bot extends Talker {
 
     }
 
-    public Bot(int id, String name){
+    public Bot(String id, String name){
         this.botId = id;
         this.botName = name;
     }
 
-    public int getBotId() {
+    public String getId() {
         return botId;
     }
 

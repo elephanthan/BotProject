@@ -1,9 +1,11 @@
 package com.worksmobile.android.botproject.feature.chat.newchat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,8 +16,11 @@ import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
+import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
 import com.worksmobile.android.botproject.model.Bot;
+import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Talker;
+import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +89,23 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
         switch (item.getItemId()) {
             case R.id.menu_item_ok:
                 List<Talker> checkedList = getCheckedTalkers();
-                Toast.makeText(getActivity(), checkedList.size() + "명 초대!", Toast.LENGTH_LONG).show();
+
+                String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);;
+                NewchatDataModel newchatDataModel = new NewchatDataModel(employeeNumber, checkedList);
+                retrofitClient.startNewchat(newchatDataModel, new ApiRepository.RequestChatroomCallback() {
+                    @Override
+                    public void success(Chatroom chatroom) {
+                        Log.i("chatroom", chatroom.toString());
+                        Intent intent = ChatroomActivity.newIntent(UserListFragment.this.getActivity(), chatroom.getId());
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void error(Throwable throwable) {
+                        Toast.makeText(getActivity(), R.string.alert_network_connection_fail, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 //                startActivity(new Intent(getActivity(), ChatroomActivity.class));
             default:
                 break;
@@ -116,8 +137,7 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
 
     @Override
     public void onHolderClick(int position) {
-        //onCheckBoxClick(position);
-        Toast.makeText(getActivity(), "###", Toast.LENGTH_SHORT).show();
+        //TODO : clean code
         talkerAdapter.updateCheckBox(position);
         getActivity().invalidateOptionsMenu();
     }
@@ -132,9 +152,9 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     private List<Talker> getCheckedTalkers() {
         List<Talker> result = new ArrayList<>();
         if (talkers != null) {
-            for (Talker t : talkers) {
-                if (t.isChecked()) {
-                    result.add(t);
+            for (Talker talker : talkers) {
+                if (talker.isChecked()) {
+                    result.add(talker);
                 }
             }
         }

@@ -23,6 +23,8 @@ public abstract class Talker {
 
     abstract public String getName();
 
+    abstract public String getId();
+
     public String getProfile() {
         return profile;
     }
