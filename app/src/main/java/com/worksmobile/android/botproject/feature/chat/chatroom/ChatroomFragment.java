@@ -396,7 +396,7 @@ public class ChatroomFragment extends RangingFragment implements ChatroomClickLi
 
     @Override
     public void onMsgClick(int position) {
-        Toast.makeText(getActivity(), messages.get(position).getText(), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
