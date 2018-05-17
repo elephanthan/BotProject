@@ -33,6 +33,17 @@ public class TalkerDataModel {
         return users;
     }
 
+    public List<User> getUsersExceptId(String userId) {
+        List<User> usersExceptId = new ArrayList<>(users);
+        for (int i=0;i<usersExceptId.size()-1;i++) {
+            if(usersExceptId.get(i).getId().equals(userId)) {
+                usersExceptId.remove(i);
+            }
+        }
+        return usersExceptId;
+
+    }
+
     public void setUsers(List<User> users) {
         this.users = new ArrayList<>(users);
     }

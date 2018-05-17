@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
-import com.worksmobile.android.botproject.model.Bot;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Talker;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
@@ -39,7 +38,7 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     @BindView(R.id.newchat_recycler_view)
     RecyclerView userRecyclerView;
     private TalkerAdapter talkerAdapter;
-    List<? extends Talker> talkers = new ArrayList<Talker>();
+    List<? extends Talker> talkers = new ArrayList<>();
 
     private MenuItem checkMenuItem;
 
@@ -105,8 +104,6 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
                         Toast.makeText(getActivity(), R.string.alert_network_connection_fail, Toast.LENGTH_SHORT).show();
                     }
                 });
-
-//                startActivity(new Intent(getActivity(), ChatroomActivity.class));
             default:
                 break;
         }
@@ -118,9 +115,8 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
         retrofitClient.getTalkers(new ApiRepository.RequestTalkerCallback() {
             @Override
             public void success(TalkerDataModel talkerDataModel) {
-                talkerDataModel.setUsers(talkerDataModel.getUsers());
-                talkerDataModel.setBots((ArrayList<Bot>) talkerDataModel.getBots());
-                talkers = talkerDataModel.getTalkers(Talker.TALKER_TYPE_USER);
+                String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
+                talkers = talkerDataModel.getUsersExceptId(employeeNumber);
 
                 if (talkerAdapter == null) {
                     talkerAdapter = new TalkerAdapter(getActivity(), talkers, UserListFragment.this);
