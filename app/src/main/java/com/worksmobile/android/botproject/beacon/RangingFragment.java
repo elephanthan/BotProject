@@ -1,19 +1,19 @@
 package com.worksmobile.android.botproject.beacon;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.perples.recosdk.RECOBeaconManager;
 import com.perples.recosdk.RECOBeaconRegion;
 
 import java.util.ArrayList;
 
-public abstract class RecoActivity extends Activity {
+public abstract class RecoActivity extends Fragment {
     protected RECOBeaconManager mRecoManager;
     protected ArrayList<RECOBeaconRegion> mRegions;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         /**
@@ -28,12 +28,12 @@ public abstract class RecoActivity extends Activity {
          * 주의: enableRangingTimeout을 false로 설정 시, 배터리 소모량이 증가합니다.
          */
 
-        mRecoManager = RECOBeaconManager.getInstance(getApplicationContext(), SettingInfo.SCAN_RECO_ONLY, SettingInfo.ENABLE_BACKGROUND_RANGING_TIMEOUT);
+        mRecoManager = RECOBeaconManager.getInstance(getActivity().getApplicationContext(), SettingInfo.SCAN_RECO_ONLY, SettingInfo.ENABLE_BACKGROUND_RANGING_TIMEOUT);
         mRegions = this.generateBeaconRegion();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
     }
 
