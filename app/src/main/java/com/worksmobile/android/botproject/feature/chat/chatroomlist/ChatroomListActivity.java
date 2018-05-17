@@ -37,6 +37,8 @@ import static com.worksmobile.android.botproject.feature.splash.SplashActivity.r
 public class ChatroomListActivity extends AppCompatActivity implements ChatroomListContract.View {
     public static final String TAG = ChatroomListActivity.class.getSimpleName();
 
+    public static final int REQUEST_NEWCHAT = 100;
+
     private ChatroomListContract.Presenter chatroomListPresenter;
 
     private View chatroomListView;
@@ -91,12 +93,25 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == SettingInfo.REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
             finish();
             return;
         }
-        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_NEWCHAT) {
+            if (resultCode == RESULT_OK) {
+                long chatroomId = intent.getLongExtra("chatroomId", -1);
+                if(chatroomId > 0) {
+                    String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
+                    chatroomListPresenter.loadChatrooms(employeeNumber);
+
+                    moveToChatroom(chatroomId);
+                }
+            } else {
+
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, intent);
     }
 
     @Override
@@ -110,7 +125,8 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_new_chatting:
-                startActivity(new Intent(this, NewchatActivity.class));
+                Intent intent = new Intent(this, NewchatActivity.class);
+                startActivityForResult(intent, REQUEST_NEWCHAT);
                 return true;
             case R.id.menu_item_my_setting:
                 startActivity(new Intent(this, MysettingActivity.class));
@@ -144,12 +160,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         }
 
         Snackbar.make(chatroomListView, R.string.location_permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.command_OK, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ActivityCompat.requestPermissions(ChatroomListActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, SettingInfo.REQUEST_LOCATION);
-                    }
-                })
+                .setAction(R.string.command_OK, v -> ActivityCompat.requestPermissions(ChatroomListActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, SettingInfo.REQUEST_LOCATION))
                 .show();
     }
 
@@ -174,4 +185,5 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         Intent intent = ChatroomActivity.newIntent(this, chatroomId);
         startActivity(intent);
     }
+
 }

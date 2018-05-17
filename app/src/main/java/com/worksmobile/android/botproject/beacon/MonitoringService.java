@@ -174,19 +174,54 @@ public class MonitoringService extends Service implements RECOMonitoringListener
         Log.i("BackMonitoringService", "didEnterRegion() - " + region.getUniqueIdentifier());
 
         String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
+        if(!checkIsSendedRecently(region)) {
+            for (RECOBeacon beacon : beacons) {
+                retrofitClient.sendBeaconEvent(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
+                    @Override
+                    public void success() {
+                        popupNotification(region.getUniqueIdentifier() + "입장");
+                    }
 
-        for (RECOBeacon beacon : beacons) {
-            retrofitClient.sendBeaconEvent(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
-                @Override
-                public void success() {
-                    popupNotification(region.getUniqueIdentifier() + "입장");
-                }
+                    @Override
+                    public void error(Throwable throwable) {
 
-                @Override
-                public void error(Throwable throwable) {
+                    }
+                });
+            }
+        }
+    }
 
-                }
-            });
+    private boolean checkIsSendedRecently(RECOBeaconRegion region) {
+        String key = region.getProximityUuid().substring(0,4).concat("_");
+
+        if (region.getMajor() != null) {
+            key = key.concat(region.getMajor().toString());
+        }
+        if (region.getMinor() != null) {
+            key = key.concat(region.getMinor().toString());
+        }
+
+        long millisecondsNow = new Date().getTime();
+        long minutesNow = ((millisecondsNow / 1000) / 60);
+
+        long millisecondsRecently = SharedPrefUtil.getLongPreference(this, key);
+
+        long minutesRecently = ((millisecondsRecently / 1000) / 60);
+
+        //if get default value return to confirm api request
+        if (millisecondsRecently < 0) {
+            SharedPrefUtil.setMiliSecondsPreference(this, key);
+            return false;
+        }
+
+        if(minutesNow - minutesRecently < 30) {
+            Log.i("### Reject : < 30", region.getUniqueIdentifier() + new Date(millisecondsNow) + " vs " + new Date(millisecondsRecently));
+            return true;
+        }
+        else {
+            Log.i("### Confirm : > 30", region.getUniqueIdentifier() + new Date(millisecondsNow) + " vs " + new Date(millisecondsRecently));
+            SharedPrefUtil.setMiliSecondsPreference(this, key);
+            return false;
         }
     }
 

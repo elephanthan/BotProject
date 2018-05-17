@@ -1,11 +1,9 @@
 package com.worksmobile.android.botproject.feature.chat.newchat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
-import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
 import com.worksmobile.android.botproject.model.Bot;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Talker;
@@ -91,9 +88,8 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
                 retrofitClient.startNewchat(newchatDataModel, new ApiRepository.RequestChatroomCallback() {
                     @Override
                     public void success(Chatroom chatroom) {
-                        Log.i("chatroom", chatroom.toString());
-                        Intent intent = ChatroomActivity.newIntent(BotListFragment.this.getActivity(), chatroom.getId());
-                        startActivity(intent);
+                        ((NewchatActivity)getActivity()).setChatroomId(chatroom.getId());
+                        getActivity().finish();
                     }
 
                     @Override

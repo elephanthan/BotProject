@@ -118,7 +118,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         public void bindChatroom(Chatroom chatroom_) {
             this.chatroom = chatroom_;
 
-            String titleText = getResizedTextViewText(context,titleTextView, chatroom.getTitle());
+            String titleText = getResizedTextViewText(context,titleTextView, chatroom.getViewTitle());
             titleTextView.setText(titleText);
 
             int chatroomNumber = chatroom.getNumber();

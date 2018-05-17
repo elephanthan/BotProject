@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
             public void success(String message) {
                 Log.i("Login Success", message);
                 startActivity(new Intent(getApplicationContext(), ChatroomListActivity.class));
+//                startActivity(new Intent(getApplicationContext(), TestActivity.class));
             }
 
             @Override

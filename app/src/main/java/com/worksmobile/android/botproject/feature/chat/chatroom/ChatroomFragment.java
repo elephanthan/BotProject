@@ -304,7 +304,6 @@ public class ChatroomFragment extends Fragment implements ChatroomClickListener 
                     Toast.makeText(getActivity(), R.string.alert_not_supply, Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    Toast.makeText(getActivity(), R.string.alert_wrong_access, Toast.LENGTH_SHORT).show();
                     break;
             }
         });

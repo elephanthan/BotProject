@@ -1,11 +1,9 @@
 package com.worksmobile.android.botproject.feature.chat.newchat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
-import com.worksmobile.android.botproject.feature.chat.chatroom.ChatroomActivity;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Talker;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
@@ -94,9 +91,8 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
                 retrofitClient.startNewchat(newchatDataModel, new ApiRepository.RequestChatroomCallback() {
                     @Override
                     public void success(Chatroom chatroom) {
-                        Log.i("chatroom", chatroom.toString());
-                        Intent intent = ChatroomActivity.newIntent(UserListFragment.this.getActivity(), chatroom.getId());
-                        startActivity(intent);
+                        ((NewchatActivity)getActivity()).setChatroomId(chatroom.getId());
+                        getActivity().finish();
                     }
 
                     @Override
@@ -104,6 +100,8 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
                         Toast.makeText(getActivity(), R.string.alert_network_connection_fail, Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
             default:
                 break;
         }

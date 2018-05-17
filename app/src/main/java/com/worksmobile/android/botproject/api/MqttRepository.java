@@ -31,5 +31,4 @@ public class MqttRepository {
         return mqttClient;
     }
 
-
 }

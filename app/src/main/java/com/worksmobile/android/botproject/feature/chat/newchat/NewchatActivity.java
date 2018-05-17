@@ -1,5 +1,6 @@
 package com.worksmobile.android.botproject.feature.chat.newchat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
@@ -10,6 +11,9 @@ import android.view.Menu;
 import com.worksmobile.android.botproject.R;
 
 public class NewchatActivity extends AppCompatActivity {
+
+    final public String EXTRA_CHATROOMID = "chatroomId";
+    private long chatroomId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,31 @@ public class NewchatActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.triggers_ok, menu);
         return true;
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        if (this.chatroomId > 0) {
+            intent.putExtra(EXTRA_CHATROOMID, this.chatroomId);
+            setResult(RESULT_OK, intent);
+
+            super.finish();
+        } else {
+            intent.putExtra(EXTRA_CHATROOMID, this.chatroomId);
+            setResult(RESULT_CANCELED, intent);
+
+            super.finish();
+        }
+    }
+
+    public void setChatroomId(long chatroomId) {
+        this.chatroomId = chatroomId;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
 }
