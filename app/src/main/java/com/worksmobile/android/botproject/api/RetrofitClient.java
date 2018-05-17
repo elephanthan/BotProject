@@ -288,6 +288,36 @@ public class RetrofitClient implements  ApiRepository {
         });
     }
 
+    @Override
+    public void getUser(String userId, RequestUserCallback callback) {
+        service.getUser(userId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() >= 400 && response.code() < 599) {
+                    try {
+                        if(response.errorBody() != null) {
+                            onFailure(call, new ApiConnectionLostException(response.errorBody().string()));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    onSuccess(response);
+                }
+            }
+
+            public void onSuccess(Response<User> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                callback.error(t);
+            }
+        });
+
+    }
+
     public interface ApiService {
         @POST("login")
         Call<String> loginUser(@Body JsonObject json);
@@ -310,6 +340,9 @@ public class RetrofitClient implements  ApiRepository {
         @POST("chatrooms")
         Call<Chatroom> startNewchat(@Body JsonObject newchat);
 
+        @GET("users/{userId}")
+        Call<User> getUser(@Path("userId") String userId);
+
         @PATCH("chatrooms/{chatroomId}")
         Call<Chatroom> updateChatroom(@Body Map<String, String> map);
 
@@ -318,9 +351,6 @@ public class RetrofitClient implements  ApiRepository {
 
         @DELETE("user_chatrooms/{chatroomId}")
         Call<User> leaveChatroom(@Path("chatroomId") String chatroomId, @Body User user);
-
-        @GET("users/{userId}")
-        Call<User> getUser(@Path("userId") String userId);
 
         @PUT("users/{userId}")
         Call<User> updateUser(@Path("userId") String userId, @Body User user);

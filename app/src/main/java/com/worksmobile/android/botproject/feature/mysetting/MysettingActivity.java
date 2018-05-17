@@ -12,51 +12,69 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
+import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.beacon.MonitoringService;
 import com.worksmobile.android.botproject.beacon.SettingInfo;
+import com.worksmobile.android.botproject.model.User;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
-import static com.worksmobile.android.botproject.api.ApiRepository.IMAGE_PROFILE_EXT;
-import static com.worksmobile.android.botproject.api.ApiRepository.IMAGE_URL;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 public class MysettingActivity extends AppCompatActivity {
 
-    private View mysettingLayout;
-    private Switch bgmonitoringSwitch;
+    @BindView(R.id.layout_mysetting)
+    View mysettingLayout;
+    @BindView(R.id.switch_beacon_monitoring)
+    Switch bgmonitoringSwitch;
+    @BindView(R.id.imageview_profile)
+    ImageView profileImageView;
+    @BindView(R.id.edittext_nickname)
+    EditText nicknameEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mysetting);
-
-        mysettingLayout = findViewById(R.id.layout_mysetting);
+        ButterKnife.bind(this);
 
         String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
+        bgmonitoringSwitch.setOnCheckedChangeListener((compoundButton, bChecked) -> bgmonitoringSwitchChanged(bChecked));
 
-        ImageView imageView = (ImageView) findViewById(R.id.imageview_profile);
-        String imageUrl = IMAGE_URL + employeeNumber + IMAGE_PROFILE_EXT;
-        Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_icon_man).error(R.drawable.ic_icon_man).into(imageView);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.barname_mysetting);
+        }
 
-        bgmonitoringSwitch = (Switch) findViewById(R.id.switch_beacon_monitoring);
-        bgmonitoringSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        retrofitClient.getUser(employeeNumber, new ApiRepository.RequestUserCallback() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
-                bgmonitoringSwitchChanged(bChecked);
+            public void success(User user) {
+                if (user != null) {
+                    Glide.with(MysettingActivity.this).load(user.getProfile()).placeholder(R.drawable.ic_icon_man).error(R.drawable.ic_icon_man).into(profileImageView);
+                    nicknameEditText.setText(user.getName());
+                }
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+                Toast.makeText(MysettingActivity.this, R.string.alert_network_connection_fail, Toast.LENGTH_SHORT).show();
             }
         });
-        getSupportActionBar().setTitle(R.string.barname_mysetting);
     }
 
     @Override
@@ -70,7 +88,7 @@ public class MysettingActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_ok:
-                Toast.makeText(this, "유저 설정 변경", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.alert_not_supply, Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -139,12 +157,7 @@ public class MysettingActivity extends AppCompatActivity {
         }
 
         Snackbar.make(mysettingLayout, R.string.location_permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.command_OK, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ActivityCompat.requestPermissions(MysettingActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, SettingInfo.REQUEST_LOCATION);
-                    }
-                })
+                .setAction(R.string.command_OK, v -> ActivityCompat.requestPermissions(MysettingActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, SettingInfo.REQUEST_LOCATION))
                 .show();
     }
 }

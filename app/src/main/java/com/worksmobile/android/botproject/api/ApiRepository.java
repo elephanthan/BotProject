@@ -33,6 +33,8 @@ public interface ApiRepository {
 
     void startNewchat(NewchatDataModel newchatDataModel, RequestChatroomCallback requestChatroomCallback);
 
+    void getUser(String userId, RequestUserCallback callback);
+
     interface RequestUserCallback {
         void success(User user);
         void error(Throwable throwable);
