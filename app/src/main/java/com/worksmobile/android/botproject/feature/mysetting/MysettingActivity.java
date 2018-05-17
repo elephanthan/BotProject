@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.beacon.RecoBackgroundMonitoringService;
+import com.worksmobile.android.botproject.beacon.MonitoringService;
 import com.worksmobile.android.botproject.beacon.SettingInfo;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
@@ -105,10 +105,10 @@ public class MysettingActivity extends AppCompatActivity {
                 }
             }
 
-            Intent intent = new Intent(this, RecoBackgroundMonitoringService.class);
+            Intent intent = new Intent(this, MonitoringService.class);
             startService(intent);
         } else {
-            stopService(new Intent(this, RecoBackgroundMonitoringService.class));
+            stopService(new Intent(this, MonitoringService.class));
         }
     }
 
@@ -126,7 +126,7 @@ public class MysettingActivity extends AppCompatActivity {
     private boolean isBackgroundMonitoringServiceRunning(Context context) {
         ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
         for(ActivityManager.RunningServiceInfo runningService : am.getRunningServices(Integer.MAX_VALUE)) {
-            if(RecoBackgroundMonitoringService.class.getName().equals(runningService.service.getClassName())) {
+            if(MonitoringService.class.getName().equals(runningService.service.getClassName())) {
                 return true;
             }
         }

@@ -34,7 +34,7 @@
             android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
 
         <service android:name="com.perples.recosdk.RECOBeaconService" />
-        <service android:name=".beacon.RecoBackgroundMonitoringService" />
+        <service android:name=".beacon.MonitoringService" />
 
         <activity android:name=".feature.FullScreenImageActivity"/>
     </application>

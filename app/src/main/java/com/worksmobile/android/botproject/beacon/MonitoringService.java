@@ -33,12 +33,12 @@ import static com.worksmobile.android.botproject.feature.splash.SplashActivity.r
  *
  * RECOBackgroundMonitoringService는 백그라운드에서 monitoring을 수행합니다.
  */
-public class RecoBackgroundMonitoringService extends Service implements RECOMonitoringListener, RECOServiceConnectListener{
+public class MonitoringService extends Service implements RECOMonitoringListener, RECOServiceConnectListener{
 
-    private RECOBeaconManager mRecoManager;
-    private ArrayList<RECOBeaconRegion> mRegions;
+    private RECOBeaconManager recoManager;
+    private ArrayList<RECOBeaconRegion> regions;
 
-    private int mNotificationID = 9999;
+    private int notificationID = 9999;
 
     @Override
     public void onCreate() {
@@ -49,21 +49,10 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("BackMonitoringService", "onStartCommand()");
-        /**
-         * Create an instance of RECOBeaconManager (to set scanning target and ranging timeout in the background.)
-         * If you want to scan only RECO, and do not set ranging timeout in the backgournd, create an instance:
-         * 		mRecoManager = RECOBeaconManager.getInstance(getApplicationContext(), true, false);
-         * WARNING: False enableRangingTimeout will affect the battery consumption.
-         *
-         * RECOBeaconManager 인스턴스틀 생성합니다. (스캔 대상 및 백그라운드 ranging timeout 설정)
-         * RECO만을 스캔하고, 백그라운드 ranging timeout을 설정하고 싶지 않으시다면, 다음과 같이 생성하시기 바랍니다.
-         * 		mRecoManager = RECOBeaconManager.getInstance(getApplicationContext(), true, false);
-         * 주의: enableRangingTimeout을 false로 설정 시, 배터리 소모량이 증가합니다.
-         */
-        mRecoManager = RECOBeaconManager.getInstance(getApplicationContext(), SettingInfo.SCAN_RECO_ONLY, SettingInfo.ENABLE_BACKGROUND_RANGING_TIMEOUT);
+
+        recoManager = RECOBeaconManager.getInstance(getApplicationContext(), SettingInfo.SCAN_RECO_ONLY, SettingInfo.ENABLE_BACKGROUND_RANGING_TIMEOUT);
         this.bindRECOService();
-        //this should be set to run in the background.
-        //background에서 동작하기 위해서는 반드시 실행되어야 합니다.
+
         return START_STICKY;
     }
 
@@ -83,11 +72,11 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     private void bindRECOService() {
         Log.i("BackMonitoringService", "bindRECOService()");
 
-        mRegions = new ArrayList<RECOBeaconRegion>();
+        regions = new ArrayList<RECOBeaconRegion>();
         this.generateBeaconRegion();
 
-        mRecoManager.setMonitoringListener(this);
-        mRecoManager.bind(this);
+        recoManager.setMonitoringListener(this);
+        recoManager.bind(this);
     }
 
     private void generateBeaconRegion() {
@@ -95,28 +84,40 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
         RECOBeaconRegion recoRegion;
 
-        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_A, "출퇴근 봇 지역 A");
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_A, SettingInfo.RECO_IDENTIFIER_COMUTE_A);
         recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
-        mRegions.add(recoRegion);
+        regions.add(recoRegion);
 
-        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_B, "출퇴근 봇 지역 B");
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_COMUTE_B, SettingInfo.RECO_IDENTIFIER_COMUTE_B);
         recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
-        mRegions.add(recoRegion);
+        regions.add(recoRegion);
 
-        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_INTRODUCE_LOCATION, "장소 소개 봇");
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_INTRODUCE_LOCATION, SettingInfo.RECO_MINOR_INTRODUCE_LOCATION_1, SettingInfo.RECO_IDENTIFIER_INTRODUCE_LOCATION_1);
         recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
-        mRegions.add(recoRegion);
+        regions.add(recoRegion);
+
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_INTRODUCE_LOCATION, SettingInfo.RECO_MINOR_INTRODUCE_LOCATION_2, SettingInfo.RECO_IDENTIFIER_INTRODUCE_LOCATION_2);
+        recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
+        regions.add(recoRegion);
+
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_INTRODUCE_LOCATION, SettingInfo.RECO_MINOR_INTRODUCE_LOCATION_3, SettingInfo.RECO_IDENTIFIER_INTRODUCE_LOCATION_3);
+        recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
+        regions.add(recoRegion);
+
+        recoRegion = new RECOBeaconRegion(SettingInfo.RECO_UUID, SettingInfo.RECO_MAJOR_INTRODUCE_LOCATION, SettingInfo.RECO_MINOR_INTRODUCE_LOCATION_4, SettingInfo.RECO_IDENTIFIER_INTRODUCE_LOCATION_4);
+        recoRegion.setRegionExpirationTimeMillis(SettingInfo.mRegionExpirationTime);
+        regions.add(recoRegion);
     }
 
     private void startMonitoring() {
         Log.i("BackMonitoringService", "startMonitoring()");
 
-        mRecoManager.setScanPeriod(SettingInfo.mScanDuration);
-        mRecoManager.setSleepPeriod(SettingInfo.mSleepDuration);
+        recoManager.setScanPeriod(SettingInfo.mScanDuration);
+        recoManager.setSleepPeriod(SettingInfo.mSleepDuration);
 
-        for(RECOBeaconRegion region : mRegions) {
+        for(RECOBeaconRegion region : regions) {
             try {
-                mRecoManager.startMonitoringForRegion(region);
+                recoManager.startMonitoringForRegion(region);
             } catch (RemoteException e) {
                 Log.e("BackMonitoringService", "RemoteException has occured while executing RECOManager.startMonitoringForRegion()");
                 e.printStackTrace();
@@ -130,9 +131,9 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     private void stopMonitoring() {
         Log.i("BackMonitoringService", "stopMonitoring()");
 
-        for(RECOBeaconRegion region : mRegions) {
+        for(RECOBeaconRegion region : regions) {
             try {
-                mRecoManager.stopMonitoringForRegion(region);
+                recoManager.stopMonitoringForRegion(region);
             } catch (RemoteException e) {
                 Log.e("BackMonitoringService", "RemoteException has occured while executing RECOManager.stopMonitoringForRegion()");
                 e.printStackTrace();
@@ -148,7 +149,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
         this.stopMonitoring();
 
         try {
-            mRecoManager.unbind();
+            recoManager.unbind();
         } catch (RemoteException e) {
             Log.e("BackMonitoringService", "RemoteException has occured while executing unbind()");
             e.printStackTrace();
@@ -170,18 +171,8 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
     @Override
     public void didEnterRegion(RECOBeaconRegion region, Collection<RECOBeacon> beacons) {
-        /**
-         * For the first run, this callback method will not be called.
-         * Please check the state of the region using didDetermineStateForRegion() callback method.
-         *
-         * 최초 실행시, 이 콜백 메소드는 호출되지 않습니다.
-         * didDetermineStateForRegion() 콜백 메소드를 통해 region 상태를 확인할 수 있습니다.
-         */
-
-        //Get the region and found beacon list in the entered region
         Log.i("BackMonitoringService", "didEnterRegion() - " + region.getUniqueIdentifier());
 
-        //Write the code when the device is enter the region
         String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
 
         for (RECOBeacon beacon : beacons) {
@@ -201,23 +192,13 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
     @Override
     public void didExitRegion(RECOBeaconRegion region) {
-        /**
-         * For the first run, this callback method will not be called.
-         * Please check the state of the region using didDetermineStateForRegion() callback method.
-         *
-         * 최초 실행시, 이 콜백 메소드는 호출되지 않습니다.
-         * didDetermineStateForRegion() 콜백 메소드를 통해 region 상태를 확인할 수 있습니다.
-         */
-
         Log.i("BackMonitoringService", "didExitRegion() - " + region.getUniqueIdentifier());
 //        this.popupNotification("Outside of " + region.getUniqueIdentifier());
-        //Write the code when the device is exit the region
     }
 
     @Override
     public void didStartMonitoringForRegion(RECOBeaconRegion region) {
         Log.i("BackMonitoringService", "didStartMonitoringForRegion() - " + region.getUniqueIdentifier());
-        //Write the code when starting monitoring the region is started successfully
     }
 
     private void popupNotification(String msg) {
@@ -230,27 +211,25 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         builder.setStyle(inboxStyle);
-        nm.notify(mNotificationID, builder.build());
-        mNotificationID = (mNotificationID - 1) % 1000 + 9000;
+
+        if (nm != null) {
+            nm.notify(notificationID, builder.build());
+            notificationID = (notificationID - 1) % 1000 + 9000;
+        }
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        // This method is not used
         return null;
     }
 
     @Override
     public void onServiceFail(RECOErrorCode errorCode) {
-        //Write the code when the RECOBeaconService is failed.
-        //See the RECOErrorCode in the documents.
         return;
     }
 
     @Override
     public void monitoringDidFailForRegion(RECOBeaconRegion region, RECOErrorCode errorCode) {
-        //Write the code when the RECOBeaconService is failed to monitor the region.
-        //See the RECOErrorCode in the documents.
         return;
     }
 }

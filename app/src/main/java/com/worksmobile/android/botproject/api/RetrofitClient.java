@@ -31,7 +31,6 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 
 /**
  * Created by user on 2018. 4. 9..
@@ -266,11 +265,17 @@ public class RetrofitClient implements  ApiRepository {
         @GET("chatrooms")
         Call<List<Chatroom>> getChatroomList(@Query("userId") String userId);
 
-        @GET("chatrooms")
-        Call<List<Chatroom>> getChatroomsByUserId(@Query("userId") String userId);
-
         @GET("chatrooms/{chatroomId}")
-        Call<Chatroom> getChatroom(@Path("chatroomId") String chatroomId);
+        Call<Chatbox> getChatbox(@Path("chatroomId") long chatroomId, @Query("userId") String userId);
+
+        @GET("messages")
+        Call<List<Message>> getMessagesByScroll(@Query("chatroomId") long chatroomId, @Query("messageId")long id, @Query("actionDirection")int scrollDirection);
+
+        @POST("beacons")
+        Call<Void> sendBeaconEvent(@Body JsonObject beaconJson);
+
+        @GET("users")
+        Call<TalkerDataModel> getTalkers();
 
         @POST("chatrooms")
         Call<Chatroom> createChatroom(@Body Chatroom chatroom);
@@ -287,25 +292,7 @@ public class RetrofitClient implements  ApiRepository {
         @GET("users/{userId}")
         Call<User> getUser(@Path("userId") String userId);
 
-        @GET("users")
-        Call<User> getUsers(@QueryMap User user);
-
         @PUT("users/{userId}")
         Call<User> updateUser(@Path("userId") String userId, @Body User user);
-
-        @GET("messages")
-        Call<List<Message>> getMessages(@QueryMap Message message);
-
-        @GET("chatrooms/{chatroomId}")
-        Call<Chatbox> getChatbox(@Path("chatroomId") long chatroomId, @Query("userId") String userId);
-
-        @GET("messages")
-        Call<List<Message>> getMessagesByScroll(@Query("chatroomId") long chatroomId, @Query("messageId")long id, @Query("actionDirection")int scrollDirection);
-
-        @POST("beacons")
-        Call<Void> sendBeaconEvent(@Body JsonObject beaconJson);
-
-        @GET("users")
-        Call<TalkerDataModel> getTalkers();
     }
 }
