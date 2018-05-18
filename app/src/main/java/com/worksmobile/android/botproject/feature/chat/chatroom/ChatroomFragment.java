@@ -478,14 +478,12 @@ public class ChatroomFragment extends RangingFragment implements ChatroomClickLi
             return;
         }
 
-        String result = BeaconUtil.checkIsSentRecently(getActivity(), region);
 
-        if(!result.equals("failed")) {
+        if(!BeaconUtil.checkIsSentRecently(getActivity(), region)) {
             for (RECOBeacon beacon : beacons) {
                 retrofitClient.sendBeaconEvent(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
                     @Override
                     public void success() {
-                        SharedPrefUtil.setMiliSecondsPreference(getActivity(), result);
                         BeaconUtil.popupNotification(getActivity(), region.getUniqueIdentifier() + "입장");
                     }
 
