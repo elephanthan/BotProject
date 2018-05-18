@@ -2,10 +2,23 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/color_background</item>
+        <item name="android:textViewStyle">@style/NotoSansTextViewStyle</item>
+        <item name="android:editTextStyle">@style/NotoSansEditTextStyle</item>
     </style>
 
+    <style name="NotoSansTextViewStyle" parent="@android:style/Widget.DeviceDefault.TextView">
+        <item name="android:fontFamily">@font/noto_sans</item>
+    </style>
+    <style name="NotoSansEditTextStyle" parent="@android:style/Widget.DeviceDefault.EditText">
+        <item name="android:fontFamily">@font/noto_sans</item>
+    </style>
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColor">@color/color_black</item>
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+    </style>
 </resources>
