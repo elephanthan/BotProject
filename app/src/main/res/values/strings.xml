@@ -28,4 +28,6 @@
     <string name="alert_wrong_access">잘못된 접근입니다.</string>
     <string name="alert_network_connection_fail">네트워크에 접속할 수 없습니다.</string>
     <string name="alert_beacon_connected">비콘 신호 송수신이 이루어지고 있습니다.</string>
+    <string name="index_employee_number">사번 :</string>
+    <string name="index_nickname">닉네임 :</string>
 </resources>
