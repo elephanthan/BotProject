@@ -35,7 +35,7 @@ public class BeaconUtil {
 
         //if get default value return to confirm api request
         if (millisecondsRecently < 0) {
-            Log.i("### Confirm :", "First Request");
+            Log.d("### Confirm :", "First Request");
             SharedPrefUtil.setMiliSecondsPreference(context, key);
             return false;
         }
@@ -48,11 +48,11 @@ public class BeaconUtil {
         }
 
         if(minutesNow - minutesRecently < sendRequestTimeGap) {
-            Log.i("### Reject : < 30min", region.getUniqueIdentifier() + new Date(millisecondsNow) + " <------> " + new Date(millisecondsRecently));
+            Log.d("### Reject : < 30min", region.getUniqueIdentifier() + new Date(millisecondsNow) + " <------> " + new Date(millisecondsRecently));
             return true;
         }
         else {
-            Log.i("### Confirm : > 30min", region.getUniqueIdentifier() + new Date(millisecondsNow) + " <------> " + new Date(millisecondsRecently));
+            Log.d("### Confirm : > 30min", region.getUniqueIdentifier() + new Date(millisecondsNow) + " <------> " + new Date(millisecondsRecently));
             SharedPrefUtil.setMiliSecondsPreference(context, key);
             return false;
         }
