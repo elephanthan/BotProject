@@ -92,6 +92,15 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
         }
     }
 
+
+    @Override
+    public void onResume() {
+        String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
+        chatroomListPresenter.loadChatrooms(employeeNumber);
+
+        super.onResume();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == SettingInfo.REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
