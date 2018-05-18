@@ -16,8 +16,8 @@ import java.util.Locale;
 public class BeaconUtil {
     private static int notificationID = 9999;
 
-    public static boolean checkIsSendedRecently(Context context, RECOBeaconRegion region) {
-        String key = region.getProximityUuid().substring(0,4).concat("_");
+    public static boolean checkIsSentRecently(Context context, RECOBeaconRegion region) {
+        String key = region.getProximityUuid().substring(0,7).concat("_");
 
         if (region.getMajor() != null) {
             key = key.concat(region.getMajor().toString());
@@ -35,6 +35,7 @@ public class BeaconUtil {
 
         //if get default value return to confirm api request
         if (millisecondsRecently < 0) {
+            Log.i("### Confirm :", "First Request");
             SharedPrefUtil.setMiliSecondsPreference(context, key);
             return false;
         }

@@ -470,7 +470,12 @@ public class ChatroomFragment extends RangingFragment implements ChatroomClickLi
         Log.i(TAG, "didRangeBeaconsInRegion() region: " + region.getUniqueIdentifier() + ", number of beacons ranged: " + beacons.size());
 
         String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
-        if(!BeaconUtil.checkIsSendedRecently(getActivity(), region)) {
+
+        if (beacons.size() == 0){
+            return;
+        }
+
+        if(!BeaconUtil.checkIsSentRecently(getActivity(), region)) {
             for (RECOBeacon beacon : beacons) {
                 retrofitClient.sendBeaconEvent(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
                     @Override

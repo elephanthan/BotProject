@@ -166,8 +166,12 @@ public class MonitoringService extends Service implements RECOMonitoringListener
     public void didEnterRegion(RECOBeaconRegion region, Collection<RECOBeacon> beacons) {
         Log.i("BackMonitoringService", "didEnterRegion() - " + region.getUniqueIdentifier());
 
+        if (beacons.size() == 0){
+            return;
+        }
+
         String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
-        if(!BeaconUtil.checkIsSendedRecently(this, region)) {
+        if(!BeaconUtil.checkIsSentRecently(this, region)) {
             for (RECOBeacon beacon : beacons) {
                 retrofitClient.sendBeaconEvent(employeeNumber, beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor(), 1, beacon.getAccuracy(), new ApiRepository.RequestVoidCallback() {
                     @Override
