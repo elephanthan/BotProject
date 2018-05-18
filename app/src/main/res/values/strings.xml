@@ -24,4 +24,10 @@
     <string name="location_permission_rationale">Location permission is needed to monitor or range beacons.</string>
     <string name="hint_mysetting_nickname">닉네임</string>
     <string name="no_chatrooms_all">참여하고 있는 채팅방이 없습니다.</string>
+    <string name="alert_not_supply">제공하지 않는 기능입니다.</string>
+    <string name="alert_wrong_access">잘못된 접근입니다.</string>
+    <string name="alert_network_connection_fail">서버 연결에 실패했습니다.</string>
+    <string name="alert_beacon_connected">실시간 비콘 신호 스캔을 시작합니다.</string>
+    <string name="index_employee_number">사번 :</string>
+    <string name="index_nickname">닉네임 :</string>
 </resources>

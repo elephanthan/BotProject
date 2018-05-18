@@ -6,7 +6,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,30 +20,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".feature.login.LoginActivity"/>
-        <activity android:name=".feature.splash.SplashActivity" android:theme="@style/SplashTheme">
+        <activity android:name=".feature.login.LoginActivity" />
+        <activity
+            android:name=".feature.splash.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".feature.chat.chatroomlist.ChatroomListActivity"/>
+        <activity android:name=".feature.chat.chatroomlist.ChatroomListActivity" />
         <activity
             android:name=".feature.chat.chatroom.ChatroomActivity"
-            android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
-        <activity
-            android:name=".feature.chat.newchat.NewchatActivity" />
+            android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity"
+            android:taskAffinity="feature.chat.chatroomlist.ChatroomListActivity" />
+        <activity android:name=".feature.chat.newchat.NewchatActivity" />
         <activity
             android:name=".feature.mysetting.MysettingActivity"
             android:parentActivityName=".feature.chat.chatroomlist.ChatroomListActivity" />
 
         <service android:name="com.perples.recosdk.RECOBeaconService" />
-        <service android:name=".beacon.RecoBackgroundMonitoringService" />
+        <service android:name=".beacon.MonitoringService" />
 
-        <activity android:name=".util.FullScreenImage"/>
+        <activity android:name=".feature.FullScreenImageActivity" />
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>

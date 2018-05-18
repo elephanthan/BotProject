@@ -13,14 +13,18 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.factory.TalkerFactory;
+import com.worksmobile.android.botproject.api.ApiRepository;
+import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Talker;
+import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 /**
  * Created by user on 2018. 4. 25..
@@ -31,7 +35,7 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     @BindView(R.id.newchat_recycler_view)
     RecyclerView userRecyclerView;
     private TalkerAdapter talkerAdapter;
-    List<Talker> talkers = new ArrayList<Talker>();
+    List<? extends Talker> talkers = new ArrayList<>();
 
     private MenuItem checkMenuItem;
 
@@ -81,8 +85,24 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
         switch (item.getItemId()) {
             case R.id.menu_item_ok:
                 List<Talker> checkedList = getCheckedTalkers();
-                Toast.makeText(getActivity(), checkedList.size() + "명 초대!", Toast.LENGTH_LONG).show();
-//                startActivity(new Intent(getActivity(), ChatroomActivity.class));
+
+                String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);;
+                NewchatDataModel newchatDataModel = new NewchatDataModel(employeeNumber, checkedList);
+                retrofitClient.startNewchat(newchatDataModel, new ApiRepository.RequestChatroomCallback() {
+                    @Override
+                    public void success(Chatroom chatroom) {
+                        ((NewchatActivity)getActivity()).setChatroomId(chatroom.getId());
+                        ((NewchatActivity)getActivity()).setChatroomType(chatroom.getChatroomType());
+                        getActivity().finish();
+                    }
+
+                    @Override
+                    public void error(Throwable throwable) {
+                        Toast.makeText(getActivity(), R.string.alert_network_connection_fail, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
             default:
                 break;
         }
@@ -91,17 +111,30 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     }
 
     private void updateUI() {
-        TalkerFactory talkerFactory = new TalkerFactory();
-        talkers = talkerFactory.getTalkers(Talker.TALKER_TYPE_USER);
+        retrofitClient.getTalkers(new ApiRepository.RequestTalkerCallback() {
+            @Override
+            public void success(TalkerDataModel talkerDataModel) {
+                String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);
+                talkers = talkerDataModel.getUsersExceptId(employeeNumber);
 
-        if (talkerAdapter == null) {
-            talkerAdapter = new TalkerAdapter(getActivity(), talkers, this);
-            userRecyclerView.setAdapter(talkerAdapter);
-        }
+                if (talkerAdapter == null) {
+                    talkerAdapter = new TalkerAdapter(getActivity(), talkers, UserListFragment.this);
+                    userRecyclerView.setAdapter(talkerAdapter);
+                }
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+
+            }
+        });
     }
 
     @Override
     public void onHolderClick(int position) {
+        //TODO : clean code
+        talkerAdapter.updateCheckBox(position);
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -112,10 +145,12 @@ public class UserListFragment extends Fragment implements TalkerClickListener {
     }
 
     private List<Talker> getCheckedTalkers() {
-        List<Talker> result = new ArrayList<Talker>();
-        for (Talker t : talkers) {
-            if (t.isChecked()) {
-                result.add(t);
+        List<Talker> result = new ArrayList<>();
+        if (talkers != null) {
+            for (Talker talker : talkers) {
+                if (talker.isChecked()) {
+                    result.add(talker);
+                }
             }
         }
         return result;

@@ -20,7 +20,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textColor="@color/color_white"
-        android:focusable="true"/>
+        android:focusable="true"
+        android:textIsSelectable="true"/>
 
     <TextView
         android:id="@+id/text_message_time"

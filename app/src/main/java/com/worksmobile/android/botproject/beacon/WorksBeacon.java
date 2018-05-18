@@ -14,4 +14,5 @@ public class WorksBeacon {
         this.beaconSignal = beaconSignal;
         this.distance = Math.round(distance*100d) / 100d;;
     }
+
 }

@@ -1,7 +1,6 @@
 package com.worksmobile.android.botproject.feature.chat.chatroomlist;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.model.Chatroom;
-import com.worksmobile.android.botproject.model.ChatroomDataModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,21 +29,12 @@ import static com.worksmobile.android.botproject.util.ViewUtil.getResizedTextVie
  */
 
 public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapter.ChatroomHolder>
-                                    implements ChatroomListContract.AdapterView, ChatroomDataModel{
+                                    implements ChatroomListContract.AdapterView, ChatroomListDataModel {
 
     private static Context context;
     private LayoutInflater inflater;
-    private int layout;
     private List<Chatroom> chatrooms = new ArrayList<>();
     private ChatroomListClickListener listener;
-
-
-    public ChatroomListAdapter(Context context, @NonNull List<Chatroom> chatrooms, ChatroomListClickListener listener) {
-        this.context = context;
-        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.chatrooms = chatrooms;
-        this.listener = listener;
-    }
 
     public ChatroomListAdapter(Context context) {
         this.context = context;
@@ -56,8 +45,7 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     @Override
     public ChatroomHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_chatroom, parent, false);
-        ChatroomHolder holder = new ChatroomHolder(view, listener);
-        return holder;
+        return new ChatroomHolder(view, listener);
     }
 
     @Override
@@ -124,26 +112,29 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            this.layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onHolderClick(getAdapterPosition());
-                }
-            });
+            this.layout.setOnClickListener(v -> listener.onHolderClick(getAdapterPosition()));
         }
 
         public void bindChatroom(Chatroom chatroom_) {
             this.chatroom = chatroom_;
 
-            String titleText = getResizedTextViewText(context,titleTextView, chatroom.getTitle());
+            String titleText = getResizedTextViewText(context,titleTextView, chatroom.getViewTitle());
             titleTextView.setText(titleText);
 
             int chatroomNumber = chatroom.getNumber();
             if(chatroomNumber > 2) {
+                numberTextView.setVisibility(View.VISIBLE);
                 numberTextView.setText("(" + chatroomNumber + ")");
+            } else {
+                numberTextView.setVisibility(View.INVISIBLE);
             }
 
-            msgTextView.setText(chatroom.getLastMessageContent());
+            if (chatroom.getLastMessageContent() != null) {
+                msgTextView.setVisibility(View.VISIBLE);
+                msgTextView.setText(chatroom.getLastMessageContent());
+            } else {
+                msgTextView.setVisibility(View.INVISIBLE);
+            }
 
             int defaultImage;
             if (chatroom.getChatroomType() == Chatroom.CHATROOM_TYPE_BOT) {
@@ -164,6 +155,9 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
                 if (chatroom.getLastMessageTime() != null) {
                     Date myDate = pattern.parse(chatroom.getLastMessageTime());
                     msgDateTextView.setText(destFormat.format(myDate));
+                    msgDateTextView.setVisibility(View.VISIBLE);
+                } else {
+                    msgDateTextView.setVisibility(View.INVISIBLE);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();

@@ -7,7 +7,7 @@ package com.worksmobile.android.botproject.beacon;
 public class SettingInfo {
 
     //This is a default proximity uuid of the RECO
-    public static final String RECO_UUID = "24DDF411-8CF1-440C-87CD-E368DAF9C93E";
+    public static final String RECO_UUID = "24DDF4118CF1440C87CDE368DAF9C93E";
 
     /**
      * SCAN_RECO_ONLY:
@@ -63,6 +63,24 @@ public class SettingInfo {
     public static final long mSleepDuration = 3*1000L;
     public static final long mRegionExpirationTime = 60*1000L;
 
-    public static final int RECO_MAJOR_COMUTE_A  = 701;
-    public static final int RECO_MAJOR_COMUTE_B  = 702;
+    public static final int RECO_MAJOR_COMMUTE_A = 701;
+    public static final int RECO_MAJOR_COMMUTE_B = 702;
+
+    public static final int RECO_MAJOR_INTRODUCE_LOCATION  = 801;
+
+    public static final int RECO_MINOR_INTRODUCE_LOCATION_1  = 3712;
+    public static final int RECO_MINOR_INTRODUCE_LOCATION_2  = 3300;
+    public static final int RECO_MINOR_INTRODUCE_LOCATION_3  = 3709;
+    public static final int RECO_MINOR_INTRODUCE_LOCATION_4  = 3713;
+
+    public static final String RECO_IDENTIFIER_COMMUTE_A = "출퇴근 구역 A";
+    public static final String RECO_IDENTIFIER_COMMUTE_B = "출퇴근 구역 B";
+
+    public static final String RECO_IDENTIFIER_INTRODUCE_LOCATION_1  = "4층";
+    public static final String RECO_IDENTIFIER_INTRODUCE_LOCATION_2  = "그린카페";
+    public static final String RECO_IDENTIFIER_INTRODUCE_LOCATION_3  = "업무지원센터&우체국";
+    public static final String RECO_IDENTIFIER_INTRODUCE_LOCATION_4  = "헬스케어센터&신한은행";
+
+    public static final int TIME_GAP_INTRODUCE_LOCATION = 30;
+    public static final int TIME_GAP_INTRODUCE_COMMUTE = 3;
 }

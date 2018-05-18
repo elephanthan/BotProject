@@ -13,14 +13,19 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
-import com.worksmobile.android.botproject.factory.TalkerFactory;
+import com.worksmobile.android.botproject.api.ApiRepository;
+import com.worksmobile.android.botproject.model.Bot;
+import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Talker;
+import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 /**
  * Created by user on 2018. 4. 25..
@@ -31,7 +36,7 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
     @BindView(R.id.newchat_recycler_view)
     RecyclerView userRecyclerView;
     private TalkerAdapter talkerAdapter;
-    private List<Talker> talkers = new ArrayList<Talker>();
+    private List<? extends Talker> talkers = new ArrayList<>();
 
     private MenuItem checkMenuItem;
 
@@ -72,15 +77,28 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
         }
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_ok:
-                Talker talker = getCheckedTalker();
-                Toast.makeText(getActivity(), talker.getName() + "과 시작", Toast.LENGTH_LONG).show();
-                //TODO : add chatroom and refresh chatroom Adapter
-//                startActivity(new Intent(getActivity(), ChatroomActivity.class));
+                Talker checkedTalker = getCheckedTalker();
+
+                String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);;
+                NewchatDataModel newchatDataModel = new NewchatDataModel(employeeNumber, checkedTalker);
+                retrofitClient.startNewchat(newchatDataModel, new ApiRepository.RequestChatroomCallback() {
+                    @Override
+                    public void success(Chatroom chatroom) {
+                        ((NewchatActivity)getActivity()).setChatroomId(chatroom.getId());
+                        ((NewchatActivity)getActivity()).setChatroomType(chatroom.getChatroomType());
+                        getActivity().finish();
+                    }
+
+                    @Override
+                    public void error(Throwable throwable) {
+                        Toast.makeText(getActivity(), R.string.alert_network_connection_fail, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             default:
                 break;
         }
@@ -89,18 +107,29 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
     }
 
     private void updateUI() {
-        TalkerFactory talkerFactory = new TalkerFactory();
-        talkers = talkerFactory.getTalkers(Talker.TALKER_TYPE_BOT);
+        retrofitClient.getTalkers(new ApiRepository.RequestTalkerCallback() {
+            @Override
+            public void success(TalkerDataModel talkerDataModel) {
+                talkerDataModel.setUsers(talkerDataModel.getUsers());
+                talkerDataModel.setBots((ArrayList<Bot>) talkerDataModel.getBots());
+                talkers = talkerDataModel.getTalkers(Talker.TALKER_TYPE_BOT);
 
-        if (talkerAdapter == null) {
-            talkerAdapter = new TalkerAdapter(getActivity(), talkers, this);
-            userRecyclerView.setAdapter(talkerAdapter);
-        }
+                if (talkerAdapter == null) {
+                    talkerAdapter = new TalkerAdapter(getActivity(), talkers, BotListFragment.this);
+                    userRecyclerView.setAdapter(talkerAdapter);
+                }
+            }
+
+            @Override
+            public void error(Throwable throwable) {
+
+            }
+        });
     }
 
     @Override
     public void onHolderClick(int position) {
-
+        onCheckBoxClick(position);
     }
 
     @Override
@@ -119,10 +148,13 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
     }
 
     private Talker getCheckedTalker() {
-        for (Talker t : talkers) {
-            if (t.isChecked()) {
-                return t;
+        if (talkers != null) {
+            for (Talker talker : talkers) {
+                if (talker.isChecked()) {
+                    return talker;
+                }
             }
+            return null;
         }
         return null;
     }

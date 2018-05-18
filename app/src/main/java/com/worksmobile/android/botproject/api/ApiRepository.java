@@ -1,12 +1,13 @@
 package com.worksmobile.android.botproject.api;
 
+import com.worksmobile.android.botproject.feature.chat.newchat.NewchatDataModel;
+import com.worksmobile.android.botproject.feature.chat.newchat.TalkerDataModel;
 import com.worksmobile.android.botproject.model.Chatbox;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Message;
 import com.worksmobile.android.botproject.model.User;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by user on 2018. 4. 16..
@@ -15,13 +16,9 @@ import java.util.Map;
 public interface ApiRepository {
     public static String SCHEME = "http";
     public static String AUTHORITY = "10.106.150.71:8080";
-//    public static String AUTHORITY2 = "10.66.76.25:8084";
+//    public static String AUTHORITY = "10.66.76.25:8080";
 
-
-    public static final String IMAGE_URL = "http://10.106.150.71:8080/image/";
-    public static final String IMAGE_PROFILE_EXT = ".jpeg";
-
-    void loginUser(Map<String, String> map, RequestChatroomListCallback callback);
+    void loginUser(String userId, RequestStringCallback callback);
 
     void getChatroomList(String userId, RequestChatroomListCallback callback);
 
@@ -29,7 +26,11 @@ public interface ApiRepository {
 
     void getMessagesByScroll(long chatroomId, long id, int scrollDirection, RequestMessagesCallback requestMessagesCallback);
 
-    void moveRegion(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback requestVoidCallback);
+    void sendBeaconEvent(String userId, String uuid, int major, int minor, int signal, double distance, RequestVoidCallback requestVoidCallback);
+
+    void startNewchat(NewchatDataModel newchatDataModel, RequestChatroomCallback requestChatroomCallback);
+
+    void getUser(String userId, RequestUserCallback callback);
 
     interface RequestUserCallback {
         void success(User user);
@@ -39,6 +40,12 @@ public interface ApiRepository {
     interface RequestChatroomListCallback {
         void success(List<Chatroom> chatrooms);
         void error(Throwable throwable);
+
+    }
+
+    interface RequestStringCallback {
+        void success(String string);
+        void error(Throwable throwable, String message);
 
     }
 
@@ -59,6 +66,11 @@ public interface ApiRepository {
 
     interface RequestVoidCallback {
         void success();
+        void error(Throwable throwable);
+    }
+
+    interface RequestTalkerCallback {
+        void success(TalkerDataModel talkerDataModel);
         void error(Throwable throwable);
     }
 }

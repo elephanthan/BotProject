@@ -26,6 +26,9 @@ public class Chatroom {
     private String lastMessageTime;
     @SerializedName("profile")
     private String profile;
+    @SerializedName("viewTitle")
+    private String viewTitle;
+
 
     public int getNumber() {
         return number;
@@ -94,5 +97,26 @@ public class Chatroom {
 
     public void setProfile(String profile) {
         this.profile = profile;
+    }
+
+    public String getViewTitle() {
+        return viewTitle;
+    }
+
+    public void setViewTitle(String viewTitle) {
+        this.viewTitle = viewTitle;
+    }
+
+    @Override
+    public String toString() {
+        return "Chatroom{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", number=" + number +
+                ", chatroomType=" + chatroomType +
+                ", lastMessageContent='" + lastMessageContent + '\'' +
+                ", lastMessageTime='" + lastMessageTime + '\'' +
+                ", profile='" + profile + '\'' +
+                '}';
     }
 }
