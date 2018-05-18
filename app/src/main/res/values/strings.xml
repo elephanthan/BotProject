@@ -27,7 +27,7 @@
     <string name="alert_not_supply">제공하지 않는 기능입니다.</string>
     <string name="alert_wrong_access">잘못된 접근입니다.</string>
     <string name="alert_network_connection_fail">서버 연결에 실패했습니다.</string>
-    <string name="alert_beacon_connected">비콘 신호 송수신이 이루어지고 있습니다.</string>
+    <string name="alert_beacon_connected">실시간 비콘 신호 스캔을 시작합니다.</string>
     <string name="index_employee_number">사번 :</string>
     <string name="index_nickname">닉네임 :</string>
 </resources>
