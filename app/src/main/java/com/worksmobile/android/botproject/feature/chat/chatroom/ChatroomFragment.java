@@ -402,8 +402,11 @@ public class ChatroomFragment extends RangingFragment implements ChatroomClickLi
     @Override
     public void onProfileClick(int position) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        UserinfoDialogFragment dialogFragment = UserinfoDialogFragment.newInstance(messages.get(position).getSenderId());
-        dialogFragment.show(fm, "fragment_dialog_test");
+        Message message = messages.get(position);
+        if (message != null && message.getSenderId().length() > 2) {
+            UserinfoDialogFragment dialogFragment = UserinfoDialogFragment.newInstance(messages.get(position).getSenderId());
+            dialogFragment.show(fm, "fragment_dialog_test");
+        }
     }
 
 
