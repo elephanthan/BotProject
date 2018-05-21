@@ -50,4 +50,15 @@ public class SharedPrefUtil {
         return false;
     }
 
+    public static boolean resetMiliSecondsPreference(Context context, String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if (preferences != null) {
+            SharedPreferences.Editor editor = preferences.edit();
+            Date d = new Date(-1);
+            long milliseconds = d.getTime();
+            editor.putLong(key, milliseconds);
+            return editor.commit();
+        }
+        return false;
+    }
 }

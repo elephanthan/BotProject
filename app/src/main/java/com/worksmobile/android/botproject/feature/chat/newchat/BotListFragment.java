@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,7 @@ import com.worksmobile.android.botproject.api.ApiRepository;
 import com.worksmobile.android.botproject.model.Bot;
 import com.worksmobile.android.botproject.model.Chatroom;
 import com.worksmobile.android.botproject.model.Talker;
+import com.worksmobile.android.botproject.util.BeaconUtil;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
     RecyclerView userRecyclerView;
     private TalkerAdapter talkerAdapter;
     private List<? extends Talker> talkers = new ArrayList<>();
+    List<Chatroom> previousChatrooms = new ArrayList<>();
 
     private MenuItem checkMenuItem;
 
@@ -85,11 +88,38 @@ public class BotListFragment extends Fragment implements TalkerClickListener {
 
                 String employeeNumber = SharedPrefUtil.getStringPreference(getActivity(), SharedPrefUtil.SHAREDPREF_KEY_USERID);;
                 NewchatDataModel newchatDataModel = new NewchatDataModel(employeeNumber, checkedTalker);
+
+
+
+                retrofitClient.getChatroomList(employeeNumber, new ApiRepository.RequestChatroomListCallback() {
+                    @Override
+                    public void success(List<Chatroom> chatroomList) {
+                        previousChatrooms = new ArrayList<>(chatroomList);
+                    }
+
+                    @Override
+                    public void error(Throwable throwable) {
+                        Log.d("retrofit error", "Retrofit Error ::: loginUser");
+                    }
+                });
+
                 retrofitClient.startNewchat(newchatDataModel, new ApiRepository.RequestChatroomCallback() {
                     @Override
                     public void success(Chatroom chatroom) {
                         ((NewchatActivity)getActivity()).setChatroomId(chatroom.getId());
                         ((NewchatActivity)getActivity()).setChatroomType(chatroom.getChatroomType());
+
+                        boolean isNewChat = true;
+                        for (Chatroom prevChatroom : previousChatrooms) {
+                            if (prevChatroom.getId() == chatroom.getId()) {
+                                isNewChat = false;
+                                break;
+                            }
+                        }
+                        if (isNewChat) {
+                            BeaconUtil.resetBeaconHistory(getActivity(), checkedTalker.getId());
+                        }
+
                         getActivity().finish();
                     }
 
