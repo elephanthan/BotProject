@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.worksmobile.android.botproject.R;
 import com.worksmobile.android.botproject.api.ApiRepository;
-import com.worksmobile.android.botproject.feature.chat.chatroomlist.ChatroomListActivity;
+import com.worksmobile.android.botproject.feature.TestActivity;
 import com.worksmobile.android.botproject.util.SharedPrefUtil;
 
 import butterknife.BindView;
@@ -44,8 +44,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void success(String message) {
                 Log.i("Login Success", message);
-                startActivity(new Intent(getApplicationContext(), ChatroomListActivity.class));
-//                startActivity(new Intent(getApplicationContext(), RecoRangingActivity.class));
+//                startActivity(new Intent(getApplicationContext(), ChatroomListActivity.class));
+                startActivity(new Intent(getApplicationContext(), TestActivity.class));
             }
 
             @Override
