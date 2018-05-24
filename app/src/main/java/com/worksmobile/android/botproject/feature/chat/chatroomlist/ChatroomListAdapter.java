@@ -90,6 +90,11 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
         return chatrooms.size();
     }
 
+    @Override
+    public List<Chatroom> getAllChatrooms() {
+        return this.chatrooms;
+    }
+
 
     static public class ChatroomHolder extends RecyclerView.ViewHolder {
         private Chatroom chatroom;
