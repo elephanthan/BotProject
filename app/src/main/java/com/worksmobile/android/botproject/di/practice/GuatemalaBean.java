@@ -1,4 +1,6 @@
-package com.worksmobile.android.botproject.di;
+package com.worksmobile.android.botproject.di.practice;
+
+import com.worksmobile.android.botproject.di.practice.CoffeeBean;
 
 import javax.inject.Inject;
 

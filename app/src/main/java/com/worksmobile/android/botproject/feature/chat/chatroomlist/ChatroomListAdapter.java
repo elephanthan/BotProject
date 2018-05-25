@@ -36,11 +36,11 @@ public class ChatroomListAdapter extends RecyclerView.Adapter<ChatroomListAdapte
     private List<Chatroom> chatrooms = new ArrayList<>();
     private ChatroomListClickListener listener;
 
+//    @Inject
     public ChatroomListAdapter(Context context) {
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
-
 
     @Override
     public ChatroomHolder onCreateViewHolder(ViewGroup parent, int viewType) {

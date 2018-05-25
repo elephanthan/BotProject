@@ -8,6 +8,8 @@ import com.worksmobile.android.botproject.model.Chatroom;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 public class ChatroomListPresenter implements ChatroomListContract.Presenter{
@@ -16,6 +18,7 @@ public class ChatroomListPresenter implements ChatroomListContract.Presenter{
     private final ChatroomListContract.AdapterView chatroomAdapterView;
     private final ChatroomListDataModel chatroomDataModel;
 
+    @Inject
     public ChatroomListPresenter(@NonNull ChatroomListContract.View view, ChatroomListContract.AdapterView adapterView, @NonNull ChatroomListDataModel dataModel) {
         this.chatroomListView = view;
         this.chatroomListView.setChatroomListPresenter(this);

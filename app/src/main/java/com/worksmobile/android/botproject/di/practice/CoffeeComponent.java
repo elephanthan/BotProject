@@ -1,4 +1,4 @@
-package com.worksmobile.android.botproject.di;
+package com.worksmobile.android.botproject.di.practice;
 
 import java.util.Map;
 

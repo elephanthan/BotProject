@@ -32,6 +32,8 @@ import com.worksmobile.android.botproject.util.SharedPrefUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static com.worksmobile.android.botproject.feature.splash.SplashActivity.retrofitClient;
 
 public class ChatroomListActivity extends AppCompatActivity implements ChatroomListContract.View {
@@ -39,9 +41,10 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
     public static final int REQUEST_NEWCHAT = 100;
 
-    private ChatroomListContract.Presenter chatroomListPresenter;
+    @Inject
+    ChatroomListContract.Presenter chatroomListPresenter;
 
-    private View chatroomListView;
+    View chatroomListView;
     private View noChatroomListView;
     private RecyclerView chatroomRecyclerView;
 
@@ -51,6 +54,8 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroomlist);
+
+//        AndroidInjection.inject(this);
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null) {
@@ -65,7 +70,7 @@ public class ChatroomListActivity extends AppCompatActivity implements ChatroomL
 
         ChatroomListAdapter chatroomListAdapter = new ChatroomListAdapter(this);
         chatroomRecyclerView.setAdapter(chatroomListAdapter);
-        chatroomListPresenter = new ChatroomListPresenter(this, chatroomListAdapter, chatroomListAdapter);
+//        chatroomListPresenter = new ChatroomListPresenter(this, chatroomListAdapter, chatroomListAdapter);
 
         String employeeNumber = SharedPrefUtil.getStringPreference(this, SharedPrefUtil.SHAREDPREF_KEY_USERID);
         chatroomListPresenter.loadChatrooms(employeeNumber);
